@@ -623,7 +623,7 @@ class OsBookingHelper {
     $bookings->select('start_time, end_time, buffer_before, buffer_after, service_id, total_attendies')->where([
       'start_date' => $date,
       'agent_id' => $agent_id]);
-    //rr
+    //rrr
     // if($service_id){
     //   $bookings->where(['service_id' => $service_id]);
     // }
