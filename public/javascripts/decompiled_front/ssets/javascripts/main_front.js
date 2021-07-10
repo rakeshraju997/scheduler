@@ -1589,3 +1589,368 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
 
 
 } )( jQuery );
+
+//os-notification
+
+function latepoint_add_notification(message, message_type = 'success'){
+	var wrapper = jQuery('body').find('.os-notifications');
+	if(!wrapper.length){
+		jQuery('body').append('<div class="os-notifications"></div>');
+		wrapper = jQuery('body').find('.os-notifications');
+	}
+	if(wrapper.find('.item').length > 0) wrapper.find('.item:first-child').remove();
+	wrapper.append('<div class="item item-type-'+ message_type +'">' + message + '<span class="os-notification-close"><i class="latepoint-icon latepoint-icon-x"></i></span></div>');
+}
+
+//os-shared
+
+function latepoint_mask_timefield($elem){
+	if(jQuery().inputmask){
+	  $elem.inputmask({
+	      'mask': '99:99',
+	      'placeholder': 'HH:MM'
+	  });
+	}
+}
+
+function latepoint_mask_phone($elem){
+	if(latepoint_is_phone_masking_enabled() && jQuery().inputmask) $elem.inputmask(latepoint_get_phone_format());
+}
+
+
+function latepoint_get_phone_format(){
+  return latepoint_helper.phone_format;
+}
+
+function latepoint_is_phone_masking_enabled(){
+	return (latepoint_helper.enable_phone_masking == 'yes');
+}
+
+function latepoint_show_booking_end_time(){
+	return (latepoint_helper.show_booking_end_time == 'yes');
+}
+
+function latepoint_init_form_masks(){
+	if(latepoint_is_phone_masking_enabled()) latepoint_mask_phone(jQuery('.os-mask-phone'));
+}
+
+function latepoint_get_paypal_payment_amount($booking_form_element){
+	var payment_portion = $booking_form_element.find('input[name="booking[payment_portion]"]').val();
+	var payment_amount = (payment_portion == 'deposit') ? $booking_form_element.find('.lp-paypal-btn-trigger').data('deposit-amount') : $booking_form_element.find('.lp-paypal-btn-trigger').data('full-amount');
+	return payment_amount;
+}
+
+//os-time
+
+function latepoint_is_timeframe_in_periods(timeframe_start, timeframe_end, periods_arr) {
+  var is_inside = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+  for (var i = 0; i < periods_arr.length; i++) {
+
+    var period_start = 0;
+    var period_end = 0;
+    var buffer_before = 0;
+    var buffer_after = 0;
+
+    var period_info = periods_arr[i].split(':');
+    if (period_info.length == 2) {
+      period_start = period_info[0];
+      period_end = period_info[1];
+    } else {
+      buffer_before = period_info[2];
+      buffer_after = period_info[3];
+      period_start = parseFloat(period_info[0]) - parseFloat(buffer_before);
+      period_end = parseFloat(period_info[1]) + parseFloat(buffer_after);
+    }
+    if (is_inside) {
+      if (latepoint_is_period_inside_another(timeframe_start, timeframe_end, period_start, period_end)) {
+        return true;
+      }
+    } else {
+      if (latepoint_is_period_overlapping(timeframe_start, timeframe_end, period_start, period_end)) {
+        return true;
+      }
+    }
+  };
+  return false;
+}
+
+function latepoint_is_period_overlapping(period_one_start, period_one_end, period_two_start, period_two_end) {
+  // https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap/
+  return period_one_start < period_two_end && period_two_start < period_one_end;
+}
+function latepoint_is_period_inside_another(period_one_start, period_one_end, period_two_start, period_two_end) {
+  return period_one_start >= period_two_start && period_one_end <= period_two_end;
+}
+
+
+// Converts time in minutes to hours if possible, if minutes also exists - shows minutes too
+function latepoint_minutes_to_hours_preferably(time) {
+  var army_clock = latepoint_is_army_clock();
+
+  var hours = Math.floor(time / 60);
+  if (!army_clock && hours > 12) hours = hours - 12;
+
+  var minutes = time % 60;
+  if(minutes > 0) hours = hours + ':' + minutes;
+  return hours;
+}
+
+
+function latepoint_minutes_to_hours(time) {
+  var army_clock = latepoint_is_army_clock();
+
+  var hours = Math.floor(time / 60);
+  if (!army_clock && hours > 12) hours = hours - 12;
+  return hours;
+}
+
+
+function latepoint_am_or_pm(minutes) {
+  if(latepoint_is_army_clock()) return '';
+  return (minutes < 720) ? 'am' : 'pm';
+}
+
+function latepoint_hours_and_minutes_to_minutes(hours_and_minutes, ampm) {
+  var hours_and_minutes_arr = hours_and_minutes.split(':');
+  var hours = hours_and_minutes_arr[0];
+  var minutes = hours_and_minutes_arr[1];
+  if(ampm == "pm" && hours<12) hours = parseInt(hours)+12;
+  if(ampm == "am" && hours==12) hours = 0;
+  minutes = parseInt(minutes) + (hours * 60);
+  return minutes;
+}
+
+function latepoint_get_time_system(){
+  return latepoint_helper.time_system;
+}
+
+function latepoint_is_army_clock(){
+  return (latepoint_get_time_system() == '24');
+}
+
+function latepoint_minutes_to_hours_and_minutes(time) {
+  var army_clock = latepoint_is_army_clock();
+  var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '%02d:%02d';
+
+  var hours = Math.floor(time / 60);
+  if(!army_clock && (hours > 12)) hours = hours - 12;
+  var minutes = time % 60;
+  return sprintf(format, hours, minutes);
+}
+
+//os-actions
+
+function latepoint_generate_form_message_html(messages, status){
+  var message_html = '<div class="os-form-message-w status-' + status + '"><ul>';
+  if(Array.isArray(messages)){
+    messages.forEach(function(message){
+      message_html+= '<li>' + message + '</li>';
+    });
+  }else{
+    message_html+= '<li>' + messages + '</li>';
+  }
+  message_html+= '</ul></div>';
+  return message_html;
+}
+
+function latepoint_clear_form_messages($form){
+  $form.find('.os-form-message-w').remove();
+}
+
+function latepoint_show_data_in_lightbox(message, extra_classes = ''){
+  jQuery('.latepoint-lightbox-w').remove();
+  var lightbox_css_classes = 'latepoint-lightbox-w latepoint-w ';
+  if(extra_classes) lightbox_css_classes+= extra_classes;
+  jQuery('body').append('<div class="'+ lightbox_css_classes +'"><div class="latepoint-lightbox-i">' + message + '<a href="#" class="latepoint-lightbox-close"><i class="latepoint-icon latepoint-icon-x"></i></a></div><div class="latepoint-lightbox-shadow"></div></div>');
+  jQuery('body').addClass('latepoint-lightbox-active');
+}
+
+
+
+// DOCUMENT READY
+jQuery(document).ready(function( $ ) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* 
+    Ajax buttons action
+  */
+  $('.latepoint').on('click', 'button[data-os-action], a[data-os-action], div[data-os-action], span[data-os-action]', function(e){
+    var $this = $(this);
+    if($this.data('os-prompt') && !confirm($this.data('os-prompt'))) return false;
+    var params = $(this).data('os-params');
+    if($(this).data('os-source-of-params')){
+      params = $($(this).data('os-source-of-params')).find('select, input, textarea').serialize();
+    }
+    var return_format = $this.data('os-return-format') ? $this.data('os-return-format') : 'json'
+    var data = { action: 'latepoint_route_call', route_name: $(this).data('os-action'), params: params, return_format: return_format } 
+    $this.addClass('os-loading');
+    $.ajax({
+      type : "post",
+      dataType : "json",
+      url : latepoint_helper.ajaxurl,
+      data : data,
+      success: function(response){
+        if(response.status === "success"){
+          if($this.data('os-output-target') == 'lightbox'){
+            latepoint_show_data_in_lightbox(response.message, $this.data('os-lightbox-classes'));
+          }else if($this.data('os-output-target') == 'side-panel'){
+            $('.latepoint-side-panel-w').remove();
+            $('body').append('<div class="latepoint-side-panel-w"><div class="latepoint-side-panel-i">' + response.message + '</div><div class="latepoint-side-panel-shadow"></div></div>');
+          }else if($this.data('os-success-action') == 'reload'){
+            latepoint_add_notification(response.message);
+            location.reload();
+            return;
+          }else if($this.data('os-success-action') == 'redirect'){
+            if($this.data('os-redirect-to')){
+              latepoint_add_notification(response.message);
+              window.location.replace($this.data('os-redirect-to'));
+            }else{
+              window.location.replace(response.message); 
+            }
+            return;
+          }else if($this.data('os-output-target') && $($this.data('os-output-target')).length){
+            if($this.data('os-output-target-do') == 'append'){
+              $($this.data('os-output-target')).append(response.message);
+            }else{
+              $($this.data('os-output-target')).html(response.message);
+            }
+          }else{
+            if($this.data('os-before-after') == 'before'){
+              $this.before(response.message);
+            }else if($this.data('os-before-after') == 'before'){
+              $this.after(response.message);
+            }else{
+              latepoint_add_notification(response.message);
+            }
+          }
+          if($this.data('os-after-call')){
+            var func_name = $this.data('os-after-call');
+            if($this.data('os-pass-this')){
+              window[func_name]($this);
+            }else if($this.data('os-pass-response')){
+              window[func_name](response);
+            }else{
+              window[func_name]();
+            }
+          }
+          $this.removeClass('os-loading');
+        }else{
+          $this.removeClass('os-loading');
+          if($this.data('os-output-target') && $($this.data('os-output-target')).length){
+            $($this.data('os-output-target')).prepend(latepoint_generate_form_message_html(response.message, 'error'));
+          }else{
+            alert(response.message);
+          }
+        }
+      }
+    });
+    return false;
+  });
+
+
+  $('.latepoint').on('click', 'form[data-os-action] button[type="submit"]', function(e){
+    $(this).addClass('os-loading');
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* 
+    Form ajax submit action
+  */
+  $('.latepoint').on('submit', 'form[data-os-action]', function(e){
+    e.preventDefault(); // prevent native submit
+    var $form = $(this);
+    var form_data = $form.serialize();
+    var data = { action: 'latepoint_route_call', route_name: $(this).data('os-action'), params: form_data, return_format: 'json' }
+    $form.find('button[type="submit"]').addClass('os-loading');
+    $.ajax({
+      type : "post",
+      dataType : "json",
+      url : latepoint_helper.ajaxurl,
+      data : data,
+      success: function(response){
+        $form.find('button[type="submit"].os-loading').removeClass('os-loading');
+        latepoint_clear_form_messages($form);
+        if(response.status === "success"){
+          if($form.data('os-success-action') == 'reload'){
+            latepoint_add_notification(response.message);
+            location.reload();
+            return;
+          }else if($form.data('os-success-action') == 'redirect'){
+            if($form.data('os-redirect-to')){
+              latepoint_add_notification(response.message);
+              window.location.replace($form.data('os-redirect-to'));
+            }else{
+              window.location.replace(response.message);
+            }
+            return;
+          }else if($form.data('os-output-target') && $($form.data('os-output-target')).length){
+            $($form.data('os-output-target')).html(response.message);
+          }else{
+            if(response.message == 'redirect'){
+              window.location.replace(response.url);
+            }else{
+              latepoint_add_notification(response.message);
+              $form.prepend(latepoint_generate_form_message_html(response.message, 'success'));
+            }
+          }
+          if($form.data('os-record-id-holder') && response.record_id){
+            $form.find('[name="' + $form.data('os-record-id-holder') + '"]').val(response.record_id)
+          }
+          if($form.data('os-after-call')){
+            var func_name = $form.data('os-after-call');
+            if($form.data('os-pass-response')){
+              window[func_name](response);
+            }else{
+              window[func_name]();
+            }
+          }
+          $('button.os-loading').removeClass('os-loading');
+        }else{
+          $('button.os-loading').removeClass('os-loading');
+          if($form.data('os-show-errors-as-notification')){
+            latepoint_add_notification(response.message, 'error');
+          }else{
+            $form.prepend(latepoint_generate_form_message_html(response.message, 'error'));
+            $([document.documentElement, document.body]).animate({
+                scrollTop: ($form.find(".os-form-message-w").offset().top - 30)
+            }, 200);
+          }
+        }
+        if(response.form_values_to_update){
+          $.each(response.form_values_to_update, function(name, value){
+            $form.find('[name="'+ name +'"]').val(value);
+          });
+        }
+      }
+    });
+    return false;
+  });
+});
