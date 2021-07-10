@@ -455,6 +455,8 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
       if($(this).hasClass('os-day-passed')) return false;
       if($(this).hasClass('os-not-in-allowed-period')) return false;
       var $booking_form_element = $(this).closest('.latepoint-booking-form-element');
+      console.log($booking_form_element.find('.latepoint_service_id').val()) // selected service_id
+      console.log(this) //selcted date div
       if($(this).closest('.os-monthly-calendar-days-w').hasClass('hide-if-single-slot')){
 
         // HIDE TIMESLOT IF ONLY ONE TIMEPOINT
@@ -490,7 +492,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
         $booking_form_element.find('.latepoint_start_date').val($(this).data('date'));
         latepoint_update_summary_field($booking_form_element, 'date', $(this).data('nice-date'));
         $booking_form_element.find('.os-day.selected').removeClass('selected');
-        $(this).addClass('selected');
+        $(this).addClass('selected');   //show blue color on click for a day
 
         // build timeslots
         day_timeslots($(this));
