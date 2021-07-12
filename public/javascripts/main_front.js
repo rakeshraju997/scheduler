@@ -387,7 +387,6 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
                                 duration: $booking_form_element.find('input[name="booking[duration]"]').val(),
                                 total_attendies: $booking_form_element.find('input[name="booking[total_attendies]"]').val() };
           var data = { action: 'latepoint_route_call', route_name: next_month_route_name, params: booking_info, layout: 'none', return_format: 'json' }
-          console.log(booking_info)
           $.ajax({
             type : "post",
             dataType : "json",
@@ -517,9 +516,9 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
 
         //ajax for date passing
         let booking_info = { date : '21-21-21' };
-        let  next_month_route_name = 'calanders_date_controller';
+        let  next_month_route_name = 'calendars__date_handle';
         let data = { action: 'latepoint_route_call', route_name: next_month_route_name, params: booking_info, layout: 'none', return_format: 'json' };
-        //alert('retgreg');
+        console.log(data);
         $.ajax({
           type : "post",
           dataType : "json",
@@ -527,6 +526,9 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
           data : data,
           success: function(data){
             alert('ewqew');
+          },
+          error: function(error){
+            console.log(error);
           }
           });
       }

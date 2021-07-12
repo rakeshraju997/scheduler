@@ -15,9 +15,9 @@ if ( ! class_exists( 'OsCalendarsController' ) ) :
       parent::__construct();
 
       $this->action_access['public'] = array_merge($this->action_access['public'], ['load_monthly_calendar_days']);
+      $this->action_access['public'] = array_merge($this->action_access['public'], ['date_handle']);
       
 
-      $_SESSION['rr'] = 'gfthtfh';
       $this->views_folder = LATEPOINT_VIEWS_ABSPATH . 'calendars/';
       $this->vars['page_header'] = [['label' => __( 'Daily View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'daily_agents'])],
                                     ['label' => __( 'Weekly View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'weekly_agent'])],
@@ -406,7 +406,7 @@ if ( ! class_exists( 'OsCalendarsController' ) ) :
       $this->format_render(__FUNCTION__);
     }
 
-    public function date_controller(){
+    function date_handle(){
       // $_SESSION['rr']='rr';
       $this->format_render(__FUNCTION__);
     }
