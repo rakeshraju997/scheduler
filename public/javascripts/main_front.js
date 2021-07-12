@@ -387,6 +387,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
                                 duration: $booking_form_element.find('input[name="booking[duration]"]').val(),
                                 total_attendies: $booking_form_element.find('input[name="booking[total_attendies]"]').val() };
           var data = { action: 'latepoint_route_call', route_name: next_month_route_name, params: booking_info, layout: 'none', return_format: 'json' }
+          console.log(booking_info)
           $.ajax({
             type : "post",
             dataType : "json",
@@ -492,6 +493,17 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
         $booking_form_element.find('.latepoint_start_date').val($(this).data('date'));
         latepoint_update_summary_field($booking_form_element, 'date', $(this).data('nice-date'));
         $booking_form_element.find('.os-day.selected').removeClass('selected');
+
+        //three day setion selection
+        let selectedService = $booking_form_element.find('.latepoint_service_id').val()
+        if(selectedService == 3){
+        for(let i=1;i<3;i++){
+        let selectedDate = new Date($(this).data('date'))
+        selectedDate.setDate(selectedDate.getDate()+i)
+        selectedDate = selectedDate.toISOString().replace(/T.*/,'').split('-').join('-')
+        $("[data-date="+ selectedDate +"]").addClass('selected')
+        }
+        } 
         $(this).addClass('selected');   //show blue color on click for a day
 
         // build timeslots
@@ -502,6 +514,21 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
         latepoint_update_summary_field($booking_form_element, 'time', '');
         $booking_form_element.find('.latepoint_start_time').val('');
         latepoint_hide_next_btn($booking_form_element);
+
+        //ajax for date passing
+        let booking_info = { date : '21-21-21' };
+        let  next_month_route_name = 'calanders_date_controller';
+        let data = { action: 'latepoint_route_call', route_name: next_month_route_name, params: booking_info, layout: 'none', return_format: 'json' };
+        //alert('retgreg');
+        $.ajax({
+          type : "post",
+          dataType : "json",
+          url : latepoint_helper.ajaxurl,
+          data : data,
+          success: function(data){
+            alert('ewqew');
+          }
+          });
       }
 
 

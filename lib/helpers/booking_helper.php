@@ -1082,7 +1082,7 @@ class OsBookingHelper {
 
         // DAYS LOOP END
       }
-      $_SESSION['rr']=$dd;
+      // $_SESSION['rr']=$dd;
     echo '</div></div>';
   }
 
