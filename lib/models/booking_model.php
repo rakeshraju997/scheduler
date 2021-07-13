@@ -490,7 +490,16 @@ class OsBookingModel extends OsModel{
 
 
   protected function before_save(){
-    $this->end_date = $this->start_date;
+    //rr date insertion end_date and stat_date
+    if($this->service_id == 1 || $this->service_id == 2){
+      $this->end_date  = $this->start_date;
+      $this->mid_date  = $this->start_date; 
+    }else if($this->service_id == 3){
+      $this->end_date =date("Y-m-d", strtotime("2 day", strtotime($this->start_date)) ) ;
+      $this->mid_date = date("Y-m-d", strtotime("1 day", strtotime($this->start_date)) ) ;
+    }
+    
+    
     if(empty($this->payment_method)) $this->payment_method = OsPaymentsHelper::get_default_payment_method();
     if(empty($this->status)) $this->status = $this->get_default_status();
     if(empty($this->ip_address)) $this->ip_address = $_SERVER['REMOTE_ADDR'];
@@ -580,6 +589,7 @@ class OsBookingModel extends OsModel{
                             'end_date',
                             'start_time',
                             'end_time',
+                            'mid_date',
                             'payment_method',
                             'payment_portion',
                             'payment_token',
@@ -605,6 +615,7 @@ class OsBookingModel extends OsModel{
                             'end_date',
                             'start_time',
                             'end_time',
+                            'mid_date',
                             'payment_method',
                             'duration',
                             'price',
