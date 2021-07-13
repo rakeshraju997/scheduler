@@ -393,6 +393,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
             url : latepoint_helper.ajaxurl,
             data : data,
             success: function(data){
+              console.log(data);
               $btn.removeClass('os-loading');
               if(data.status === "success"){
                 $booking_form_element.find('.os-months').append(data.message);
@@ -455,8 +456,8 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
       if($(this).hasClass('os-day-passed')) return false;
       if($(this).hasClass('os-not-in-allowed-period')) return false;
       var $booking_form_element = $(this).closest('.latepoint-booking-form-element');
-      console.log($booking_form_element.find('.latepoint_service_id').val()) // selected service_id
-      console.log(this) //selcted date div
+      //rr console.log($booking_form_element.find('.latepoint_service_id').val()) // selected service_id
+      //rr console.log(this) //selcted date div
       if($(this).closest('.os-monthly-calendar-days-w').hasClass('hide-if-single-slot')){
 
         // HIDE TIMESLOT IF ONLY ONE TIMEPOINT
@@ -493,17 +494,14 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
         latepoint_update_summary_field($booking_form_element, 'date', $(this).data('nice-date'));
         $booking_form_element.find('.os-day.selected').removeClass('selected');
 
-        //three day setion selection
-        let selectedService = $booking_form_element.find('.latepoint_service_id').val()
-        if(selectedService == 3){
-        for(let i=1;i<3;i++){
-        let selectedDate = new Date($(this).data('date'))
-        selectedDate.setDate(selectedDate.getDate()+i)
-        selectedDate = selectedDate.toISOString().replace(/T.*/,'').split('-').join('-')
-        $("[data-date="+ selectedDate +"]").addClass('selected')
-        }
-        } 
-        $(this).addClass('selected');   //show blue color on click for a day
+        //rr remove not available class
+        // $booking_form_element.find('.os-day.selected.os-not-available').removeClass('os-not-available');
+
+        //rr three day setion selection
+        var selectedService = $booking_form_element.find('.latepoint_service_id').val();
+        var selectedDate_p = $(this).data('date');
+
+        // $(this).addClass('selected');   //show blue color on click for a day
 
         // build timeslots
         day_timeslots($(this));
@@ -514,26 +512,44 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
         $booking_form_element.find('.latepoint_start_time').val('');
         latepoint_hide_next_btn($booking_form_element);
 
-        //ajax for date passing
-        let booking_info = { date : '21-21-21' };
+        //rr ajax for date passing
+        if(selectedService == 3){
+          let booking_info = { day1 : selectedDate_p };
+          for(let i=1;i<3;i++){
+            let selectedDate = new Date(selectedDate_p)
+            selectedDate.setDate(selectedDate.getDate()+i)
+            selectedDate = selectedDate.toISOString().replace(/T.*/,'').split('-').join('-')
+            booking_info['day'+(i+1)] = selectedDate;
+          }
+
         let  next_month_route_name = 'calendars__date_handle';
         let data = { action: 'latepoint_route_call', route_name: next_month_route_name, params: booking_info, layout: 'none', return_format: 'json' };
-        console.log(data);
-        $.ajax({
-          type : "post",
-          dataType : "json",
-          url : latepoint_helper.ajaxurl,
-          data : data,
-          success: function(data){
-            alert('ewqew');
-          },
-          error: function(error){
-            console.log(error);
-          }
-          });
+          $.ajax({
+            type : "post",
+            dataType : "json",
+            url : latepoint_helper.ajaxurl,
+            data : data,
+            success: function(data){
+              if(data == null)
+              {
+                let $timeslots = $booking_form_element.find('.timeslots')
+                $timeslots.html('')
+                $timeslots.addClass('slots-not-available').append('<div class="not-working-message">' + 'Three day session not available' + "</div>");
+                $("[data-date="+ selectedDate_p +"]").addClass('os-not-available')
+                
+                console.log('block by other session')
+              }else{
+                Object.values(data).forEach(val => {
+                  $("[data-date="+ val +"]").addClass('selected')
+                });
+              }
+            },
+            error: function(error){
+              console.log('ygrtyrty',error);
+            }
+            });
+        }
       }
-
-
       return false;
     });
   }

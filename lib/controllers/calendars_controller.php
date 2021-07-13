@@ -15,6 +15,7 @@ if ( ! class_exists( 'OsCalendarsController' ) ) :
       parent::__construct();
 
       $this->action_access['public'] = array_merge($this->action_access['public'], ['load_monthly_calendar_days']);
+      //rr clicked date function call
       $this->action_access['public'] = array_merge($this->action_access['public'], ['date_handle']);
       
 
@@ -405,10 +406,53 @@ if ( ! class_exists( 'OsCalendarsController' ) ) :
 
       $this->format_render(__FUNCTION__);
     }
-
+    //rr clicked date function 
     function date_handle(){
-      // $_SESSION['rr']='rr';
-      $this->format_render(__FUNCTION__);
+      $booking = new OsBookingModel();
+      $selected_date = [
+       "start_date" => $this->params['day1'],
+       "mid_date" => $this->params['day2'],
+       "end_date" => $this->params['day3']
+      ];
+
+      foreach( $selected_date as $dates){
+        $query = "SELECT start_date,mid_date,end_date FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE service_id = '3' AND (start_date = '".$dates."' OR mid_date = '".$dates."' OR end_date = '".$dates."')";
+        $fetched_date = $booking->get_query_results($query);
+        $returndata[$dates] = $fetched_date[0]; 
+        $data[] = $fetched_date[0];
+      }
+
+      if($data[0] == NULL) {
+        if($data[1] == NULL && $data[2] == NULL) {
+
+          foreach( $selected_date as $dates){
+            $query = "SELECT start_date,mid_date,end_date FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE start_date = '".$dates."' OR mid_date = '".$dates."' OR end_date = '".$dates."'";
+            $fetched_all_date = $booking->get_query_results($query);
+            $data_witout_serviceid[] = $fetched_all_date[0];
+          }
+          if($data_witout_serviceid[0] == NULL && $data_witout_serviceid[1] == NULL && $data_witout_serviceid[2] == NULL ){
+            $arrr = $selected_date;
+            // $status = 'freash case';          
+            
+          }
+          else {
+            $arrr = null;
+            //  $status =  'block by other session';
+          }
+          
+        }
+        else {
+          // $status = 'block';
+        }
+      }
+      else if($data[0] != NULL) {
+
+        $arrr = $returndata[$this->params['day1']];
+
+      }
+      echo json_encode($arrr);
+      die();
+
     }
 
   }
