@@ -315,7 +315,7 @@ if ( ! class_exists( 'OsBookingsController' ) ) :
                   <div class="confirmation-app-info">
                     <h5 class="confirmation-section-heading"><?php _e('Appointment Info', 'latepoint'); ?></h5>
                     <ul>
-                      <li><?php _e('Date:', 'latepoint'); ?> <strong><?php echo $booking->format_start_date_and_time(get_option('date_format'), false, OsTimeHelper::get_timezone_from_session()); ?></strong></li>
+                      <li><?php _e('Date:', 'latepoint'); ?> <strong><?php echo $booking->format_start_date_and_time(get_option('date_format'), false, OsTimeHelper::get_timezone_from_session()); //end date only for three day session ?></strong></li>
                       <li>
                         <?php _e('Time:', 'latepoint'); ?> 
                         <strong>
