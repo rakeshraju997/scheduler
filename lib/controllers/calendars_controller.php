@@ -426,7 +426,7 @@ if ( ! class_exists( 'OsCalendarsController' ) ) :
         if($data[1] == NULL && $data[2] == NULL) {
 
           foreach( $selected_date as $dates){
-            $query = "SELECT start_date,mid_date,end_date FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE start_date = '".$dates."' OR mid_date = '".$dates."' OR end_date = '".$dates."'";
+            $query = "SELECT start_date,mid_date,end_date,service_id FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE start_date = '".$dates."' OR mid_date = '".$dates."' OR end_date = '".$dates."'";
             $fetched_all_date = $booking->get_query_results($query);
             $data_witout_serviceid[] = $fetched_all_date[0];
           }
@@ -435,8 +435,12 @@ if ( ! class_exists( 'OsCalendarsController' ) ) :
             // $status = 'freash case';          
             
           }
-          else {
+          else {          
             $arrr = null;
+            if($data_witout_serviceid[2] != NULL && $data_witout_serviceid[2]->service_id == 1) {
+              $arrr = $selected_date; 
+            }
+            
             //  $status =  'block by other session';
           }
           
