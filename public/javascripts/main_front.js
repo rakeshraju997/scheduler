@@ -540,11 +540,13 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
                 $timeslots.addClass('slots-not-available').append('<div class="not-working-message">' + 'Three day session not available' + "</div>");
                 $booking_form_element.find('.os-day.selected').removeClass('selected');
                 $("[data-date="+ selectedDate_p +"]").addClass('os-not-available selected')
-                
                 console.log('block by other session')
               }else{
                 $booking_form_element.find('.latepoint_start_date').val(data.start_date);
-                $booking_form_element.find('.os-not-available.selected').removeClass('os-not-available')
+                let $os_not_available = $booking_form_element.find('.os-not-available.selected')
+                if($os_not_available.find('.day-available')[0] != null){
+                  $booking_form_element.find('.os-not-available.selected').removeClass('os-not-available')
+                }
                 $booking_form_element.find('.os-day.selected').removeClass('selected');
                 latepoint_update_summary_field($booking_form_element, 'date', $("[data-date="+ data.start_date +"]").data('nice-date')+' - '+$("[data-date="+ data.end_date +"]").data('nice-date'))
                 $('.times-header-label span').text($("[data-date="+ data.start_date +"]").data('nice-date')+' - '+$("[data-date="+ data.end_date +"]").data('nice-date'));

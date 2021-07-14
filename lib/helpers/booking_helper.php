@@ -919,18 +919,24 @@ class OsBookingHelper {
             $select = false;
            }else if($service_id_db == 3 || $count>0){ 
               if($count == 0){
-                $count = $service_id_db;
+                $count = $service_id_db;//assign count to three for colouring 
               }
               $select = true;
+              if($service->id == 1 && $count == 1){
+                $select = false; //three day session end half gree for half day booking
+                $is_available = true;
+              }
               $count--;
-            }else if($service_id_db){
-              $select = true;
-            }
-         else{
+           }else if($service_id_db){
+              $select = true;  
+              if($service_id_db == 1 && $service->id == 3){
+                $select = false; //three day session end half day red remove
+              }            
+           }else{
             $select = false;
             $is_available = true;
-          }
-
+           }
+          //rr condition for three day selected blue
           if($service_id_db == 3 || $countt>0){
             if($countt == 0){
               $countt = $service_id_db;
