@@ -524,7 +524,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
             selectedDate = selectedDate.toISOString().replace(/T.*/,'').split('-').join('-')
             booking_info['day'+(i+1)] = selectedDate;
           }
-
+        booking_info['agent_id'] = $booking_form_element.find('.latepoint_agent_id').val()
         let  next_month_route_name = 'calendars__date_handle';
         let data = { action: 'latepoint_route_call', route_name: next_month_route_name, params: booking_info, layout: 'none', return_format: 'json' };
           $.ajax({
