@@ -928,19 +928,19 @@ class OsBookingHelper
                 $booked_periods_arr['agent_' . $agent_id][$day_date->format('Y-m-d')][] = '0:' . $today_earliest_possible_minutes_start . ':0:0';
               }
               //rr
-
+              $agent_service_count = self::get_agent_seat_number($agent_id)->number_of_seats;
               $dd = self::get_serviceid_by_date($day_date->format('Y-m-d'), $agent_id, $approved_only = true);
               $service_id_db = intval($dd->service_id);
               $service_count = intval($dd->count);
 
-              if ($dd->service_id == $service->id && $service_count < 3) {
+              if ($dd->service_id == $service->id && $service_count < $agent_service_count) {
                 $select = false;
               } else if ($service_id_db == 3 || $count > 0) {
                 if ($count == 0) {
                   $count = $service_id_db; //assign count to three for colouring 
                 }
                 $select = true;
-                if ($service->id == 1 && $count == 1 && $service_count < 3) {             
+                if ($service->id == 1 && $count == 1 && $service_count < $agent_service_count) {             
                   $select = false; //three day session end half gree for half day booking
                   $is_available = true;
                   if ($service_id_db == 2) {
@@ -1284,7 +1284,14 @@ class OsBookingHelper
           return $bookings->get_query_results($query, $query_args);
         }
 
-
+        public static function get_agent_seat_number($agent_id)
+        {
+          $bookings = new OsBookingModel();
+          $query = 'SELECT number_of_seats FROM wp_latepoint_agents WHERE id ='.$agent_id;        
+          // return $query;
+          return $bookings->get_query_results($query)[0];
+        }
+        
         public static function get_bookings_times_for_date_range($date_from = false, $date_to = false, $args = [])
         {
           if (!$date_from || !$date_to) return false;
