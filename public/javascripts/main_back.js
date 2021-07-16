@@ -1,4 +1,2783 @@
-"use strict";function latepoint_is_timeframe_in_periods(e,t,a,o){for(var n=arguments.length>3&&void 0!==o&&o,s=0;s<a.length;s++){var i=0,r=0,l=0,c=0,u=a[s].split(":");if(2==u.length?(i=u[0],r=u[1]):(l=u[2],c=u[3],i=parseFloat(u[0])-parseFloat(l),r=parseFloat(u[1])+parseFloat(c)),n){if(latepoint_is_period_inside_another(e,t,i,r))return!0}else if(latepoint_is_period_overlapping(e,t,i,r))return!0}return!1}function latepoint_is_period_overlapping(e,t,a,o){return e<o&&a<t}function latepoint_is_period_inside_another(e,t,a,o){return e>=a&&t<=o}function latepoint_minutes_to_hours_preferably(e){var t=latepoint_is_army_clock(),a=Math.floor(e/60);!t&&a>12&&(a-=12);var o=e%60;return o>0&&(a=a+":"+o),a}function latepoint_minutes_to_hours(e){var t=latepoint_is_army_clock(),a=Math.floor(e/60);return!t&&a>12&&(a-=12),a}function latepoint_am_or_pm(e){return latepoint_is_army_clock()?"":e<720?"am":"pm"}function latepoint_hours_and_minutes_to_minutes(e,t){var a=e.split(":"),o=a[0],n=a[1];return"pm"==t&&o<12&&(o=parseInt(o)+12),"am"==t&&12==o&&(o=0),n=parseInt(n)+60*o}function latepoint_get_time_system(){return latepoint_helper.time_system}function latepoint_is_army_clock(){return"24"==latepoint_get_time_system()}function latepoint_minutes_to_hours_and_minutes(e,t){var a=latepoint_is_army_clock(),o=arguments.length>1&&void 0!==t?t:"%02d:%02d",n=Math.floor(e/60);!a&&n>12&&(n-=12);var s=e%60;return sprintf(o,n,s)}function latepoint_generate_form_message_html(e,t){var a='<div class="os-form-message-w status-'+t+'"><ul>';return Array.isArray(e)?e.forEach((function(e){a+="<li>"+e+"</li>"})):a+="<li>"+e+"</li>",a+="</ul></div>"}function latepoint_clear_form_messages(e){e.find(".os-form-message-w").remove()}function latepoint_show_data_in_lightbox(e,t){var a=arguments.length>1&&void 0!==t?t:"";jQuery(".latepoint-lightbox-w").remove();var o="latepoint-lightbox-w latepoint-w ";a&&(o+=a),jQuery("body").append('<div class="'+o+'"><div class="latepoint-lightbox-i">'+e+'<a href="#" class="latepoint-lightbox-close"><i class="latepoint-icon latepoint-icon-x"></i></a></div><div class="latepoint-lightbox-shadow"></div></div>'),jQuery("body").addClass("latepoint-lightbox-active")}function latepoint_add_notification(e,t){var a=arguments.length>1&&void 0!==t?t:"success",o=jQuery("body").find(".os-notifications");o.length||(jQuery("body").append('<div class="os-notifications"></div>'),o=jQuery("body").find(".os-notifications")),o.find(".item").length>0&&o.find(".item:first-child").remove(),o.append('<div class="item item-type-'+a+'">'+e+'<span class="os-notification-close"><i class="latepoint-icon latepoint-icon-x"></i></span></div>')}function latepoint_mask_timefield(e){jQuery().inputmask&&e.inputmask({mask:"99:99",placeholder:"HH:MM"})}function latepoint_mask_phone(e){latepoint_is_phone_masking_enabled()&&jQuery().inputmask&&e.inputmask(latepoint_get_phone_format())}function latepoint_get_phone_format(){return latepoint_helper.phone_format}function latepoint_is_phone_masking_enabled(){return"yes"==latepoint_helper.enable_phone_masking}function latepoint_show_booking_end_time(){return"yes"==latepoint_helper.show_booking_end_time}function latepoint_init_form_masks(){latepoint_is_phone_masking_enabled()&&latepoint_mask_phone(jQuery(".os-mask-phone"))}function latepoint_get_paypal_payment_amount(e){var t,a;return"deposit"==e.find('input[name="booking[payment_portion]"]').val()?e.find(".lp-paypal-btn-trigger").data("deposit-amount"):e.find(".lp-paypal-btn-trigger").data("full-amount")}function latepoint_load_addons_info(){var e=jQuery(".addons-info-holder");e.addClass("os-loading");var t,a={action:"latepoint_route_call",route_name:e.data("route"),params:"",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:a,success:function t(a){e.removeClass("os-loading"),"success"===a.status?a.message?e.html(a.message):e.html("Something is wrong. Try refreshing the page."):alert(a.message,"error")}})}function latepoint_check_for_updates(){if(jQuery(".version-log-w").length){var e=jQuery(".version-log-w");e.addClass("os-loading");var t,a={action:"latepoint_route_call",route_name:t=e.data("route"),params:"",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:a,success:function t(a){e.removeClass("os-loading"),"success"===a.status?e.html(a.message):alert(a.message,"error")}})}if(jQuery(".version-status-info").length){var o=jQuery(".version-status-info");o.addClass("os-loading");var t,a={action:"latepoint_route_call",route_name:t=o.data("route"),params:"",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:a,success:function e(t){o.removeClass("os-loading"),"success"===t.status?o.html(t.message):alert(t.message,"error")}})}jQuery(".addons-info-holder").length&&latepoint_load_addons_info()}function _classCallCheck(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function _defineProperties(e,t){for(var a=0;a<t.length;a++){var o=t[a];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}function _createClass(e,t,a){return t&&_defineProperties(e.prototype,t),a&&_defineProperties(e,a),e}function _defineProperty(e,t,a){return t in e?Object.defineProperty(e,t,{value:a,enumerable:!0,configurable:!0,writable:!0}):e[t]=a,e}function latepoint_init_side_menu(){jQuery(".menu-toggler").on("click",(function(){var e="full";jQuery(".latepoint-side-menu-w").hasClass("side-menu-full")?(e="compact",jQuery(".latepoint-side-menu-w").addClass("side-menu-compact").removeClass("side-menu-full")):jQuery(".latepoint-side-menu-w").addClass("side-menu-full").removeClass("side-menu-compact");var t,a={action:"latepoint_route_call",route_name:jQuery(this).data("route"),params:{menu_layout_style:e},layout:"none",return_format:"json"};return jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:a,success:function e(t){}}),!1}))}function latepoint_init_grouped_bookings_form(){}function latepoint_quick_booking_customer_selected(){jQuery(".customer-info-w").removeClass("selecting").addClass("selected")}function latepoint_custom_day_removed(e){e.closest(".custom-day-work-period").fadeOut(300,(function(){jQuery(this).remove()}))}function latepoint_booking_synced(e){e.closest(".os-booking-tiny-box").removeClass("not-synced").addClass("is-synced"),latepoint_sync_update_progress(!1)}function latepoint_gcal_event_deleted(e){e.closest(".os-booking-tiny-box").remove()}function latepoint_booking_unsynced(e){e.closest(".os-booking-tiny-box").addClass("not-synced").removeClass("is-synced"),latepoint_sync_update_progress(!0)}function latepoint_count_active_connections(e){var t=e.find(".connection-children-list li.active").length,a=e.find(".connection-children-list li").length;t==a?(t=jQuery(".selected-connections").data("all-text"),jQuery(".selected-connections").removeClass("not-all-selected")):(t=t+"/"+a,jQuery(".selected-connections").addClass("not-all-selected"),e.closest(".white-box").find(".os-select-all-toggler").prop("checked",!1)),e.find(".selected-connections strong").text(t)}function latepoint_custom_field_removed(e){e.closest(".os-custom-field-form").remove()}function latepoint_coupon_removed(e){e.closest(".os-coupon-form").remove()}function latepoint_init_custom_fields_form(){jQuery(".latepoint-content-w").on("click",".os-custom-field-form-info",(function(){return jQuery(this).closest(".os-custom-field-form").toggleClass("os-is-editing"),!1})),jQuery(".latepoint-content-w").on("change","select.os-custom-field-type-select",(function(){"select"==jQuery(this).val()?jQuery(this).closest(".os-custom-field-form").find(".os-custom-field-select-values").show():jQuery(this).closest(".os-custom-field-form").find(".os-custom-field-select-values").hide()})),jQuery(".latepoint-content-w").on("keyup",".os-custom-field-name-input",(function(){jQuery(this).closest(".os-custom-field-form").find(".os-custom-field-name").text(jQuery(this).val())}))}function latepoint_init_coupons_form(){jQuery(".latepoint-content-w").on("click",".os-coupon-form-info",(function(){return jQuery(this).closest(".os-coupon-form").toggleClass("os-is-editing"),!1})),jQuery(".latepoint-content-w").on("change","select.os-coupon-medium-select",(function(){"email"==jQuery(this).val()?jQuery(this).closest(".os-coupon-form").find(".os-coupon-email-subject").show():jQuery(this).closest(".os-coupon-form").find(".os-coupon-email-subject").hide()})),jQuery(".latepoint-content-w").on("keyup",".os-coupon-name-input",(function(){jQuery(this).closest(".os-coupon-form").find(".os-coupon-name").text(jQuery(this).val())})),jQuery(".latepoint-content-w").on("keyup",".os-coupon-code-input",(function(){jQuery(this).closest(".os-coupon-form").find(".os-coupon-code").text(jQuery(this).val())}))}function latepoint_init_reminders_form(){jQuery(".latepoint-content-w").on("click",".os-reminder-form-info",(function(){return jQuery(this).closest(".os-reminder-form").toggleClass("os-is-editing"),!1})),jQuery(".latepoint-content-w").on("change","select.os-reminder-medium-select",(function(){"email"==jQuery(this).val()?jQuery(this).closest(".os-reminder-form").find(".os-reminder-email-subject").show():jQuery(this).closest(".os-reminder-form").find(".os-reminder-email-subject").hide()})),jQuery(".latepoint-content-w").on("keyup",".os-reminder-name-input",(function(){jQuery(this).closest(".os-reminder-form").find(".os-reminder-name").text(jQuery(this).val())}))}function latepoint_custom_field_saved(e){}function latepoint_init_custom_day_schedule(){jQuery("#custom_day_calendar_month, #custom_day_calendar_year").on("change",(function(){var e=jQuery(".custom-day-calendar-month"),t=e.data("route");e.addClass("os-loading");var a,o={action:"latepoint_route_call",route_name:t,params:{target_date_string:jQuery("#custom_day_calendar_year").val()+"-"+jQuery("#custom_day_calendar_month").val()+"-01"},layout:"none",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:o,success:function t(a){e.removeClass("os-loading"),"success"===a.status&&e.html(a.message)}})})),jQuery(".custom-day-calendar").on("click",".os-day",(function(){var e=jQuery(this);return jQuery(".custom-day-calendar .os-day.selected").removeClass("selected"),e.addClass("selected"),jQuery(".latepoint-lightbox-footer").slideDown(200),"yes"==jQuery(".custom-day-calendar").data("show-schedule")&&jQuery(".latepoint-lightbox-w").removeClass("hide-schedule"),jQuery(".custom_day_schedule_date").val(e.data("date")),!1}))}function latepoint_init_updates_page(){}function latepoint_init_monthly_calendar_navigation(){jQuery(".calendar-location-selector").on("change",(function(){latepoint_reload_daily_agents_page()})),jQuery(".os-month-next-btn").on("click",(function(){if(jQuery(".os-monthly-calendar-days-w.active + .os-monthly-calendar-days-w").length)jQuery(".os-monthly-calendar-days-w.active").removeClass("active").next(".os-monthly-calendar-days-w").addClass("active"),latepoint_calendar_set_month_label();else{var e=jQuery(this);e.addClass("os-loading");var t=jQuery(this).data("route"),a=jQuery(".os-monthly-calendar-days-w.active"),o=a.data("calendar-layout"),n=a.data("calendar-year"),s=a.data("calendar-month");12==s?(n+=1,s=1):s+=1;var i,r,l={target_date_string:n+"-"+s+"-1",agent_id:jQuery(".agent-select").val(),service_id:jQuery(".service-select").val(),allow_full_access:!0,calendar_layout:o};jQuery(".cc-location-selector select").length&&jQuery(".cc-location-selector select").val()&&(l.location_id=jQuery(".cc-location-selector select").val());var c={action:"latepoint_route_call",route_name:t,params:l,layout:"none",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:c,success:function t(a){e.removeClass("os-loading"),"success"===a.status&&(jQuery(".os-months").append(a.message),jQuery(".os-monthly-calendar-days-w.active").removeClass("active").next(".os-monthly-calendar-days-w").addClass("active"),latepoint_calendar_set_month_label())}})}return!1})),jQuery(".os-month-prev-btn").on("click",(function(){if(jQuery(".os-monthly-calendar-days-w.active").prev(".os-monthly-calendar-days-w").length)jQuery(".os-monthly-calendar-days-w.active").removeClass("active").prev(".os-monthly-calendar-days-w").addClass("active"),latepoint_calendar_set_month_label();else{var e=jQuery(this);e.addClass("os-loading");var t=jQuery(this).data("route"),a=jQuery(".os-monthly-calendar-days-w.active").last(),o=a.data("calendar-layout"),n=a.data("calendar-year"),s=a.data("calendar-month");1==s?(n-=1,s=12):s-=1;var i,r,l={target_date_string:n+"-"+s+"-1",agent_id:jQuery(".agent-select").val(),service_id:jQuery(".service-select").val(),allow_full_access:!0,calendar_layout:o};jQuery(".cc-location-selector select").length&&jQuery(".cc-location-selector select").val()&&(l.location_id=jQuery(".cc-location-selector select").val());var c={action:"latepoint_route_call",route_name:t,params:l,layout:"none",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:c,success:function t(a){e.removeClass("os-loading"),"success"===a.status&&(jQuery(".os-months").prepend(a.message),jQuery(".os-monthly-calendar-days-w.active").removeClass("active").prev(".os-monthly-calendar-days-w").addClass("active"),latepoint_calendar_set_month_label())}})}return!1}))}function latepoint_calendar_set_month_label(){jQuery(".os-current-month-label .current-month").text(jQuery(".os-monthly-calendar-days-w.active").data("calendar-month-label")),jQuery(".os-current-month-label .current-year").text(jQuery(".os-monthly-calendar-days-w.active").data("calendar-year"))}function latepoint_init_element_togglers(){jQuery("[data-toggle-element]").on("click",(function(){var e=jQuery(this);e.closest(".os-form-checkbox-group").toggleClass("is-checked"),jQuery(e.data("toggle-element")).toggle()}))}function latepoint_init_color_picker(){jQuery(".latepoint-color-picker").length&&jQuery(".latepoint-color-picker").each((function(){var e=jQuery(this).data("color"),t=jQuery(this)[0],a=jQuery(this).closest(".latepoint-color-picker-w");Pickr.create({el:t,default:e,comparison:!1,useAsButton:!0,components:{preview:!0,opacity:!1,hue:!0,interaction:{input:!1,clear:!1,save:!0}},onChange:function e(t,o){a.find(".os-form-control").val(t.toHEX().toString())}})}))}function latepoint_lightbox_close(){jQuery("body").removeClass("latepoint-lightbox-active"),jQuery(".latepoint-lightbox-w").remove()}function latepoint_reload_select_service_categories(){jQuery(".service-selector-adder-field-w").each((function(){var e=jQuery(this),t,a={action:"latepoint_route_call",route_name:jQuery(".service-selector-adder-field-w").find("select").data("select-source"),params:"",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:a,success:function t(a){e.removeClass("os-loading"),"success"===a.status?(latepoint_lightbox_close(),e.find("select").html(a.message),e.find("select option:last").attr("selected","selected")):alert(a.message,"error")}})}))}function latepoint_wizard_item_editing_cancelled(){jQuery(".os-wizard-setup-w").removeClass("is-sub-editing"),jQuery(".os-wizard-footer").show(),jQuery(".os-wizard-footer .os-wizard-next-btn").show()}function latepoint_load_quick_availability(e,t,a,o,n){var s=arguments.length>1&&void 0!==t&&t,i=arguments.length>2&&void 0!==a&&a,r=arguments.length>3&&void 0!==o&&o,l=arguments.length>4&&void 0!==n&&n;e.addClass("os-loading");var c=jQuery(".trigger-quick-availability").data("route"),u=jQuery(".quick-booking-form-w");s&&u.find('select[name="booking[agent_id]"]').val(s),u.find('input[name="booking[service_id]"]').val()||u.find(".os-services-select-field-w .service-option:first").click();var d=u.find("form").serialize();i&&(d+="&start_date="+i),(r||l)&&(d+="&show_days_only=true"),l&&(d+="&previous_days=true");var p={action:"latepoint_route_call",route_name:c,params:d,return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:p,success:function t(a){e.removeClass("os-loading"),"success"===a.status?r?(e.parent(".os-availability-next-w").remove(),jQuery(".latepoint-side-panel-w .os-availability-days").append(a.message)):l?(e.parent(".os-availability-prev-w").remove(),jQuery(".latepoint-side-panel-w .os-availability-days").prepend(a.message),jQuery(".latepoint-side-panel-w .os-availability-days").scrollTop(30)):(jQuery(".latepoint-side-panel-w .side-sub-panel").length?jQuery(".latepoint-side-panel-w .side-sub-panel").replaceWith(a.message):jQuery(".latepoint-side-panel-w").append(a.message),jQuery(".latepoint-side-panel-w .os-availability-days").scrollTop(30),latepoint_init_quick_availability_form()):alert(a.message,"error")}})}function latepoint_init_quick_availability_form(){var e=jQuery(".quick-booking-form-w input#booking_start_date").val(),t,a,o=latepoint_hours_and_minutes_to_minutes(jQuery('.quick-booking-form-w input[name="booking[start_time][formatted_value]"]').val(),jQuery('.quick-booking-form-w input[name="booking[start_time][ampm]"]').val());jQuery(".quick-availability-per-day-w .os-availability-days").find('.agent-timeslot[data-formatted-date="'+e+'"][data-minutes="'+o+'"]').addClass("selected"),jQuery(".quick-availability-per-day-w").on("click",".load-more-quick-availability",(function(){return latepoint_load_quick_availability(jQuery(this),!1,jQuery(this).data("start-date"),!0),!1})),jQuery(".quick-availability-per-day-w").on("click",".load-prev-quick-availability",(function(){return latepoint_load_quick_availability(jQuery(this),!1,jQuery(this).data("start-date"),!1,!0),!1})),jQuery('.quick-availability-per-day-w select[name="booking[agent_id]"]').on("change",(function(){latepoint_load_quick_availability(jQuery(".trigger-quick-availability"),jQuery(this).val())})),jQuery(".os-time-group label").on("click",(function(){jQuery(this).closest(".os-time-group").find(".os-form-control").focus()})),jQuery(".quick-availability-per-day-w").on("click",".fill-booking-time",(function(){jQuery(".os-availability-days .agent-timeslot.selected").removeClass("selected"),jQuery(this).addClass("selected");var e=jQuery(this).data("date"),t=jQuery(this).data("formatted-date"),a=jQuery(this).data("minutes"),o=jQuery(".os-services-select-field-w .service-option-selected").data("duration"),n=jQuery(".quick-booking-form-w");n.find('input[name="booking[start_date]"]').val(t);var s=a,i=latepoint_minutes_to_hours_and_minutes(s);s>=720?n.find(".quick-start-time-w .time-pm").click():n.find(".quick-start-time-w .time-am").click(),n.find('input[name="booking[start_time][formatted_value]"]').val(i),latepoint_set_booking_end_time(),n.find(".ws-period").addClass("animate-filled-in"),setTimeout((function(){n.find(".ws-period").removeClass("animate-filled-in")}),500)}))}function latepoint_init_work_period_form(){latepoint_mask_timefield(jQuery(".os-time-input-w .os-mask-time"))}function latepoint_close_side_panel(){jQuery(".latepoint-side-panel-w").remove()}function latepoint_reload_after_booking_save(){jQuery(".bookings-daily-agents .os-day-current.selected").first().click(),jQuery(".calendar-week-agent-w").length&&latepoint_load_calendar(jQuery(".calendar-start-date").val(),jQuery(".calendar-agent-selector").val(),jQuery(".calendar-location-selector").val()),jQuery(".os-widget").each((function(){latepoint_reload_widget(jQuery(this))})),jQuery("table.os-reload-on-booking-update").length&&latepoint_filter_table(jQuery("table.os-reload-on-booking-update"),jQuery("table.os-reload-on-booking-update")),latepoint_close_side_panel()}function latepoint_init_quick_booking_form(){latepoint_lightbox_close(),jQuery(".os-late-select").lateSelect(),jQuery(".save-transaction-btn").on("click",(function(){var e=jQuery(this),t=e.closest(".quick-add-transaction-box-w"),a={amount:t.find('input[name="transaction[amount]"]').val(),date:t.find('input[name="transaction[created_at]"]').val(),token:t.find('input[name="transaction[token]"]').val(),processor:t.find('select[name="transaction[processor]"]').val(),payment_method:t.find('select[name="transaction[payment_method]"]').val(),booking_id:jQuery(".quick-booking-form-w").find('input[name="booking[id]"]').val(),customer_id:jQuery(".quick-booking-form-w").find('input[name="booking[customer_id]"]').val()},o={action:"latepoint_route_call",route_name:t.data("route"),params:a,return_format:"json"};return e.addClass("os-loading"),jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:o,success:function a(o){e.removeClass("os-loading"),"success"===o.status?(jQuery(".quick-transactions-list-w").append(o.message),t.hide(),jQuery(".trigger-add-transaction-btn").show()):alert(o.message)}}),!1})),jQuery(".trigger-price-recalculate").on("click",(function(){return latepoint_recalculate_booking_price(jQuery(this)),!1})),jQuery(".trigger-add-transaction-btn").on("click",(function(){return jQuery(".quick-add-transaction-box-w").show().find('input[name="transaction[amount]"]').focus(),jQuery(".trigger-add-transaction-btn").hide(),!1})),jQuery(".trigger-cancel-add-transaction-btn").on("click",(function(){return jQuery(".quick-add-transaction-box-w").hide(),jQuery(".trigger-add-transaction-btn").show(),!1})),jQuery(".trigger-quick-availability").on("click",(function(){return latepoint_load_quick_availability(jQuery(".open-quick-availability-btn")),!1})),jQuery('.quick-booking-form-w input[name="booking[start_time][formatted_value]"]').on("change",(function(){latepoint_set_booking_end_time()})),latepoint_mask_timefield(jQuery(".latepoint-side-panel-w .os-mask-time")),latepoint_mask_phone(jQuery(".latepoint-side-panel-w .os-mask-phone")),jQuery(".customers-selector-search-input").keyup((function(){var e=jQuery(this),t=e.val().toLowerCase();t!=e.data("current-query")&&(e.closest(".customers-selector-search-w").addClass("os-loading"),e.data("searching-query",t),setTimeout((function(){if(t==jQuery(".customers-selector-search-input").data("searching-query")){var a={action:"latepoint_route_call",route_name:e.data("route"),params:{query:t},return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:a,success:function a(o){e.data("searching-query")==t&&(e.closest(".customers-selector-search-w").removeClass("os-loading"),"success"===o.status?(e.data("current-query",t),jQuery(".quick-booking-form-w .customers-options-list").html(o.message)):console.log(o.message))}})}}),300,t,e))})),jQuery(".latepoint-side-panel-w").on("change",".agent-selector",(function(){latepoint_apply_agent_selector_change()})),jQuery(".latepoint-side-panel-w").on("change",'select[name="booking[location_id]"]',(function(){latepoint_apply_agent_selector_change()})),jQuery(".latepoint-side-panel-w").on("change",'select[name="booking[total_attendies]"]',(function(){latepoint_apply_agent_selector_change()})),jQuery(".latepoint-side-panel-w").on("change",".os-affects-duration",(function(){latepoint_set_booking_end_time(),jQuery(".quick-availability-per-day-w").length&&latepoint_load_quick_availability(jQuery(".trigger-quick-availability"))})),jQuery(".latepoint-side-panel-w").on("click",".services-options-list .service-option",(function(){var e=jQuery(this).html(),t;return jQuery(this).closest(".os-services-select-field-w").find(".service-option-selected").html(e).data("id",jQuery(this).data("id")).data("duration",jQuery(this).data("duration")).data("buffer-before",jQuery(this).data("buffer-before")).data("buffer-after",jQuery(this).data("buffer-after")).data("capacity-min",jQuery(this).data("capacity-min")).data("capacity-max",jQuery(this).data("capacity-max")).data("extra-durations",jQuery(this).data("extra-durations")),jQuery(this).closest(".os-services-select-field-w").find(".service-option.selected").removeClass("selected"),jQuery(this).addClass("selected").closest(".os-services-select-field-w").removeClass("active"),latepoint_apply_service_selector_change(),!1}))}function latepoint_reload_widget(e){var t=e.find("select, input").serialize(),a={action:"latepoint_route_call",route_name:e.data("os-reload-action"),params:t,return_format:"json"};e.addClass("os-loading"),jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:a,success:function t(a){if(e.removeClass("os-loading"),"success"===a.status){var o=jQuery(a.message);o.removeClass("os-widget-animated"),e=e.replaceWith(o),latepoint_init_daterangepicker(o.find(".os-date-range-picker")),e.hasClass("os-widget-top-agents")&&latepoint_init_circles_charts(),e.hasClass("os-widget-daily-bookings")&&(latepoint_init_daily_bookings_chart(),latepoint_init_donut_charts())}else alert(a.message)}})}function latepoint_load_calendar(e,t,a){var o=arguments.length>2&&void 0!==a&&a,n=jQuery(".calendar-week-agent-w").data("calendar-action");jQuery(".calendar-week-agent-w").addClass("os-loading");var s={target_date:e,agent_id:t};o&&(s.location_id=o);var i={action:"latepoint_route_call",route_name:n,params:jQuery.param(s),return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:i,success:function e(t){"success"===t.status?(jQuery(".calendar-week-agent-w").html(t.message).removeClass("os-loading"),jQuery(".calendar-load-target-date.os-loading").removeClass("os-loading")):alert(t.message)}})}function latepoint_recalculate_booking_price(e){e.addClass("os-loading");var t=e.closest("form.booking-quick-edit-form"),a,o={action:"latepoint_route_call",route_name:"bookings__calculate_full_price",params:t.serialize(),return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:o,success:function a(o){e.removeClass("os-loading"),"success"===o.status?t.find('input[name="booking[price]"]').val(o.message):alert(o.message)}})}function latepoint_complex_selector_select(e){e.each((function(){jQuery(this).addClass("active"),jQuery(this).find(".connection-children-list li").addClass("active"),jQuery(this).find(".connection-child-is-connected").val("yes"),latepoint_count_active_connections(jQuery(this))}))}function latepoint_complex_selector_deselect(e){e.each((function(){jQuery(this).removeClass("active"),jQuery(this).removeClass("show-customize-box"),jQuery(this).find(".connection-children-list li.active").removeClass("active"),jQuery(this).find(".connection-child-is-connected").val("no"),latepoint_count_active_connections(jQuery(this))}))}function latepoint_apply_agent_selector_change(){jQuery(".quick-availability-per-day-w").length&&latepoint_load_quick_availability(jQuery(".trigger-quick-availability"))}function latepoint_set_booking_end_time(){var e=jQuery("form.booking-quick-edit-form"),t=0,a=e.find(".os-service-durations select").val();t+=a,e.find('select[name="temp_service_extras_ids"] option:selected').length&&e.find('select[name="temp_service_extras_ids"] option:selected').each((function(){var e=Number(jQuery(this).data("duration")),a=jQuery(this).closest(".lateselect-w").find('.ls-item[data-value="'+jQuery(this).val()+'"]').find(".os-late-quantity-selector-input");a.length&&(e=Number(e)*Number(a.val())),t=Number(t)+Number(e)}));var o=e.find('input[name="booking[start_time][formatted_value]"]').val();if(o){var n,s=latepoint_hours_and_minutes_to_minutes(o,e.find('input[name="booking[start_time][ampm]"]').val()),i=parseInt(s)+parseInt(t),r=i>=720?"pm":"am",l=latepoint_minutes_to_hours_and_minutes(i);e.find('input[name="booking[end_time][formatted_value]"]').val(l),e.find(".quick-end-time-w .time-ampm-select.time-"+r).click(),e.find('input[name="booking[end_time][formatted_value]"]').closest(".os-form-group").addClass("has-value")}}function latepoint_apply_service_selector_change(){var e=jQuery(".os-services-select-field-w .service-option-selected"),t=e.data("id"),a=e.data("buffer-before"),o=e.data("buffer-after"),n=e.data("duration"),s=e.data("capacity-min"),i=e.data("capacity-max"),r=e.data("extra-durations"),l=jQuery("form.booking-quick-edit-form");l.find('input[name="booking[buffer_before]"]').val(a).closest(".os-form-group").addClass("has-value"),l.find('input[name="booking[buffer_after]"]').val(o).closest(".os-form-group").addClass("has-value"),l.find('input[name="booking[service_id]"]').val(t).closest(".os-form-group").addClass("has-value");var c='<option value="'+n+'">'+n+" "+latepoint_helper.string_minutes+"</option>";r.length?(jQuery.each(r,(function(e,t){c+='<option value="'+t.duration+'">'+t.duration+" "+latepoint_helper.string_minutes+"</option>"})),l.find(".os-service-durations").show()):l.find(".os-service-durations").hide(),jQuery(".booking-total-attendies-selector-w .capacity-info strong").text(i);for(var u="",d=1;d<=i;d++)u+='<option value="'+d+'">'+d+"</option>";var p=Math.min(jQuery(".booking-total-attendies-selector-w select").val(),i);jQuery(".booking-total-attendies-selector-w select").html(u).val(p),i>1?jQuery(".booking-total-attendies-selector-w").show():jQuery(".booking-total-attendies-selector-w").hide(),l.find(".os-service-durations select").html(c),latepoint_set_booking_end_time(),jQuery(".quick-availability-per-day-w").length&&latepoint_load_quick_availability(jQuery(".trigger-quick-availability"))}function latepoint_init_daily_bookings_chart(){if("undefined"!=typeof Chart&&jQuery("#chartDailyBookings").length){var e,t=jQuery("#chartDailyBookings"),a=t.data("chart-labels").toString().split(","),o=t.data("chart-values").toString().split(",").map(Number),n=Math.max.apply(Math,o)+5,s=latepoint_helper.font_family;Chart.defaults.global.defaultFontFamily=s,Chart.defaults.global.defaultFontSize=18,Chart.defaults.global.defaultFontStyle="400",Chart.defaults.global.tooltips.titleFontFamily=s,Chart.defaults.global.tooltips.titleFontSize=14,Chart.defaults.global.tooltips.titleFontColor="rgba(255,255,255,0.6)",Chart.defaults.global.tooltips.backgroundColor="#000",Chart.defaults.global.tooltips.titleFontStyle="400",Chart.defaults.global.tooltips.titleMarginBottom=1,Chart.defaults.global.tooltips.bodyFontFamily=s,Chart.defaults.global.tooltips.bodyFontSize=24,Chart.defaults.global.tooltips.bodyFontStyle="500",Chart.defaults.global.tooltips.displayColors=!1,Chart.defaults.global.tooltips.xPadding=10,Chart.defaults.global.tooltips.yPadding=8,Chart.defaults.global.tooltips.yAlign="bottom",Chart.defaults.global.tooltips.xAlign="center",Chart.defaults.global.tooltips.cornerRadius=0,Chart.defaults.global.tooltips.intersect=!1;var i=t[0].getContext("2d"),r=i.createLinearGradient(500,0,100,0);r.addColorStop(0,"#587ef8"),r.addColorStop(1,"#1e4fef");var l=i.createLinearGradient(0,200,0,50);l.addColorStop(0,"rgba(163, 165, 243, 0)"),l.addColorStop(1,"rgba(163, 165, 243, 0.1)");var c={labels:a,datasets:[(e={label:"",fill:!0,lineTension:.3,backgroundColor:l,borderColor:"#0937ff",borderWidth:2,borderCapStyle:"butt",borderDash:[],borderDashOffset:0,borderJoinStyle:"miter",pointBorderColor:"#fbfcff"},_defineProperty(e,"borderColor",r),_defineProperty(e,"pointBackgroundColor","#0937ff"),_defineProperty(e,"pointRadius",0),_defineProperty(e,"pointBorderWidth",2),_defineProperty(e,"pointHoverRadius",5),_defineProperty(e,"pointHoverBorderWidth",2),_defineProperty(e,"pointHoverBackgroundColor","#0937ff"),_defineProperty(e,"pointHoverBorderColor","#fff"),_defineProperty(e,"pointHitRadius",15),_defineProperty(e,"data",o),_defineProperty(e,"spanGaps",!1),e)]},u=new Chart(t,{type:"line",data:c,options:{layout:{padding:{top:20,left:20,right:20,bottom:20}},responsive:!0,maintainAspectRatio:!1,legend:{display:!1},scales:{xAxes:[{display:!1,ticks:{fontSize:"10",fontColor:"#8894AF"},gridLines:{color:"rgba(0,0,0,0)",zeroLineColor:"rgba(0,0,0,0)"}}],yAxes:[{gridLines:{color:"rgba(0,0,0,0.0)",zeroLineColor:"rgba(0,0,0,0.0)"},display:!1,ticks:{beginAtZero:!1,suggestedMax:n,fontSize:"10",fontColor:"#8894AF"}}]}}})}}function latepoint_reload_daily_agents_page(){jQuery(".bookings-daily-agents").addClass("os-loading")
-;var e=jQuery(".agent-select").val(),t=jQuery(".service-select").val(),a=jQuery(".daily-agent-monthly-calendar-w .os-day.selected").data("date"),o=jQuery(".bookings-daily-agents").data("route"),n={target_date:a};e&&(n.selected_agent_id=e),t&&(n.selected_service_id=t),jQuery(".cc-location-selector select").length&&jQuery(".cc-location-selector select").val()&&(n.location_id=jQuery(".cc-location-selector select").val());var s={action:"latepoint_route_call",route_name:o,params:jQuery.param(n),layout:"none",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:s,success:function e(t){"success"===t.status&&(jQuery(".bookings-daily-agents").replaceWith(t.message),latepoint_init_donut_charts(),latepoint_init_daily_agent_calendar(),latepoint_init_monthly_calendar_navigation()),jQuery(".bookings-daily-agents").removeClass("os-loading")}})}function latepoint_init_daily_agent_calendar(){jQuery("select.agent-select, select.service-select").on("change",(function(){latepoint_reload_daily_agents_page()})),jQuery(".daily-agent-monthly-calendar-w").on("click",".os-day",(function(){var e=jQuery(this).closest(".daily-agent-monthly-calendar-w");jQuery(".daily-agent-monthly-calendar-w .os-day.selected").removeClass("selected"),jQuery(this).addClass("selected"),e.hasClass("horizontal-calendar")&&e.find(".current-month").text(jQuery(this).data("nice-date")),latepoint_reload_daily_agents_page()}))}function latepoint_init_donut_charts(){if("undefined"!=typeof Chart&&jQuery(".os-donut-chart").length){var e=latepoint_helper.font_family;Chart.defaults.global.defaultFontFamily=e,Chart.defaults.global.defaultFontSize=18,Chart.defaults.global.defaultFontStyle="400",Chart.defaults.global.tooltips.titleFontFamily=e,Chart.defaults.global.tooltips.titleFontSize=14,Chart.defaults.global.tooltips.titleFontColor="rgba(255,255,255,0.6)",Chart.defaults.global.tooltips.backgroundColor="#000",Chart.defaults.global.tooltips.titleFontStyle="400",Chart.defaults.global.tooltips.titleMarginBottom=1,Chart.defaults.global.tooltips.bodyFontFamily=e,Chart.defaults.global.tooltips.bodyFontSize=24,Chart.defaults.global.tooltips.bodyFontStyle="500",Chart.defaults.global.tooltips.displayColors=!1,Chart.defaults.global.tooltips.xPadding=10,Chart.defaults.global.tooltips.yPadding=8,Chart.defaults.global.tooltips.yAlign="bottom",Chart.defaults.global.tooltips.xAlign="center",Chart.defaults.global.tooltips.cornerRadius=0,Chart.defaults.global.tooltips.intersect=!1,jQuery(".os-donut-chart").each((function(e){var t=jQuery(this).data("chart-colors").toString().split(","),a=jQuery(this).data("chart-labels").toString().split(","),o=jQuery(this).data("chart-values").toString().split(",").map(Number),n=jQuery(this),s=new Chart(n,{type:"doughnut",data:{labels:a,datasets:[{data:o,backgroundColor:t,hoverBackgroundColor:t,borderWidth:0,hoverBorderColor:"transparent"}]},options:{layout:{padding:{top:40}},tooltips:{callbacks:{title:function e(t,a){return a.labels[t[0].index]},label:function e(t,a){return a.datasets[0].data[t.index]}}},legend:{display:!1},animation:{animateScale:!0},cutoutPercentage:80,responsive:!1,maintainAspectRatio:!0}})}))}}function latepoint_init_circles_charts(){jQuery(".circle-chart").each((function(e){var t=jQuery(this).prop("id"),a=jQuery(this).data("max-value"),o=jQuery(this).data("chart-value"),n=jQuery(this).data("chart-color"),s=jQuery(this).data("chart-color-fade"),i=Circles.create({id:t,radius:25,value:o,maxValue:a,width:2,text:function e(t){return Math.round(t)},colors:[n,s],duration:200,wrpClass:"circles-wrp",textClass:"circles-text",valueStrokeClass:"circles-valueStroke",maxValueStrokeClass:"circles-maxValueStroke",styleWrapper:!0,styleText:!0})}))}function latepoint_random_text(e){for(var t="",a="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",o=a.length,n=0;n<e;n++)t+=a.charAt(Math.floor(Math.random()*o));return t}function latepoint_get_order_for_service_categories(){}function latepoint_init_daterangepicker(e){e.each((function(){var e=jQuery(this).find('input[name="date_from"], .os-datepicker-date-from').val(),t=jQuery(this).find('input[name="date_to"], .os-datepicker-date-to').val(),a={};jQuery(this).data("can-be-cleared")&&(a={cancelLabel:jQuery(this).data("clear-btn-label")}),moment.locale(latepoint_helper.wp_locale),jQuery(this).daterangepicker({opens:"left",singleDatePicker:"yes"==jQuery(this).data("single-date"),startDate:e?moment(e):moment(),endDate:t?moment(t):moment(),locale:a})})),e.on("cancel.daterangepicker",(function(e,t){t.element.data("can-be-cleared")&&(t.element.find('input[name="date_from"], .os-datepicker-date-from').val(""),t.element.find('input[name="date_to"], .os-datepicker-date-to').val(""),t.element.find("span.range-picker-value").text(t.element.data("no-value-label")),t.element.hasClass("os-table-filter-datepicker")&&latepoint_filter_table(t.element.closest("table"),t.element.closest(".os-form-group")))})),e.on("apply.daterangepicker",(function(e,t){"yes"==t.element.data("single-date")?t.element.find(".range-picker-value").text(t.startDate.format("ll")):t.element.find(".range-picker-value").text(t.startDate.format("ll")+" - "+t.endDate.format("ll")),t.element.find('input[name="date_from"], .os-datepicker-date-from').attr("value",t.startDate.format("YYYY-MM-DD")),t.element.find('input[name="date_to"], .os-datepicker-date-to').attr("value",t.endDate.format("YYYY-MM-DD")),t.element.closest(".os-widget").length&&latepoint_reload_widget(t.element.closest(".os-widget")),t.element.hasClass("os-table-filter-datepicker")&&latepoint_filter_table(t.element.closest("table"),t.element.closest(".os-form-group"))}))}function latepoint_recalculate_services_count_in_category(){jQuery(".os-category-services-count").each((function(){var e=jQuery(this).closest(".os-category-parent-w").find(".service-in-category-w").length;jQuery(this).find("span").text(e)}))}function latepoint_remove_agent_box(e){var t;e.closest(".agent-box-w").fadeOut(300,(function(){jQuery(this).remove()}))}function latepoint_remove_service_box(e){var t;e.closest(".service-box-w").fadeOut(300,(function(){jQuery(this).remove()}))}function latepoint_init_monthly_view(){jQuery(".calendar-month-agents-w").length&&(jQuery(".ma-days-with-bookings-w").length,jQuery("#monthly_calendar_month_select, #monthly_calendar_year_select, #monthly_calendar_location_select").on("change",(function(){var e=jQuery(".calendar-month-agents-w"),t=e.data("route");e.addClass("os-loading");var a={month:jQuery("#monthly_calendar_month_select").val(),year:jQuery("#monthly_calendar_year_select").val()};jQuery("#monthly_calendar_location_select").length&&jQuery("#monthly_calendar_location_select").val()&&(a.location_id=jQuery("#monthly_calendar_location_select").val());var o={action:"latepoint_route_call",route_name:t,params:a,layout:"none",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:o,success:function t(a){e.removeClass("os-loading"),"success"===a.status&&e.html(a.message)}})})),jQuery(".custom-day-calendar").on("click",".os-day",(function(){var e=jQuery(this);return jQuery(".custom-day-calendar .os-day.selected").removeClass("selected"),e.addClass("selected"),jQuery(".latepoint-lightbox-footer").slideDown(200),"yes"==jQuery(".custom-day-calendar").data("show-schedule")&&jQuery(".latepoint-lightbox-w").removeClass("hide-schedule"),jQuery(".custom_day_schedule_date").val(e.data("date")),!1})))}function latepoint_init_copy_on_click_elements(){jQuery(".os-click-to-copy").mouseenter((function(){var e=jQuery(this).position(),t=jQuery(this).outerWidth(),a=e.left+t+5,o=e.top+3;jQuery(this).after('<div class="os-click-to-copy-prompt" style="top: '+o+"px; left: "+a+'px;">'+latepoint_helper.click_to_copy_prompt+"</div>")})).mouseleave((function(){jQuery(this).nextAll(".os-click-to-copy-prompt").remove()})),jQuery(".os-click-to-copy").on("click",(function(){var e=jQuery(this);e.nextAll(".os-click-to-copy-prompt").hide();var t=jQuery("<input>");jQuery("body").append(t),t.val(e.text()).select(),document.execCommand("Copy"),t.remove();var a=e.position(),o=e.outerWidth(),n=a.left+o+5,s=a.top+3,i;jQuery('<div class="os-click-to-copy-done" style="top: '+s+"px; left: "+n+'px;">'+latepoint_helper.click_to_copy_done+"</div>").insertAfter(e).animate({opacity:0,left:n+20},600),setTimeout((function(){e.nextAll(".os-click-to-copy-done").remove(),e.nextAll(".os-click-to-copy-prompt").show()}),800)}))}function latepoint_sync_update_progress(e){var t=jQuery(".os-sync-stat-tiles .os-tile-value span").text();t=e?parseInt(t)-1:parseInt(t)+1,jQuery(".os-sync-stat-tiles .os-tile-value span").text(t),jQuery(".os-tile-hor-progress-chart").data("value",t);var a=jQuery(".os-tile-hor-progress-chart").data("total"),o=jQuery(".os-tile-hor-progress-chart").data("value");if(a>0){var n=Math.round(o/a*100);jQuery(".os-tile-hor-progress-chart-value").css("width",n+"%")}}function latepoint_remove_first_synced_booking_with_google(){var e=jQuery(".os-booking-tiny-box.is-synced:first .os-booking-sync-google-trigger");if(!e.length||jQuery(".remove-all-bookings-from-google-trigger").hasClass("stop-removing"))return jQuery(".remove-all-bookings-from-google-trigger").removeClass("os-removing").removeClass("stop-removing").find("span").text(jQuery(".remove-all-bookings-from-google-trigger").data("label-remove")),!1;var t,a,o={action:"latepoint_route_call",route_name:e.data("os-remove-action"),params:e.data("os-params"),layout:"none",return_format:"json"};e.addClass("os-loading"),jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:o,success:function t(a){"success"===a.status&&(e.closest(".os-booking-tiny-box").removeClass("is-synced").addClass("not-synced"),e.removeClass("os-loading"),latepoint_sync_update_progress(!0),latepoint_remove_first_synced_booking_with_google())}})}function latepoint_sync_next_booking_with_google(){var e=jQuery(".os-booking-tiny-box.not-synced:first .os-booking-sync-google-trigger");if(!e.length||jQuery(".sync-all-bookings-to-google-trigger").hasClass("stop-syncing"))return jQuery(".sync-all-bookings-to-google-trigger").removeClass("os-syncing").removeClass("stop-syncing").find("span").text(jQuery(".sync-all-bookings-to-google-trigger").data("label-sync")),!1;var t,a,o={action:"latepoint_route_call",route_name:e.data("os-action"),params:e.data("os-params"),layout:"none",return_format:"json"};e.addClass("os-loading"),jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:o,success:function t(a){"success"===a.status&&(e.closest(".os-booking-tiny-box").removeClass("not-synced").addClass("is-synced"),e.removeClass("os-loading"),latepoint_sync_update_progress(!1),latepoint_sync_next_booking_with_google())}})}function latepoint_init_reminder_form(){"undefined"!=typeof tinymce&&jQuery(".os-reminder-form:last-child textarea").length&&tinymce.execCommand("mceAddEditor",!0,jQuery(".os-reminder-form:last-child textarea").attr("id"))}function latepoint_filter_table(e,t,a){var o=!(arguments.length>2&&void 0!==a)||a;t.addClass("os-loading");var n=e.find(".os-table-filter").serialize(),s=e.closest(".table-with-pagination-w");o?s.find("select.pagination-page-select").val(1):n+="&page_number="+s.find("select.pagination-page-select").val();var i=e.data("route"),r={action:"latepoint_route_call",route_name:i,params:n,layout:"none",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:r,success:function a(n){if(t.removeClass("os-loading"),"success"===n.status){if(e.find("tbody").html(n.message),n.total_pages&&o){for(var i="",r=1;r<=n.total_pages;r++)i+="<option>"+r+"</option>";s.find("select.pagination-page-select").html(i)}s.find(".os-pagination-from").text(n.showing_from),s.find(".os-pagination-to").text(n.showing_to),s.find(".os-pagination-total").text(n.total_records)}}})}!function(e){e.fn.lateSelect=function(){function t(e){var t="";return e.data("quantity")&&(t='<span class="os-late-quantity-selector-w"><span class="os-late-quantity-selector minus" data-sign="minus"></span><input class="os-late-quantity-selector-input" type="text" data-max-quantity="'+e.data("max-quantity")+'" value="'+e.data("quantity")+'"/><span class="os-late-quantity-selector plus" data-sign="plus"></span></span>'),'<div class="ls-item" data-value="'+e.val()+'"><span class="latepoint-icon latepoint-icon-x ls-item-remover"></span><span>'+e.text()+"</span>"+t+"</div>"}this.each((function(){var a="",o="",n="",s="";e(this).hide(),e(this).find("option").each((function(){e(this).is(":selected")&&(n+=t(e(this))),s=e(this).is(":selected")?"selected":"",o+='<div class="ls-item '+s+'" data-value="'+e(this).val()+'">'+e(this).text()+"</div>"})),a=e('<div class="lateselect-w"></div>'),e(this).wrap(a);var i=e(this).closest(".lateselect-w");i.append('<div class="ls-selected-items-w">'+n+"</div>"),i.append('<div class="ls-all-items-w">'+o+"</div>"),i.on("click",".ls-all-items-w .ls-item:not(.selected)",(function(){var a=e(this).data("value");return i.find(".ls-selected-items-w").append(t(i.find('select option[value="'+a+'"]'))),e(this).addClass("selected"),i.removeClass("ls-selecting"),i.find('select option[value="'+a+'"]').attr("selected",!0),i.find("select").trigger("change"),!1})),i.on("click",".ls-selected-items-w .ls-item-remover",(function(){var t=e(this).closest(".ls-item").data("value");return e(this).closest(".ls-item").remove(),i.find('.ls-all-items-w .ls-item.selected[data-value="'+t+'"]').removeClass("selected"),i.find('select option[value="'+t+'"]').removeAttr("selected"),i.find("select").trigger("change"),!1})),i.on("click",".ls-selected-items-w",(function(){return i.toggleClass("ls-selecting"),!1})),i.on("click",".os-late-quantity-selector",(function(){var t=e(this).closest(".ls-item").find("input.os-late-quantity-selector-input"),a=parseInt(t.val()),o="minus"==e(this).data("sign")?a-1:a+1,n=t.data("max-quantity");o<=0&&(o=1),n&&o>n&&(o=n);var s=e(this).closest(".ls-item").data("value");return i.find('select option[value="'+s+'"]').data("quantity",o),t.val(o),i.find("select").trigger("change"),!1})),e(this).on("change",(function(){if(e(this).data("hidden-connection")){var t="";e(this).find("option:selected").length?e(this).find("option:selected").each((function(){var a=e(this).data("quantity")?e(this).data("quantity"):1;t+=e(this).val()+":"+a+","})):t="",""!=t&&(t=t.slice(0,-1)),e(e(this).data("hidden-connection")).val(t)}}))}))}}(jQuery),jQuery(document).ready((function(e){e(".latepoint").on("click","button[data-os-action], a[data-os-action], div[data-os-action], span[data-os-action]",(function(t){var a=e(this);if(a.data("os-prompt")&&!confirm(a.data("os-prompt")))return!1;var o=e(this).data("os-params");e(this).data("os-source-of-params")&&(o=e(e(this).data("os-source-of-params")).find("select, input, textarea").serialize());var n=a.data("os-return-format")?a.data("os-return-format"):"json",s={action:"latepoint_route_call",route_name:e(this).data("os-action"),params:o,return_format:n};return a.addClass("os-loading"),e.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:s,success:function t(o){if("success"===o.status){if("lightbox"==a.data("os-output-target"))latepoint_show_data_in_lightbox(o.message,a.data("os-lightbox-classes"));else if("side-panel"==a.data("os-output-target"))e(".latepoint-side-panel-w").remove(),e("body").append('<div class="latepoint-side-panel-w"><div class="latepoint-side-panel-i">'+o.message+'</div><div class="latepoint-side-panel-shadow"></div></div>');else{if("reload"==a.data("os-success-action"))return latepoint_add_notification(o.message),void location.reload();if("redirect"==a.data("os-success-action"))return void(a.data("os-redirect-to")?(latepoint_add_notification(o.message),window.location.replace(a.data("os-redirect-to"))):window.location.replace(o.message));a.data("os-output-target")&&e(a.data("os-output-target")).length?"append"==a.data("os-output-target-do")?e(a.data("os-output-target")).append(o.message):e(a.data("os-output-target")).html(o.message):"before"==a.data("os-before-after")?a.before(o.message):"before"==a.data("os-before-after")?a.after(o.message):latepoint_add_notification(o.message)}if(a.data("os-after-call")){var n=a.data("os-after-call");a.data("os-pass-this")?window[n](a):a.data("os-pass-response")?window[n](o):window[n]()}a.removeClass("os-loading")}else a.removeClass("os-loading"),a.data("os-output-target")&&e(a.data("os-output-target")).length?e(a.data("os-output-target")).prepend(latepoint_generate_form_message_html(o.message,"error")):alert(o.message)}}),!1})),e(".latepoint").on("click",'form[data-os-action] button[type="submit"]',(function(t){e(this).addClass("os-loading")})),e(".latepoint").on("submit","form[data-os-action]",(function(t){t.preventDefault();var a=e(this),o=a.serialize(),n={action:"latepoint_route_call",route_name:e(this).data("os-action"),params:o,return_format:"json"};return a.find('button[type="submit"]').addClass("os-loading"),e.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:n,success:function t(o){if(a.find('button[type="submit"].os-loading').removeClass("os-loading"),latepoint_clear_form_messages(a),"success"===o.status){if("reload"==a.data("os-success-action"))return latepoint_add_notification(o.message),void location.reload();if("redirect"==a.data("os-success-action"))return void(a.data("os-redirect-to")?(latepoint_add_notification(o.message),window.location.replace(a.data("os-redirect-to"))):window.location.replace(o.message));if(a.data("os-output-target")&&e(a.data("os-output-target")).length?e(a.data("os-output-target")).html(o.message):"redirect"==o.message?window.location.replace(o.url):(latepoint_add_notification(o.message),a.prepend(latepoint_generate_form_message_html(o.message,"success"))),a.data("os-record-id-holder")&&o.record_id&&a.find('[name="'+a.data("os-record-id-holder")+'"]').val(o.record_id),a.data("os-after-call")){var n=a.data("os-after-call");a.data("os-pass-response")?window[n](o):window[n]()}e("button.os-loading").removeClass("os-loading")}else e("button.os-loading").removeClass("os-loading"),a.data("os-show-errors-as-notification")?latepoint_add_notification(o.message,"error"):(a.prepend(latepoint_generate_form_message_html(o.message,"error")),e([document.documentElement,document.body]).animate({scrollTop:a.find(".os-form-message-w").offset().top-30},200));o.form_values_to_update&&e.each(o.form_values_to_update,(function(e,t){a.find('[name="'+e+'"]').val(t)}))}}),!1}))})),jQuery(document).ready((function(e){latepoint_check_for_updates(),jQuery(".addons-info-holder").on("click",".os-addon-action-btn",(function(){var e=jQuery(this);e.addClass("os-loading");var t={action:"latepoint_route_call",route_name:e.data("route-name"),params:{addon_name:e.data("addon-name"),addon_path:e.data("addon-path")},layout:"none",return_format:"json"};return jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:t,success:function t(a){e.removeClass("os-loading"),"success"===a.status?(latepoint_add_notification(a.message),latepoint_load_addons_info()):"404"==a.code?latepoint_show_data_in_lightbox(a.message):alert(a.message)}}),!1}))}));var OsGoogleCalendar=function(){function e(){_classCallCheck(this,e)}return _createClass(e,[{key:"init",value:function e(){var t=this;gapi.load("client:auth2",(function(){gapi.client.init({clientId:latepoint_helper.google_calendar_client_id,discoveryDocs:["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],scope:"https://www.googleapis.com/auth/calendar"}).then((function(){jQuery(".os-google-cal-authorize-btn").on("click",(function(){try{gapi.auth2.getAuthInstance().grantOfflineAccess().then(t.saveAuthCode)}catch(e){jQuery(".channel-watch-status").before(latepoint_generate_form_message_html(e.message,"error"))}return!1}))}),(function(e){jQuery(".channel-watch-status").before(latepoint_generate_form_message_html(e.details,"error"))}))}))}},{key:"saveAuthCode",value:function e(t){var a={code:t.code,agent_id:jQuery(".os-google-cal-authorize-btn").data("agent-id")},o={action:"latepoint_route_call",route_name:jQuery(".os-google-cal-authorize-btn").data("route"),params:a,layout:"none",return_format:"json"};jQuery.ajax({type:"POST",url:latepoint_helper.ajaxurl,dataType:"json",headers:{"X-Requested-With":"XMLHttpRequest"},data:o,success:function e(t){latepoint_add_notification(t.message),location.reload()}})}}]),e}();jQuery(document).ready((function(e){latepoint_helper.google_calendar_is_enabled&&jQuery(".os-google-cal-authorize-btn").length&&(latepoint_helper.google_calendar=new OsGoogleCalendar,latepoint_helper.google_calendar.init()),latepoint_init_daily_agent_calendar(),latepoint_init_circles_charts(),latepoint_init_donut_charts(),latepoint_init_daily_bookings_chart(),latepoint_init_element_togglers(),latepoint_init_daterangepicker(jQuery(".os-date-range-picker")),latepoint_init_monthly_calendar_navigation(),latepoint_init_monthly_view(),latepoint_init_custom_fields_form(),latepoint_init_reminders_form(),latepoint_init_coupons_form(),latepoint_init_copy_on_click_elements(),latepoint_init_side_menu(),latepoint_init_color_picker(),jQuery(".os-select-all-toggler").on("change",(function(){var t=jQuery(this).closest(".white-box").find(".os-complex-connections-selector .connection");return e(this).is(":checked")?latepoint_complex_selector_select(t):latepoint_complex_selector_deselect(t),!1})),jQuery(".os-main-location-selector").on("change",(function(){var e,t,a={action:"latepoint_route_call",route_name:jQuery(this).data("route"),params:"id="+jQuery(this).val(),layout:"none",return_format:"json"};jQuery(".latepoint-content-w").addClass("os-loading"),jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:a,success:function e(t){location.reload()}})})),e(".os-service-durations-w").on("click",".os-remove-duration",(function(){return e(this).closest(".duration-box").slideUp(300,(function(){e(this).remove()})),!1})),e(".menu-color-toggler").on("click",(function(){return e(".latepoint-side-menu-w").toggleClass("dark"),!1})),e(".latepoint-mobile-top-menu-trigger").on("click",(function(){return e(this).closest(".latepoint-all-wrapper").toggleClass("os-show-mobile-menu"),e(this).closest(".latepoint-all-wrapper").hasClass("os-show-mobile-menu")?e(".latepoint-side-menu-w ul.side-menu > li.has-children > a").on("click",(function(){return e(this).closest("li").toggleClass("menu-item-sub-open-mobile"),!1})):e(".latepoint-side-menu-w ul.side-menu > li.has-children > a").off("click"),!1})),e(".latepoint-mobile-top-search-trigger-cancel").on("click",(function(){return e(this).closest(".latepoint-all-wrapper").removeClass("os-show-mobile-search"),!1})),e(".latepoint-mobile-top-search-trigger").on("click",(function(){return e(this).closest(".latepoint-all-wrapper").toggleClass("os-show-mobile-search"),e(this).closest(".latepoint-all-wrapper").hasClass("os-show-mobile-search")&&e(".latepoint-top-search").focus(),!1})),e(".latepoint-content").on("click",".os-widget-header-actions-trigger",(function(){return e(this).closest(".os-widget-header").toggleClass("os-show-actions"),!1})),e(".sync-all-bookings-to-google-trigger").on("click",(function(){return e(this).hasClass("os-syncing")?(e(this).addClass("stop-syncing"),e(this).find("span").text(e(this).data("label-sync"))):(e(this).find("span").text(e(this).data("label-cancel-sync")),e(this).addClass("os-syncing"),latepoint_sync_next_booking_with_google()),!1})),e(".remove-all-bookings-from-google-trigger").on("click",(function(){if(e(this).hasClass("os-removing"))e(this).addClass("stop-removing"),e(this).find("span").text(e(this).data("label-remove"));else{if(!confirm(e(this).data("os-prompt")))return!1;e(this).find("span").text(e(this).data("label-cancel-remove")),e(this).addClass("os-removing"),latepoint_remove_first_synced_booking_with_google()}return!1})),jQuery(".download-csv-with-filters").on("click",(function(){var e=jQuery(this).closest("table").find(".os-table-filter").serialize();e+="&download=csv",jQuery(this).attr("href",this.href+"&"+e)})),e("select.pagination-page-select").on("change",(function(){latepoint_filter_table(jQuery(this).closest(".table-with-pagination-w").find("table"),jQuery(this).closest(".pagination-page-select-w"),!1)})),e("select.os-table-filter").on("change",(function(){latepoint_filter_table(jQuery(this).closest("table"),jQuery(this).closest(".os-form-group"))})),e("input.os-table-filter").on("keyup",(function(){latepoint_filter_table(jQuery(this).closest("table"),jQuery(this).closest(".os-form-group"))})),jQuery(".customize-connection-btn").on("click",(function(){return jQuery(this).closest(".connection").toggleClass("show-customize-box"),!1})),jQuery(".connection-children-list").on("click","li",(function(){return jQuery(this).hasClass("active")?(jQuery(this).removeClass("active"),jQuery(this).find("input.connection-child-is-connected").val("no")):(jQuery(this).addClass("active"),jQuery(this).find("input.connection-child-is-connected").val("yes")),latepoint_count_active_connections(jQuery(this).closest(".connection")),!1})),jQuery(".add-service-category-trigger").on("click",(function(){return e(".add-service-category-box").toggle(),e(".os-new-service-category-form-w").toggle(),!1})),jQuery(".latepoint-top-search").on("keyup",(function(e){var t=jQuery(this).closest(".latepoint-top-search-w");t.addClass("os-loading");var a=jQuery(this).val();if(27==e.keyCode)return t.removeClass("typing"),jQuery(".latepoint-top-search-results-w").html(""),jQuery(this).val(""),void t.removeClass("os-loading");if(""==a)return t.removeClass("typing"),jQuery(".latepoint-top-search-results-w").html(""),void t.removeClass("os-loading");var o,n,s={action:"latepoint_route_call",route_name:jQuery(this).data("route"),params:"query="+a,layout:"none",return_format:"json"};t.addClass("typing"),jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:s,success:function e(a){t.hasClass("typing")&&(t.removeClass("os-loading"),"success"===a.status&&jQuery(".latepoint-top-search-results-w").html(a.message))}})})),jQuery(".add-custom-step-btn").on("click",(function(t){var a=jQuery(".empty-step-w .step-w").clone(),o="step_"+latepoint_random_text(6),n=e(".steps-ordering-w .step-w").length;return a.find('input[name="step[name]"]').val(o),a.find('input[name="step[order_number]"]').val(n),a.addClass("editing").attr("data-step-name",o),jQuery(".steps-ordering-w").append(a),!1})),jQuery(".appointment-status-selector").on("click",(function(e){e.stopPropagation()})),jQuery(".latepoint-show-license-details").on("click",(function(e){return jQuery(this).closest(".active-license-info").find(".license-form-w").slideToggle(200),!1})),jQuery(".aba-button-w").on("click",(function(e){e.stopPropagation();var t=jQuery(this).hasClass("aba-approve")?latepoint_helper.approve_confirm:latepoint_helper.reject_confirm,a;confirm(t)&&jQuery(this).closest(".appointment-box-large").find(".appointment-status-selector select").val(jQuery(this).data("status")).change();return!1})),jQuery("select.agent_google_calendar_selector").on("change",(function(t){var a,o,n,s={action:"latepoint_route_call",route_name:e(this).data("route"),params:{calendar_id:e(this).val(),agent_id:e(this).data("agent-id")},layout:"none",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:s,success:function e(t){"success"===t.status&&latepoint_add_notification(t.message)}})})),jQuery(".appointment-status-selector select").on("change",(function(e){var t=jQuery(this).closest(".appointment-status-selector"),a=t.data("route"),o=t.data("booking-id"),n=jQuery(this).val();jQuery(this).closest(".appointment-box-large").attr("class","appointment-box-large status-"+n);var s,i={action:"latepoint_route_call",route_name:a,params:"id="+o+"&status="+n,layout:"none",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:i,success:function e(t){"success"===t.status&&latepoint_add_notification(t.message)}})})),jQuery("body").on("click",".open-template-variables-panel",(function(){return jQuery(".latepoint-template-variables").toggleClass("is-visible"),!1})),jQuery("body").on("click",".close-template-variables-panel",(function(){return jQuery(".latepoint-template-variables").removeClass("is-visible"),!1})),jQuery("body").on("click",".os-notifications .os-notification-close",(function(){return jQuery(this).closest(".item").remove(),!1})),jQuery("body").on("keyup",".os-form-group .os-form-control",(function(){jQuery(this).val()?jQuery(this).closest(".os-form-group").addClass("has-value"):jQuery(this).closest(".os-form-group").removeClass("has-value")})),jQuery(".os-wizard-setup-w, .latepoint-settings-w, .custom-schedule-wrapper").on("click",".ws-head",(function(){var e=jQuery(this).closest(".weekday-schedule-w");e.toggleClass("is-editing").removeClass("day-off"),e.find(".os-toggler").removeClass("off"),e.find("input.is-active").val(1)})),latepoint_mask_timefield(jQuery(".os-mask-time")),latepoint_mask_phone(jQuery(".os-mask-phone")),jQuery(".latepoint").on("click",".wizard-add-edit-item-trigger",(function(e){jQuery(this).addClass("os-loading");var t=jQuery(this).data("route"),a={};jQuery(this).data("id")&&(a.id=jQuery(this).data("id"));var o={action:"latepoint_route_call",route_name:t,params:a,layout:"none",return_format:"json"};jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:o,success:function e(t){jQuery(".wizard-add-edit-item-trigger.os-loading").removeClass("os-loading"),"success"===t.status&&(jQuery(".os-wizard-step-content-i").html(t.message),jQuery(".os-wizard-setup-w").addClass("is-sub-editing"),jQuery(".os-wizard-footer").hide())}})})),jQuery(".latepoint").on("click",".os-wizard-next-btn",(function(){var e=jQuery(this);e.addClass("os-loading");var t,a="current_step="+jQuery("#wizard_current_step").val();jQuery(".os-wizard-setup-w form.weekday-schedules-w").length&&(a+="&"+jQuery(".os-wizard-setup-w form.weekday-schedules-w .weekday-schedule-w:not(.day-off) input").serialize());var o={action:"latepoint_route_call",route_name:jQuery(this).data("route-name"),params:a,layout:"none",return_format:"json"};return jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:o,success:function t(a){e.removeClass("os-loading"),"success"===a.status&&(jQuery("#wizard_current_step").val(a.step_name),jQuery(".os-wizard-setup-w").attr("class","os-wizard-setup-w step-"+a.step_name),jQuery(".os-wizard-step-content").html(a.message),a.show_prev_btn?jQuery(".os-wizard-prev-btn").show():jQuery(".os-wizard-prev-btn").hide(),a.show_next_btn?jQuery(".os-wizard-next-btn").show():jQuery(".os-wizard-next-btn").hide(),a.show_next_btn||a.show_prev_btn?jQuery(".os-wizard-footer").show():jQuery(".os-wizard-footer").hide())}}),!1})),jQuery(".latepoint").on("click",".os-wizard-prev-btn",(function(){var e=jQuery(this);e.addClass("os-loading");var t,a="current_step="+jQuery("#wizard_current_step").val(),o={action:"latepoint_route_call",route_name:jQuery(this).data("route-name"),params:a,layout:"none",return_format:"json"};return jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:o,success:function t(a){e.removeClass("os-loading"),"success"===a.status&&(jQuery("#wizard_current_step").val(a.step_name),jQuery(".os-wizard-setup-w").attr("class","os-wizard-setup-w step-"+a.step_name),jQuery(".os-wizard-step-content").html(a.message),a.show_prev_btn?jQuery(".os-wizard-prev-btn").show():jQuery(".os-wizard-prev-btn").hide(),a.show_next_btn?jQuery(".os-wizard-next-btn").show():jQuery(".os-wizard-next-btn").hide(),a.show_next_btn||a.show_prev_btn?jQuery(".os-wizard-footer").show():jQuery(".os-wizard-footer").hide())}}),!1})),jQuery(".latepoint-content-w").on("change",".os-widget .os-trigger-reload-widget",(function(){latepoint_reload_widget(jQuery(this).closest(".os-widget"))})),dragula([].slice.apply(document.querySelectorAll(".os-categories-ordering-w .os-category-children")),{
-moves:function e(t,a,o){return o.classList.contains("os-category-drag")||o.classList.contains("os-category-service-drag")}}).on("drop",(function(e){var t=jQuery(".os-categories-ordering-w"),a=[],o=[];t.find(".os-category-parent-w").each((function(e){var t=jQuery(this).index()+1,o=jQuery(this).parent().closest(".os-category-parent-w").data("id")||0;a.push({id:jQuery(this).data("id"),order_number:t,parent_id:o})})),t.find(".service-in-category-w").each((function(e){var t=jQuery(this).index()+1,a=jQuery(this).closest(".os-category-parent-w").data("id")||0;o.push({id:jQuery(this).data("id"),order_number:t,category_id:a})})),latepoint_recalculate_services_count_in_category();var n={action:"latepoint_route_call",route_name:t.data("category-order-update-route"),params:{category_datas:a,service_datas:o},return_format:"json"};t.addClass("os-loading"),jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:n,success:function e(a){t.removeClass("os-loading"),"success"===a.status||alert(a.message)}})})),dragula([jQuery(".os-custom-fields-ordering-w")[0]],{moves:function e(t,a,o){return o.classList.contains("os-custom-field-drag")}}).on("drop",(function(e){var t={},a=jQuery(".os-custom-fields-ordering-w");a.find(".os-custom-field-form").each((function(e){var a=jQuery(this).index()+1,o=jQuery(this).find(".os-custom-field-id");o.length&&o.val()&&(t[o.val()]=a)}));var o={action:"latepoint_route_call",route_name:a.data("order-update-route"),params:{ordered_fields:t,fields_for:a.data("fields-for")},return_format:"json"};a.addClass("os-loading"),jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:o,success:function e(t){a.removeClass("os-loading")}})})),dragula([jQuery(".steps-ordering-w")[0]],{moves:function e(t,a,o){return o.classList.contains("step-drag")}}).on("drop",(function(e){var t={},a=jQuery(".steps-ordering-w");a.find(".step-w").each((function(e){var a=jQuery(this).index()+1;jQuery(this).data("step-order-number",a),jQuery(this).find('input[name="step[order_number]"]').val(a),t[jQuery(this).data("step-name")]=a}));var o={action:"latepoint_route_call",route_name:a.data("step-order-update-route"),params:{steps:t},return_format:"json"};a.addClass("os-loading"),jQuery.ajax({type:"post",dataType:"json",url:latepoint_helper.ajaxurl,data:o,success:function e(t){a.removeClass("os-loading")}})})),jQuery("body.latepoint-admin").on("click",".os-category-edit-btn, .os-category-edit-cancel-btn, .os-category-w .os-category-name",(function(){return jQuery(this).closest(".os-category-w").toggleClass("editing"),!1})),jQuery("body.latepoint-admin").on("click",".step-edit-btn, .step-edit-cancel-btn, .step-w .step-name",(function(){return jQuery(this).closest(".step-w").toggleClass("editing"),!1})),jQuery("body.latepoint-admin").on("click",".agent-info-change-agent-btn",(function(){return jQuery(this).closest(".agent-info-w").removeClass("selected").addClass("selecting"),!1})),jQuery("body.latepoint-admin").on("click",".agent-info-change-agent-btn",(function(){return jQuery(this).closest(".agent-info-w").removeClass("selected").addClass("selecting"),!1})),jQuery("body.latepoint-admin").on("click",".customer-info-create-btn",(function(){return jQuery(this).closest(".customer-info-w").removeClass("selecting").addClass("selected"),!1})),jQuery("body.latepoint-admin").on("click",".customer-info-load-btn",(function(){return jQuery(this).closest(".customer-info-w").removeClass("selected").addClass("selecting").find(".customers-selector-search-input").focus(),!1})),jQuery("body.latepoint-admin").on("click",".customers-selector-cancel",(function(){return jQuery(this).closest(".customer-info-w").removeClass("selecting").addClass("selected "),jQuery(".customers-options-list .customer-option").show(),jQuery(".customers-selector-search-input").val(""),!1})),jQuery("body.latepoint-admin").on("click",".os-services-select-field-w .service-option-selected",(function(){var e=jQuery(this).closest(".os-services-select-field-w");return e.hasClass("active")?e.removeClass("active"):e.addClass("active").find("input").focus(),!1})),jQuery("body.latepoint-admin").on("click",".os-services-select-field-w service-option-selected",(function(){return!1})),jQuery("body.latepoint-admin").on("keyup",".service-options-filter-input",(function(){var e=jQuery(this).closest(".services-options-list"),t=jQuery(this).val().toLowerCase();return e.find(".service-option").hide(),e.find(".service-option").each((function(){-1!=jQuery(this).text().toLowerCase().indexOf(""+t)&&jQuery(this).show()})),!1})),jQuery(".calendar-week-agent-w").on("click",".calendar-load-target-date",(function(e){return jQuery(this).addClass("os-loading"),latepoint_load_calendar(jQuery(this).data("target-date"),jQuery(".calendar-agent-selector").val(),jQuery(".calendar-location-selector").val()),!1})),jQuery(".calendar-week-agent-w").on("change",".calendar-agent-selector",(function(e){return latepoint_load_calendar(jQuery(".calendar-start-date").val(),jQuery(".calendar-agent-selector").val(),jQuery(".calendar-location-selector").val()),!1})),jQuery(".calendar-week-agent-w").on("change",".calendar-location-selector",(function(e){return latepoint_load_calendar(jQuery(".calendar-start-date").val(),jQuery(".calendar-agent-selector").val(),jQuery(".calendar-location-selector").val()),!1})),jQuery(".latepoint-admin").on("click",".os-complex-connections-selector .selector-trigger",(function(){var e=jQuery(this).closest(".connection");return e.hasClass("active")?(latepoint_complex_selector_deselect(e),jQuery(this).closest(".white-box").find(".os-select-all-toggler").prop("checked",!1)):latepoint_complex_selector_select(e),!1})),jQuery(".latepoint-admin").on("click",".os-agents-selector .agent",(function(){return jQuery(this).hasClass("active")?(jQuery(this).removeClass("active"),jQuery(this).find(".connection-child-is-connected").val("no")):(jQuery(this).addClass("active"),jQuery(this).find(".connection-child-is-connected").val("yes")),!1})),jQuery(".latepoint-admin").on("click",".os-services-selector .service",(function(){return jQuery(this).hasClass("active")?(jQuery(this).removeClass("active"),jQuery(this).find(".connection-child-is-connected").val("no")):(jQuery(this).addClass("active"),jQuery(this).find(".connection-child-is-connected").val("yes")),!1})),jQuery("#wpcontent").on("click",".os-toggler",(function(t){return jQuery(this).toggleClass("off"),jQuery(this).data("for")&&(jQuery(this).data("is-string-value")?e('input[name="'+jQuery(this).data("for")+'"]').val(jQuery(this).hasClass("off")?"off":"on"):e('input[name="'+jQuery(this).data("for")+'"]').val(jQuery(this).hasClass("off")?0:1)),jQuery(this).data("controlled-toggle-id")&&(jQuery(this).hasClass("off")?e("#"+jQuery(this).data("controlled-toggle-id")).hide():e("#"+jQuery(this).data("controlled-toggle-id")).show()),jQuery(this).trigger("ostoggler:toggle"),!1})),jQuery("#wpcontent").on("click",".os-image-selector-trigger",(function(e){var t;e.preventDefault();var a=jQuery(this),o=jQuery(this).closest(".os-image-selector-w"),n=o.find(".os-image-container"),s=o.find(".os-image-id-holder"),i;if(n.find("img").length)s.val(""),n.removeClass("has-image"),n.html(""),a.find(".os-text-holder").text(a.data("label-set-str"));else{if(t)return t.open(),!1;(t=wp.media({title:"Select or Upload Media",button:{text:"Use this media"},multiple:!1})).on("select",(function(){var e=t.state().get("selection").first().toJSON();n.append('<img src="'+e.url+'" alt=""/>'),s.val(e.id),n.addClass("has-image"),a.find(".os-text-holder").text(a.data("label-remove-str"))})),t.open()}return!1})),jQuery("body").on("click",".latepoint-lightbox-close",(function(){return latepoint_lightbox_close(),!1})),jQuery("body").on("click",".latepoint-side-panel-close-trigger",(function(){return jQuery(".latepoint-side-panel-w").remove(),!1})),jQuery("body").on("click",".latepoint-quick-availability-close",(function(){return jQuery(".quick-availability-per-day-w").remove(),!1})),jQuery("body.latepoint-admin").on("click",".time-ampm-select",(function(){jQuery(this).closest(".time-ampm-w").find(".active").removeClass("active"),jQuery(this).addClass("active");var e=jQuery(this).data("ampm-value");return jQuery(this).closest(".os-time-group").find(".ampm-value-hidden-holder").val(e),!1})),jQuery("body.latepoint-admin").on("click",".latepoint-lightbox-shadow",(function(){return latepoint_lightbox_close(),!1})),jQuery("body.latepoint-admin").on("click",".latepoint-side-panel-shadow",(function(){return jQuery(".latepoint-side-panel-w").remove(),!1})),jQuery("body.latepoint-admin").on("click",".ws-period-remove",(function(e){return jQuery(this).closest(".ws-period").remove(),!1})),jQuery("#wpcontent").on("click",".weekday-schedule-w .os-toggler",(function(e){return jQuery(this).hasClass("off")?jQuery(this).closest(".weekday-schedule-w").addClass("day-off").removeClass("is-editing").find("input.is-active").val(0):jQuery(this).closest(".weekday-schedule-w").removeClass("day-off").addClass("is-editing").find("input.is-active").val(1),!1}))}));
-//# sourceMappingURL=main_back.js.map
+// @codekit-prepend "os-time.js";
+// @codekit-prepend "os-select.js";
+// @codekit-prepend "os-actions.js";
+// @codekit-prepend "os-notifications.js";
+// @codekit-prepend "os-shared.js";
+// @codekit-prepend "os-updates.js";
+// @codekit-prepend "os-google-calendar.js";
+
+
+function latepoint_init_side_menu(){
+    jQuery('.menu-toggler').on('click', function(){
+      var layout_style = 'full';
+      if(jQuery('.latepoint-side-menu-w').hasClass('side-menu-full')){
+        layout_style = 'compact';
+        jQuery('.latepoint-side-menu-w').addClass('side-menu-compact').removeClass('side-menu-full');
+      }else{
+        jQuery('.latepoint-side-menu-w').addClass('side-menu-full').removeClass('side-menu-compact');
+      }
+      var route_name = jQuery(this).data('route');
+      var data = { action: 'latepoint_route_call', route_name: route_name, params: { menu_layout_style: layout_style }, layout: 'none', return_format: 'json' }
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(data){
+        }
+      });
+      return false;
+    });
+  }
+  
+  function latepoint_init_grouped_bookings_form(){
+    
+  }
+  
+  function latepoint_quick_booking_customer_selected(){
+    jQuery('.customer-info-w').removeClass('selecting').addClass('selected');
+  }
+    
+  function latepoint_custom_day_removed($elem){
+    $elem.closest('.custom-day-work-period').fadeOut(300, function(){ jQuery(this).remove()});
+  }
+  
+  function latepoint_booking_synced($elem){
+    $elem.closest('.os-booking-tiny-box').removeClass('not-synced').addClass('is-synced');
+    latepoint_sync_update_progress(false);
+  }
+  
+  function latepoint_gcal_event_deleted($elem){
+    $elem.closest('.os-booking-tiny-box').remove();
+  }
+  
+  function latepoint_booking_unsynced($elem){
+    $elem.closest('.os-booking-tiny-box').addClass('not-synced').removeClass('is-synced');
+    latepoint_sync_update_progress(true);
+  }
+  
+  
+  function latepoint_count_active_connections($connection_wrapper){
+    var connected_services_count = $connection_wrapper.find('.connection-children-list li.active').length;
+    var all_services_count = $connection_wrapper.find('.connection-children-list li').length;
+    if(connected_services_count == all_services_count){
+      connected_services_count = jQuery('.selected-connections').data('all-text');
+      jQuery('.selected-connections').removeClass('not-all-selected');
+    }else{
+      connected_services_count = connected_services_count + '/' + all_services_count;
+      jQuery('.selected-connections').addClass('not-all-selected');
+      $connection_wrapper.closest('.white-box').find('.os-select-all-toggler').prop('checked', false);
+    }
+    $connection_wrapper.find('.selected-connections strong').text(connected_services_count);
+  }
+  
+  function latepoint_custom_field_removed($elem){
+    $elem.closest('.os-custom-field-form').remove();
+  }
+  
+  function latepoint_coupon_removed($elem){
+    $elem.closest('.os-coupon-form').remove();
+  }
+  
+  function latepoint_init_custom_fields_form(){
+    jQuery('.latepoint-content-w').on('click', '.os-custom-field-form-info', function(){
+      jQuery(this).closest('.os-custom-field-form').toggleClass('os-is-editing');
+      return false;
+    });
+    jQuery('.latepoint-content-w').on('change', 'select.os-custom-field-type-select', function(){
+      if(jQuery(this).val() == 'select'){
+        jQuery(this).closest('.os-custom-field-form').find('.os-custom-field-select-values').show();
+      }else{
+        jQuery(this).closest('.os-custom-field-form').find('.os-custom-field-select-values').hide();
+      }
+    });
+    jQuery('.latepoint-content-w').on('keyup', '.os-custom-field-name-input', function(){
+      jQuery(this).closest('.os-custom-field-form').find('.os-custom-field-name').text(jQuery(this).val());
+    });
+  }
+  
+  
+  function latepoint_init_coupons_form(){
+    jQuery('.latepoint-content-w').on('click', '.os-coupon-form-info', function(){
+      jQuery(this).closest('.os-coupon-form').toggleClass('os-is-editing');
+      return false;
+    });
+    jQuery('.latepoint-content-w').on('change', 'select.os-coupon-medium-select', function(){
+      if(jQuery(this).val() == 'email'){
+        jQuery(this).closest('.os-coupon-form').find('.os-coupon-email-subject').show();
+      }else{
+        jQuery(this).closest('.os-coupon-form').find('.os-coupon-email-subject').hide();
+      }
+    });
+    jQuery('.latepoint-content-w').on('keyup', '.os-coupon-name-input', function(){
+      jQuery(this).closest('.os-coupon-form').find('.os-coupon-name').text(jQuery(this).val());
+    });
+    jQuery('.latepoint-content-w').on('keyup', '.os-coupon-code-input', function(){
+      jQuery(this).closest('.os-coupon-form').find('.os-coupon-code').text(jQuery(this).val());
+    });
+  }
+  
+  function latepoint_init_reminders_form(){
+    jQuery('.latepoint-content-w').on('click', '.os-reminder-form-info', function(){
+      jQuery(this).closest('.os-reminder-form').toggleClass('os-is-editing');
+      return false;
+    });
+    jQuery('.latepoint-content-w').on('change', 'select.os-reminder-medium-select', function(){
+      if(jQuery(this).val() == 'email'){
+        jQuery(this).closest('.os-reminder-form').find('.os-reminder-email-subject').show();
+      }else{
+        jQuery(this).closest('.os-reminder-form').find('.os-reminder-email-subject').hide();
+      }
+    });
+    jQuery('.latepoint-content-w').on('keyup', '.os-reminder-name-input', function(){
+      jQuery(this).closest('.os-reminder-form').find('.os-reminder-name').text(jQuery(this).val());
+    });
+  }
+  
+  function latepoint_custom_field_saved($elem){
+  }
+  
+  function latepoint_init_custom_day_schedule(){
+    jQuery('#custom_day_calendar_month, #custom_day_calendar_year').on('change', function(){
+      var $calendar = jQuery('.custom-day-calendar-month');
+      var route_name = $calendar.data('route');
+      $calendar.addClass('os-loading');
+      var target_date_string = jQuery('#custom_day_calendar_year').val() + '-' + jQuery('#custom_day_calendar_month').val() + '-01';
+      var data = { action: 'latepoint_route_call', route_name: route_name, params: { target_date_string: target_date_string }, layout: 'none', return_format: 'json' }
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(data){
+          $calendar.removeClass('os-loading');
+          if(data.status === "success"){
+            $calendar.html(data.message);
+          }else{
+            // console.log(data.message);
+          }
+        }
+      });
+    });
+    jQuery('.custom-day-calendar').on('click', '.os-day', function(){
+      var $this = jQuery(this);
+      jQuery('.custom-day-calendar .os-day.selected').removeClass('selected');
+      $this.addClass('selected');
+      jQuery('.latepoint-lightbox-footer').slideDown(200);
+      if(jQuery('.custom-day-calendar').data('show-schedule') == 'yes') jQuery('.latepoint-lightbox-w').removeClass('hide-schedule');
+      jQuery('.custom_day_schedule_date').val($this.data('date'));
+      return false;
+    });
+  }
+  
+  function latepoint_init_updates_page(){
+    
+  }
+  
+  function latepoint_init_monthly_calendar_navigation(){
+    jQuery('.calendar-location-selector').on('change', function(){
+      latepoint_reload_daily_agents_page();
+    });
+  
+    jQuery('.os-month-next-btn').on('click', function(){
+      // check if next month is already loaded
+      if(jQuery('.os-monthly-calendar-days-w.active + .os-monthly-calendar-days-w').length){
+        jQuery('.os-monthly-calendar-days-w.active').removeClass('active').next('.os-monthly-calendar-days-w').addClass('active');
+        latepoint_calendar_set_month_label();
+      }else{
+        var $btn = jQuery(this);
+        $btn.addClass('os-loading');
+        var load_month_route_name = jQuery(this).data('route');
+        var $calendar_element = jQuery('.os-monthly-calendar-days-w.active');
+        var calendar_layout = $calendar_element.data('calendar-layout');
+        var calendar_year = $calendar_element.data('calendar-year');
+        var calendar_month = $calendar_element.data('calendar-month');
+        if(calendar_month == 12){
+          calendar_year = calendar_year + 1;
+          calendar_month = 1;
+        }else{
+          calendar_month = calendar_month + 1;
+        }
+        var selected_agent_id = jQuery('.agent-select').val();
+        var selected_service_id = jQuery('.service-select').val();
+        var booking_info = {  target_date_string: calendar_year + '-' + calendar_month + '-1', 
+                              agent_id: selected_agent_id, 
+                              service_id: selected_service_id, 
+                              allow_full_access: true, 
+                              calendar_layout: calendar_layout 
+                            };
+        if(jQuery('.cc-location-selector select').length && jQuery('.cc-location-selector select').val()){
+          booking_info.location_id = jQuery('.cc-location-selector select').val();
+        }
+        var data = {  action: 'latepoint_route_call', 
+                      route_name: load_month_route_name, 
+                      params: booking_info, 
+                      layout: 'none', 
+                      return_format: 'json' 
+                    };
+        jQuery.ajax({
+          type : "post",
+          dataType : "json",
+          url : latepoint_helper.ajaxurl,
+          data : data,
+          success: function(data){
+  
+            $btn.removeClass('os-loading');
+            if(data.status === "success"){
+              jQuery('.os-months').append(data.message);
+              jQuery('.os-monthly-calendar-days-w.active').removeClass('active').next('.os-monthly-calendar-days-w').addClass('active');
+              latepoint_calendar_set_month_label();
+            }else{
+              // console.log(data.message);
+            }
+          }
+        });
+      }
+      return false;
+    });
+    jQuery('.os-month-prev-btn').on('click', function(){
+      // check if prev month is already loaded
+      if(jQuery('.os-monthly-calendar-days-w.active').prev('.os-monthly-calendar-days-w').length){
+        jQuery('.os-monthly-calendar-days-w.active').removeClass('active').prev('.os-monthly-calendar-days-w').addClass('active');
+        latepoint_calendar_set_month_label();
+      }else{
+        var $btn = jQuery(this);
+        $btn.addClass('os-loading');
+        var load_month_route_name = jQuery(this).data('route');
+        var $calendar_element = jQuery('.os-monthly-calendar-days-w.active').last();
+        var calendar_layout = $calendar_element.data('calendar-layout');
+        var calendar_year = $calendar_element.data('calendar-year');
+        var calendar_month = $calendar_element.data('calendar-month');
+        if(calendar_month == 1){
+          calendar_year = calendar_year - 1;
+          calendar_month = 12;
+        }else{
+          calendar_month = calendar_month - 1;
+        }
+        var selected_agent_id = jQuery('.agent-select').val();
+        var selected_service_id = jQuery('.service-select').val();
+        var booking_info = {  target_date_string: calendar_year + '-' + calendar_month + '-1', 
+                              agent_id: selected_agent_id, 
+                              service_id: selected_service_id, 
+                              allow_full_access: true, 
+                              calendar_layout: calendar_layout 
+                            };
+        if(jQuery('.cc-location-selector select').length && jQuery('.cc-location-selector select').val()){
+          booking_info.location_id = jQuery('.cc-location-selector select').val();
+        }
+        var data = {  action: 'latepoint_route_call', 
+                      route_name: load_month_route_name, 
+                      params: booking_info, 
+                      layout: 'none', 
+                      return_format: 'json' 
+                    };
+        jQuery.ajax({
+          type : "post",
+          dataType : "json",
+          url : latepoint_helper.ajaxurl,
+          data : data,
+          success: function(data){
+            $btn.removeClass('os-loading');
+            if(data.status === "success"){
+              jQuery('.os-months').prepend(data.message);
+              jQuery('.os-monthly-calendar-days-w.active').removeClass('active').prev('.os-monthly-calendar-days-w').addClass('active');
+              latepoint_calendar_set_month_label();
+            }else{
+              // console.log(data.message);
+            }
+          }
+        });
+      }
+      return false;
+    });
+  }
+  
+  function latepoint_calendar_set_month_label(){
+    jQuery('.os-current-month-label .current-month').text(jQuery('.os-monthly-calendar-days-w.active').data('calendar-month-label'));
+    jQuery('.os-current-month-label .current-year').text(jQuery('.os-monthly-calendar-days-w.active').data('calendar-year'));
+  }
+  
+  
+  function latepoint_init_element_togglers(){
+    jQuery('[data-toggle-element]').on('click', function(){
+      var $this = jQuery(this);
+      $this.closest('.os-form-checkbox-group').toggleClass('is-checked');
+      jQuery($this.data('toggle-element')).toggle();
+    });
+  }
+  
+  
+  function latepoint_init_color_picker(){
+    if(jQuery('.latepoint-color-picker').length){
+      jQuery('.latepoint-color-picker').each(function(){
+        var color = jQuery(this).data('color');
+        var picker = jQuery(this)[0];
+        var $picker_wrapper = jQuery(this).closest('.latepoint-color-picker-w');
+        Pickr.create({
+          el: picker,
+          default: color,
+          comparison: false,
+          useAsButton: true,
+          components: {
+  
+              // Main components
+              preview: true,
+              opacity: false,
+              hue: true,
+  
+              // Input / output Options
+              interaction: {
+                  input: false,
+                  clear: false,
+                  save: true
+              }
+          },
+          onChange(hsva, instance) {
+            $picker_wrapper.find('.os-form-control').val(hsva.toHEX().toString());
+          },
+        });
+      });
+    }
+  }
+  
+  
+  function latepoint_lightbox_close(){
+    jQuery('body').removeClass('latepoint-lightbox-active');
+    jQuery('.latepoint-lightbox-w').remove();
+  }
+  
+  function latepoint_reload_select_service_categories(){
+    jQuery('.service-selector-adder-field-w').each(function(){
+      var $trigger_elem = jQuery(this);
+      var route = jQuery('.service-selector-adder-field-w').find('select').data('select-source');
+      var data = { action: 'latepoint_route_call', route_name: route, params: '', return_format: 'json' }
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(response){
+          $trigger_elem.removeClass('os-loading');
+          if(response.status === "success"){
+            latepoint_lightbox_close();
+            $trigger_elem.find('select').html(response.message);
+            $trigger_elem.find('select option:last').attr('selected', 'selected');
+          }else{
+            alert(response.message, 'error');
+          }
+        }
+      });
+    });
+  }
+  
+  function latepoint_wizard_item_editing_cancelled(){
+    jQuery('.os-wizard-setup-w').removeClass('is-sub-editing');
+    jQuery('.os-wizard-footer').show();
+    jQuery('.os-wizard-footer .os-wizard-next-btn').show();
+  }
+  
+  function latepoint_load_quick_availability($trigger_elem, custom_agent_id = false, start_date = false, load_more_days = false, load_prev_days = false){
+    $trigger_elem.addClass('os-loading');
+    var route = jQuery('.trigger-quick-availability').data('route');
+    var $quick_booking_form = jQuery('.quick-booking-form-w');
+  
+    if(custom_agent_id) $quick_booking_form.find('select[name="booking[agent_id]"]').val(custom_agent_id);
+    if(!$quick_booking_form.find('input[name="booking[service_id]"]').val()){
+      $quick_booking_form.find('.os-services-select-field-w .service-option:first').click();
+    }
+  
+    var form_data = $quick_booking_form.find('form').serialize();
+    if(start_date) form_data+= '&start_date='+start_date;
+    if(load_more_days || load_prev_days) form_data+= '&show_days_only=true';
+    if(load_prev_days) form_data+= '&previous_days=true';
+    var data = { action: 'latepoint_route_call', route_name: route, params: form_data, return_format: 'json' }
+    jQuery.ajax({
+      type : "post",
+      dataType : "json",
+      url : latepoint_helper.ajaxurl,
+      data : data,
+      success: function(response){
+        $trigger_elem.removeClass('os-loading');
+        if(response.status === "success"){
+          if(load_more_days){
+            $trigger_elem.parent('.os-availability-next-w').remove();
+            jQuery('.latepoint-side-panel-w .os-availability-days').append(response.message);
+          }else if(load_prev_days){
+            $trigger_elem.parent('.os-availability-prev-w').remove();
+            jQuery('.latepoint-side-panel-w .os-availability-days').prepend(response.message);
+            jQuery('.latepoint-side-panel-w .os-availability-days').scrollTop(30);
+          }else{
+            if(jQuery('.latepoint-side-panel-w .side-sub-panel').length){
+              jQuery('.latepoint-side-panel-w .side-sub-panel').replaceWith(response.message);
+            }else{
+              jQuery('.latepoint-side-panel-w').append(response.message);
+            }
+            jQuery('.latepoint-side-panel-w .os-availability-days').scrollTop(30);
+            latepoint_init_quick_availability_form();
+          }
+        }else{
+          alert(response.message, 'error');
+        }
+      }
+    });
+  }
+  
+  function latepoint_init_quick_availability_form(){
+    var selected_start_date = jQuery('.quick-booking-form-w input#booking_start_date').val();
+    var selected_start_time = jQuery('.quick-booking-form-w input[name="booking[start_time][formatted_value]"]').val();
+    var selected_start_time_ampm = jQuery('.quick-booking-form-w input[name="booking[start_time][ampm]"]').val();
+    var selected_start_time_minutes = latepoint_hours_and_minutes_to_minutes(selected_start_time, selected_start_time_ampm);
+    jQuery('.quick-availability-per-day-w .os-availability-days').find('.agent-timeslot[data-formatted-date="'+ selected_start_date +'"][data-minutes="' + selected_start_time_minutes + '"]').addClass('selected');
+    jQuery('.quick-availability-per-day-w').on('click', '.load-more-quick-availability', function(){
+      latepoint_load_quick_availability(jQuery(this), false, jQuery(this).data('start-date'), true);
+      return false;
+    });
+    jQuery('.quick-availability-per-day-w').on('click', '.load-prev-quick-availability', function(){
+      latepoint_load_quick_availability(jQuery(this), false, jQuery(this).data('start-date'), false, true);
+      return false;
+    });
+    jQuery('.quick-availability-per-day-w select[name="booking[agent_id]"]').on('change', function(){
+      latepoint_load_quick_availability(jQuery('.trigger-quick-availability'), jQuery(this).val());
+    });
+    jQuery('.os-time-group label').on('click', function(){
+      jQuery(this).closest('.os-time-group').find('.os-form-control').focus();
+    });
+    jQuery('.quick-availability-per-day-w').on('click', '.fill-booking-time', function(){
+      jQuery('.os-availability-days .agent-timeslot.selected').removeClass('selected');
+      jQuery(this).addClass('selected');
+      var date = jQuery(this).data('date');
+      var formatted_date = jQuery(this).data('formatted-date');
+      var minutes = jQuery(this).data('minutes');
+      var service_duration = jQuery('.os-services-select-field-w .service-option-selected').data('duration');
+      var $form_w = jQuery('.quick-booking-form-w');
+      $form_w.find('input[name="booking[start_date]"]').val(formatted_date);
+      var start_minutes = minutes;
+      var start_hours_and_minutes = latepoint_minutes_to_hours_and_minutes(start_minutes);
+  
+      if(start_minutes >= 720){
+        $form_w.find('.quick-start-time-w .time-pm').click();
+      }else{
+        $form_w.find('.quick-start-time-w .time-am').click();
+      }
+  
+      $form_w.find('input[name="booking[start_time][formatted_value]"]').val(start_hours_and_minutes);
+      latepoint_set_booking_end_time();
+      $form_w.find('.ws-period').addClass('animate-filled-in');
+      setTimeout(function(){
+        $form_w.find('.ws-period').removeClass('animate-filled-in');
+      }, 500)
+    });
+  }
+  
+  
+  function latepoint_init_work_period_form(){
+    latepoint_mask_timefield(jQuery('.os-time-input-w .os-mask-time'));
+  }
+  
+  function latepoint_close_side_panel(){
+    jQuery('.latepoint-side-panel-w').remove();
+  }
+  
+  function latepoint_reload_after_booking_save(){
+    jQuery('.bookings-daily-agents .os-day-current.selected').first().click();
+    if(jQuery('.calendar-week-agent-w').length) latepoint_load_calendar(jQuery('.calendar-start-date').val(), jQuery('.calendar-agent-selector').val(), jQuery('.calendar-location-selector').val());
+    jQuery('.os-widget').each(function(){
+      latepoint_reload_widget(jQuery(this));
+    });
+    if(jQuery('table.os-reload-on-booking-update').length) latepoint_filter_table(jQuery('table.os-reload-on-booking-update'), jQuery('table.os-reload-on-booking-update'));
+    latepoint_close_side_panel();
+  }
+  
+  function latepoint_init_quick_booking_form(){
+    latepoint_lightbox_close();
+  
+    jQuery('.os-late-select').lateSelect();
+    jQuery('.save-transaction-btn').on('click', function(){
+      var $save_transaction_btn = jQuery(this);
+      var $transaction_box = $save_transaction_btn.closest('.quick-add-transaction-box-w');
+      var params = { amount: $transaction_box.find('input[name="transaction[amount]"]').val(), 
+                  date: $transaction_box.find('input[name="transaction[created_at]"]').val(), 
+                  token: $transaction_box.find('input[name="transaction[token]"]').val(), 
+                  processor: $transaction_box.find('select[name="transaction[processor]"]').val(), 
+                  payment_method: $transaction_box.find('select[name="transaction[payment_method]"]').val(),
+                  booking_id: jQuery('.quick-booking-form-w').find('input[name="booking[id]"]').val(),
+                  customer_id: jQuery('.quick-booking-form-w').find('input[name="booking[customer_id]"]').val()};
+  
+      var data = { action: 'latepoint_route_call', route_name: $transaction_box.data('route'), params: params, return_format: 'json' } 
+      $save_transaction_btn.addClass('os-loading');
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(response){
+          $save_transaction_btn.removeClass('os-loading');
+          if(response.status === "success"){
+            jQuery('.quick-transactions-list-w').append(response.message);
+            $transaction_box.hide();
+            jQuery('.trigger-add-transaction-btn').show();
+          }else{
+            alert(response.message);
+          }
+        }
+      });
+      return false;
+    });
+  
+    jQuery('.trigger-price-recalculate').on('click', function(){
+      latepoint_recalculate_booking_price(jQuery(this));
+      return false;
+    });
+  
+    jQuery('.trigger-add-transaction-btn').on('click', function(){
+      jQuery('.quick-add-transaction-box-w').show().find('input[name="transaction[amount]"]').focus();
+      jQuery('.trigger-add-transaction-btn').hide();
+      return false;
+    });
+  
+    jQuery('.trigger-cancel-add-transaction-btn').on('click', function(){
+      jQuery('.quick-add-transaction-box-w').hide();
+      jQuery('.trigger-add-transaction-btn').show();
+      return false;
+    });
+  
+    jQuery('.trigger-quick-availability').on('click', function(){
+      latepoint_load_quick_availability(jQuery('.open-quick-availability-btn'));
+      return false;
+    });
+    jQuery('.quick-booking-form-w input[name="booking[start_time][formatted_value]"]').on('change', function(){
+      latepoint_set_booking_end_time();
+    });
+  
+  
+  
+    latepoint_mask_timefield(jQuery('.latepoint-side-panel-w .os-mask-time'));
+    latepoint_mask_phone(jQuery('.latepoint-side-panel-w .os-mask-phone'));
+  
+    jQuery('.customers-selector-search-input').keyup(function(){
+      var $queryInput = jQuery(this);
+      var query = $queryInput.val().toLowerCase();
+      if(query == $queryInput.data('current-query')) return;
+  
+      // Search 
+      $queryInput.closest('.customers-selector-search-w').addClass('os-loading');
+      $queryInput.data('searching-query', query);
+      setTimeout(function(){
+        if(query != jQuery('.customers-selector-search-input').data('searching-query')) return;
+        var data = { action: 'latepoint_route_call', route_name: $queryInput.data('route'), params: {query: query}, return_format: 'json' } 
+        jQuery.ajax({
+          type : "post",
+          dataType : "json",
+          url : latepoint_helper.ajaxurl,
+          data : data,
+          success: function(response){
+            if($queryInput.data('searching-query') != query) return;
+            $queryInput.closest('.customers-selector-search-w').removeClass('os-loading');
+            if(response.status === "success"){
+              $queryInput.data('current-query', query);
+              jQuery('.quick-booking-form-w .customers-options-list').html(response.message);
+            }else{
+              console.log(response.message);
+            }
+          }
+        });
+      }, 300, query, $queryInput);
+   });
+  
+  
+    
+    jQuery('.latepoint-side-panel-w').on('change', '.agent-selector', function(){
+      latepoint_apply_agent_selector_change();
+    });
+    jQuery('.latepoint-side-panel-w').on('change', 'select[name="booking[location_id]"]', function(){
+      latepoint_apply_agent_selector_change();
+    });
+    jQuery('.latepoint-side-panel-w').on('change', 'select[name="booking[total_attendies]"]', function(){
+      latepoint_apply_agent_selector_change();
+    });
+  
+    jQuery('.latepoint-side-panel-w').on('change', '.os-affects-duration', function(){
+      latepoint_set_booking_end_time();
+      if(jQuery('.quick-availability-per-day-w').length){
+        latepoint_load_quick_availability(jQuery('.trigger-quick-availability'));
+      }
+    });
+  
+  
+    jQuery('.latepoint-side-panel-w').on('click', '.services-options-list .service-option', function(){
+      var selected_option_html = jQuery(this).html();
+      var $selected_option = jQuery(this).closest('.os-services-select-field-w').find('.service-option-selected');
+      $selected_option.html(selected_option_html)
+                      .data('id', jQuery(this).data('id'))
+                      .data('duration', jQuery(this).data('duration'))
+                      .data('buffer-before', jQuery(this).data('buffer-before'))
+                      .data('buffer-after', jQuery(this).data('buffer-after'))
+                      .data('capacity-min', jQuery(this).data('capacity-min'))
+                      .data('capacity-max', jQuery(this).data('capacity-max'))
+                      .data('extra-durations', jQuery(this).data('extra-durations'));
+      jQuery(this).closest('.os-services-select-field-w').find('.service-option.selected').removeClass('selected');
+      jQuery(this).addClass('selected').closest('.os-services-select-field-w').removeClass('active');
+      latepoint_apply_service_selector_change();
+      return false;
+    });
+  
+  }
+  
+  
+  function latepoint_reload_widget($widget_elem){
+    var form_data = $widget_elem.find('select, input').serialize();
+    var data = { action: 'latepoint_route_call', route_name: $widget_elem.data('os-reload-action'), params: form_data, return_format: 'json' } 
+    $widget_elem.addClass('os-loading');
+    jQuery.ajax({
+      type : "post",
+      dataType : "json",
+      url : latepoint_helper.ajaxurl,
+      data : data,
+      success: function(response){
+        $widget_elem.removeClass('os-loading');
+        if(response.status === "success"){
+          var $updated_widget_elem = jQuery(response.message);
+          $updated_widget_elem.removeClass('os-widget-animated');
+          $widget_elem = $widget_elem.replaceWith($updated_widget_elem);
+          latepoint_init_daterangepicker($updated_widget_elem.find('.os-date-range-picker'));
+          if($widget_elem.hasClass('os-widget-top-agents')) latepoint_init_circles_charts();
+          if($widget_elem.hasClass('os-widget-daily-bookings')){
+            latepoint_init_daily_bookings_chart();
+            latepoint_init_donut_charts();
+          }
+        }else{
+          alert(response.message);
+        }
+      }
+    });
+  }
+  
+  function latepoint_load_calendar(target_date, agent_id, location_id = false){
+    var route_name = jQuery('.calendar-week-agent-w').data('calendar-action');
+    jQuery('.calendar-week-agent-w').addClass('os-loading');
+    var params_arr = {target_date: target_date, agent_id: agent_id};
+    if(location_id) params_arr.location_id = location_id;
+    var data = { action: 'latepoint_route_call', route_name: route_name, params: jQuery.param(params_arr), return_format: 'json' }
+    jQuery.ajax({
+      type : "post",
+      dataType : "json",
+      url : latepoint_helper.ajaxurl,
+      data : data,
+      success: function(response){
+        if(response.status === "success"){
+          jQuery('.calendar-week-agent-w').html(response.message).removeClass('os-loading');
+          jQuery('.calendar-load-target-date.os-loading').removeClass('os-loading');
+        }else{
+          alert(response.message);
+        }
+      }
+    });
+  }
+  
+  
+  function latepoint_recalculate_booking_price($trigger){
+    $trigger.addClass('os-loading');
+    var $quick_edit_form = $trigger.closest('form.booking-quick-edit-form');
+    var form_data = $quick_edit_form.serialize();
+    
+    var data = { action: 'latepoint_route_call', route_name: 'bookings__calculate_full_price', params: form_data, return_format: 'json' }
+    jQuery.ajax({
+      type : "post",
+      dataType : "json",
+      url : latepoint_helper.ajaxurl,
+      data : data,
+      success: function(response){
+        $trigger.removeClass('os-loading');
+        if(response.status === "success"){
+          $quick_edit_form.find('input[name="booking[price]"]').val(response.message);
+        }else{
+          alert(response.message);
+        }
+      }
+    });
+  }
+  
+  function latepoint_complex_selector_select($connection_wrappers){
+    $connection_wrappers.each(function(){
+      jQuery(this).addClass('active');
+      jQuery(this).find('.connection-children-list li').addClass('active');
+      jQuery(this).find('.connection-child-is-connected').val('yes');
+      latepoint_count_active_connections(jQuery(this));
+    });
+  }
+  
+  function latepoint_complex_selector_deselect($connection_wrappers){
+    $connection_wrappers.each(function(){
+      jQuery(this).removeClass('active');
+      jQuery(this).removeClass('show-customize-box');
+      jQuery(this).find('.connection-children-list li.active').removeClass('active');
+      jQuery(this).find('.connection-child-is-connected').val('no');
+      latepoint_count_active_connections(jQuery(this));
+    });
+  }
+  
+  
+  function latepoint_apply_agent_selector_change(){
+    if(jQuery('.quick-availability-per-day-w').length){
+      latepoint_load_quick_availability(jQuery('.trigger-quick-availability'));
+    }
+  }
+  
+  function latepoint_set_booking_end_time(){
+    var $quick_edit_form = jQuery('form.booking-quick-edit-form');
+    var booking_duration = 0;
+    var service_duration = $quick_edit_form.find('.os-service-durations select').val();
+    booking_duration = booking_duration + service_duration;
+    if($quick_edit_form.find('select[name="temp_service_extras_ids"] option:selected').length){
+      $quick_edit_form.find('select[name="temp_service_extras_ids"] option:selected').each(function(){
+        var extra_duration = Number(jQuery(this).data('duration'));
+        var $extra_quantity_input = jQuery(this).closest('.lateselect-w').find('.ls-item[data-value="' + jQuery(this).val() + '"]').find('.os-late-quantity-selector-input');
+        if($extra_quantity_input.length) extra_duration = Number(extra_duration) * Number($extra_quantity_input.val());
+        booking_duration = Number(booking_duration) + Number(extra_duration);
+      });
+    }
+  
+    var start_time = $quick_edit_form.find('input[name="booking[start_time][formatted_value]"]').val();
+  
+    if(start_time){
+      var start_time_ampm = $quick_edit_form.find('input[name="booking[start_time][ampm]"]').val();
+      var start_time_minutes = latepoint_hours_and_minutes_to_minutes(start_time, start_time_ampm);
+      var end_time_minutes = parseInt(start_time_minutes) + parseInt(booking_duration);
+      var end_time_ampm = (end_time_minutes >= 720) ? 'pm' : 'am';
+      var end_hours_and_minutes = latepoint_minutes_to_hours_and_minutes(end_time_minutes);
+  
+      $quick_edit_form.find('input[name="booking[end_time][formatted_value]"]').val(end_hours_and_minutes);
+      $quick_edit_form.find('.quick-end-time-w .time-ampm-select.time-' + end_time_ampm).click();
+      $quick_edit_form.find('input[name="booking[end_time][formatted_value]"]').closest('.os-form-group').addClass('has-value');
+    }
+  }
+  
+  function latepoint_apply_service_selector_change(){
+  
+    var $selected_service = jQuery('.os-services-select-field-w .service-option-selected');
+    var service_id = $selected_service.data('id');
+    var buffer_before = $selected_service.data('buffer-before');
+    var buffer_after = $selected_service.data('buffer-after');
+    var default_duration = $selected_service.data('duration');
+    var min_capacity = $selected_service.data('capacity-min');
+    var max_capacity = $selected_service.data('capacity-max');
+  
+    var extra_durations = $selected_service.data('extra-durations');
+  
+    var $quick_edit_form = jQuery('form.booking-quick-edit-form');
+    $quick_edit_form.find('input[name="booking[buffer_before]"]').val(buffer_before).closest('.os-form-group').addClass('has-value');
+    $quick_edit_form.find('input[name="booking[buffer_after]"]').val(buffer_after).closest('.os-form-group').addClass('has-value');
+    $quick_edit_form.find('input[name="booking[service_id]"]').val(service_id).closest('.os-form-group').addClass('has-value');
+  
+    var options = '<option value="'+ default_duration +'">' + default_duration + ' ' + latepoint_helper.string_minutes + '</option>';
+    if(extra_durations.length){
+      jQuery.each(extra_durations, function(index, value){
+        options+= '<option value="'+ value.duration +'">' + value.duration + ' ' + latepoint_helper.string_minutes + '</option>';
+      });
+      $quick_edit_form.find('.os-service-durations').show();
+    }else{
+      $quick_edit_form.find('.os-service-durations').hide();
+    }
+  
+    jQuery('.booking-total-attendies-selector-w .capacity-info strong').text(max_capacity);
+    var attendies_options_html = '';
+    for(var i=1;i<=max_capacity;i++){
+      attendies_options_html+= '<option value="' + i + '">' + i + '</option>';
+    }
+    var selected_attendies = Math.min(jQuery('.booking-total-attendies-selector-w select').val(), max_capacity);
+    jQuery('.booking-total-attendies-selector-w select').html(attendies_options_html).val(selected_attendies);
+    if(max_capacity > 1){
+      jQuery('.booking-total-attendies-selector-w').show();
+    }else{
+      jQuery('.booking-total-attendies-selector-w').hide();
+    }
+  
+    $quick_edit_form.find('.os-service-durations select').html(options);
+  
+    latepoint_set_booking_end_time();
+    if(jQuery('.quick-availability-per-day-w').length){
+      latepoint_load_quick_availability(jQuery('.trigger-quick-availability'));
+    }
+    
+  }
+  
+  
+  function latepoint_init_daily_bookings_chart(){
+    if(typeof Chart !== 'undefined' && jQuery('#chartDailyBookings').length){
+  
+      var $dailyBookingsChart = jQuery('#chartDailyBookings');
+      var dailyBookingsLabels = $dailyBookingsChart.data('chart-labels').toString().split(',');
+      var dailyBookingsValues = $dailyBookingsChart.data('chart-values').toString().split(',').map(Number);
+      var dailyBookingsChartMax = Math.max.apply(Math, dailyBookingsValues) + 5;
+  
+  
+  
+      var fontFamily = latepoint_helper.font_family;
+      // set defaults
+      Chart.defaults.global.defaultFontFamily = fontFamily;
+      Chart.defaults.global.defaultFontSize = 18;
+      Chart.defaults.global.defaultFontStyle = '400';
+  
+      Chart.defaults.global.tooltips.titleFontFamily = fontFamily;
+      Chart.defaults.global.tooltips.titleFontSize = 14;
+      Chart.defaults.global.tooltips.titleFontColor = 'rgba(255,255,255,0.6)';
+      Chart.defaults.global.tooltips.backgroundColor = '#000';
+      Chart.defaults.global.tooltips.titleFontStyle = '400';
+      Chart.defaults.global.tooltips.titleMarginBottom = 1;
+      Chart.defaults.global.tooltips.bodyFontFamily = fontFamily;
+      Chart.defaults.global.tooltips.bodyFontSize = 24;
+      Chart.defaults.global.tooltips.bodyFontStyle = '500';
+      Chart.defaults.global.tooltips.displayColors = false;
+      Chart.defaults.global.tooltips.xPadding = 10;
+      Chart.defaults.global.tooltips.yPadding = 8;
+      Chart.defaults.global.tooltips.yAlign = 'bottom';
+      Chart.defaults.global.tooltips.xAlign = 'center';
+      Chart.defaults.global.tooltips.cornerRadius = 0;
+      Chart.defaults.global.tooltips.intersect = false;
+  
+      var ctx = $dailyBookingsChart[0].getContext("2d");
+      var gradientStroke = ctx.createLinearGradient(500, 0, 100, 0);
+      gradientStroke.addColorStop(0, '#587ef8');
+      gradientStroke.addColorStop(1, '#1e4fef');
+  
+      var gradientFill = ctx.createLinearGradient(0, 200, 0, 50);
+      gradientFill.addColorStop(0, "rgba(163, 165, 243, 0)");
+      gradientFill.addColorStop(1, "rgba(163, 165, 243, 0.1)");
+  
+      // line chart data
+      var chartDailyBookingsData = {
+        labels: dailyBookingsLabels,
+        datasets: [{
+            label: "",
+            fill: true,
+            lineTension: 0.3,
+            backgroundColor: gradientFill,
+            // backgroundColor: "transparent",
+            borderColor: "#0937ff",
+            borderWidth: 2,
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#fbfcff",
+            borderColor: gradientStroke,
+            pointBackgroundColor: "#0937ff",
+            pointRadius: 0,
+            pointBorderWidth: 2,
+            pointHoverRadius: 5,
+            pointHoverBorderWidth: 2,
+            pointHoverBackgroundColor: "#0937ff",
+            pointHoverBorderColor: "#fff",
+            pointHitRadius: 15,
+            data: dailyBookingsValues,
+            spanGaps: false
+          }]
+      };
+  
+      // line chart init
+      var chartDailyBookings = new Chart($dailyBookingsChart, {
+        type: 'line',
+        data: chartDailyBookingsData,
+        options: {
+          layout: {
+            padding: {
+              top: 20,
+              left: 20,
+              right: 20,
+              bottom: 20
+            }
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          legend: {
+              display: false
+          },
+          scales: {
+            xAxes: [{
+              display: false,
+              ticks: {
+                fontSize: '10',
+                fontColor: '#8894AF',
+              },
+              gridLines: {
+                  color: 'rgba(0,0,0,0)',
+                  zeroLineColor: 'rgba(0,0,0,0)'
+              }
+            }],
+            yAxes: [{
+              gridLines: {
+                  color: 'rgba(0,0,0,0.0)',
+                  zeroLineColor: 'rgba(0,0,0,0.0)'
+              },
+              display: false,
+              ticks: {
+                beginAtZero: false,
+                suggestedMax: dailyBookingsChartMax,
+                fontSize: '10',
+                fontColor: '#8894AF',
+              }
+            }]
+          }
+        }
+      });
+    }
+  }
+  
+  function latepoint_reload_daily_agents_page(){
+    jQuery('.bookings-daily-agents').addClass('os-loading');
+    var selected_agent_id = jQuery('.agent-select').val();
+    var selected_service_id = jQuery('.service-select').val();
+    var target_date = jQuery('.daily-agent-monthly-calendar-w .os-day.selected').data('date');
+    var route = jQuery('.bookings-daily-agents').data('route');
+  
+    var params_arr = {target_date: target_date};
+    if(selected_agent_id) params_arr.selected_agent_id = selected_agent_id;
+    if(selected_service_id) params_arr.selected_service_id = selected_service_id;
+    if(jQuery('.cc-location-selector select').length && jQuery('.cc-location-selector select').val()) params_arr.location_id = jQuery('.cc-location-selector select').val();
+    var data = {  action: 'latepoint_route_call', 
+                  route_name: route, 
+                  params: jQuery.param(params_arr), 
+                  layout: 'none', 
+                  return_format: 'json' };
+    jQuery.ajax({
+      type : "post",
+      dataType : "json",
+      url : latepoint_helper.ajaxurl,
+      data : data,
+      success: function(data){
+        if(data.status === "success"){
+          jQuery('.bookings-daily-agents').replaceWith(data.message);
+          latepoint_init_donut_charts();
+          latepoint_init_daily_agent_calendar();
+          latepoint_init_monthly_calendar_navigation();
+        }else{
+          // console.log(data.message);
+        }
+        jQuery('.bookings-daily-agents').removeClass('os-loading');
+      }
+    });
+  }
+  
+  
+  function latepoint_init_daily_agent_calendar(){
+    jQuery('select.agent-select, select.service-select').on('change', function(){
+      latepoint_reload_daily_agents_page();
+    });
+    jQuery('.daily-agent-monthly-calendar-w').on('click', '.os-day', function(){
+      var $calendar = jQuery(this).closest('.daily-agent-monthly-calendar-w');
+  
+      jQuery('.daily-agent-monthly-calendar-w .os-day.selected').removeClass('selected');
+      jQuery(this).addClass('selected');
+      if($calendar.hasClass('horizontal-calendar')){
+        $calendar.find('.current-month').text(jQuery(this).data('nice-date'));
+      }
+      latepoint_reload_daily_agents_page();
+    });
+  }
+  
+  
+  
+  function latepoint_init_donut_charts(){
+    if(typeof Chart !== 'undefined' && jQuery('.os-donut-chart').length){
+      var fontFamily = latepoint_helper.font_family;
+      // set defaults
+      Chart.defaults.global.defaultFontFamily = fontFamily;
+      Chart.defaults.global.defaultFontSize = 18;
+      Chart.defaults.global.defaultFontStyle = '400';
+  
+      Chart.defaults.global.tooltips.titleFontFamily = fontFamily;
+      Chart.defaults.global.tooltips.titleFontSize = 14;
+      Chart.defaults.global.tooltips.titleFontColor = 'rgba(255,255,255,0.6)';
+      Chart.defaults.global.tooltips.backgroundColor = '#000';
+      Chart.defaults.global.tooltips.titleFontStyle = '400';
+      Chart.defaults.global.tooltips.titleMarginBottom = 1;
+      Chart.defaults.global.tooltips.bodyFontFamily = fontFamily;
+      Chart.defaults.global.tooltips.bodyFontSize = 24;
+      Chart.defaults.global.tooltips.bodyFontStyle = '500';
+      Chart.defaults.global.tooltips.displayColors = false;
+      Chart.defaults.global.tooltips.xPadding = 10;
+      Chart.defaults.global.tooltips.yPadding = 8;
+      Chart.defaults.global.tooltips.yAlign = 'bottom';
+      Chart.defaults.global.tooltips.xAlign = 'center';
+      Chart.defaults.global.tooltips.cornerRadius = 0;
+      Chart.defaults.global.tooltips.intersect = false;
+      jQuery('.os-donut-chart').each(function(index){
+        var chart_colors = jQuery(this).data('chart-colors').toString().split(',');
+        var chart_labels = jQuery(this).data('chart-labels').toString().split(',');
+        var chart_values = jQuery(this).data('chart-values').toString().split(',').map(Number);
+        var $chart_canvas = jQuery(this);
+        var chartDonut = new Chart($chart_canvas, {
+            type: 'doughnut',
+            data: {
+              labels: chart_labels,
+              datasets: [{
+                data: chart_values,
+                backgroundColor: chart_colors,
+                hoverBackgroundColor: chart_colors,
+                borderWidth: 0,
+                hoverBorderColor: 'transparent'
+              }]
+            },
+            options: {
+              layout: {
+                padding: {
+                  top: 40
+                }
+              },
+              tooltips: {
+                callbacks: {
+                  title: function(tooltipItem, data) {
+                    return data['labels'][tooltipItem[0]['index']];
+                  },
+                  label: function(tooltipItem, data) {
+                    return data['datasets'][0]['data'][tooltipItem['index']];
+                  },
+                }
+              },
+              legend: {
+                  display: false
+              },
+              animation:{
+                  animateScale:true
+              },
+              cutoutPercentage: 80,
+              responsive: false,
+              maintainAspectRatio: true, 
+            }
+        });
+      });
+    }
+  }
+  
+  
+  function latepoint_init_circles_charts(){
+    jQuery('.circle-chart').each(function(index){
+      var chart_elem_id = jQuery(this).prop('id');
+      var max_value = jQuery(this).data('max-value');
+      var chart_value = jQuery(this).data('chart-value');
+      var chart_color = jQuery(this).data('chart-color');
+      var chart_color_fade = jQuery(this).data('chart-color-fade');
+      var myCircle = Circles.create({
+        id:                  chart_elem_id,
+        radius:              25,
+        value:               chart_value,
+        maxValue:            max_value,
+        width:               2,
+        text:                function(value){return Math.round(value);},
+        colors:              [chart_color, chart_color_fade],
+        duration:            200,
+        wrpClass:            'circles-wrp',
+        textClass:           'circles-text',
+        valueStrokeClass:    'circles-valueStroke',
+        maxValueStrokeClass: 'circles-maxValueStroke',
+        styleWrapper:        true,
+        styleText:           true
+      });
+  
+    });
+  
+  
+  }
+  
+  
+  function latepoint_random_text(length){
+     var result           = '';
+     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+     var charactersLength = characters.length;
+     for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+     }
+     return result;
+  }
+  
+  function latepoint_get_order_for_service_categories(){
+  
+  }
+  
+  
+  function latepoint_init_daterangepicker($elem){
+    $elem.each(function(){
+      // DATERANGEPICKER
+      var picker_start_time = jQuery(this).find('input[name="date_from"], .os-datepicker-date-from').val();
+      var picker_end_time = jQuery(this).find('input[name="date_to"], .os-datepicker-date-to').val();
+      var locale = {};
+      if(jQuery(this).data('can-be-cleared')) locale = { cancelLabel: jQuery(this).data('clear-btn-label')};
+  
+  
+      moment.locale(latepoint_helper.wp_locale);
+  
+      jQuery(this).daterangepicker({
+        opens: 'left',
+        singleDatePicker: (jQuery(this).data('single-date') == 'yes'),
+        startDate: (picker_start_time) ? moment(picker_start_time) : moment(),
+        endDate: (picker_end_time) ? moment(picker_end_time) : moment(),
+        locale: locale
+      });
+    });
+  
+    $elem.on('cancel.daterangepicker', function(ev, picker) {
+      if(picker.element.data('can-be-cleared')){
+        picker.element.find('input[name="date_from"], .os-datepicker-date-from').val('');
+        picker.element.find('input[name="date_to"], .os-datepicker-date-to').val('');
+        picker.element.find('span.range-picker-value').text(picker.element.data('no-value-label'));
+        if(picker.element.hasClass('os-table-filter-datepicker')){
+          latepoint_filter_table(picker.element.closest('table'), picker.element.closest('.os-form-group'));
+        }
+      }
+    });
+  
+    $elem.on('apply.daterangepicker', function(ev, picker) {
+      if(picker.element.data('single-date') == 'yes'){
+        picker.element.find('.range-picker-value').text(picker.startDate.format('ll'));
+      }else{
+        picker.element.find('.range-picker-value').text(picker.startDate.format('ll') + ' - ' + picker.endDate.format('ll'));
+      }
+      picker.element.find('input[name="date_from"], .os-datepicker-date-from').attr('value', picker.startDate.format('YYYY-MM-DD'));
+      picker.element.find('input[name="date_to"], .os-datepicker-date-to').attr('value', picker.endDate.format('YYYY-MM-DD'));
+      if(picker.element.closest('.os-widget').length){
+        latepoint_reload_widget(picker.element.closest('.os-widget'));
+      }
+      if(picker.element.hasClass('os-table-filter-datepicker')){
+        latepoint_filter_table(picker.element.closest('table'), picker.element.closest('.os-form-group'));
+      }
+    });
+  }
+  
+  function latepoint_recalculate_services_count_in_category(){
+    jQuery('.os-category-services-count').each(function(){
+      var number_of_services = jQuery(this).closest('.os-category-parent-w').find('.service-in-category-w').length;
+      jQuery(this).find('span').text(number_of_services);
+    });
+  }
+  
+  function latepoint_remove_agent_box($remove_btn){
+    var $agent_box = $remove_btn.closest('.agent-box-w');
+    $agent_box.fadeOut(300, function(){ jQuery(this).remove(); });
+  }
+  
+  function latepoint_remove_service_box($remove_btn){
+    var $service_box = $remove_btn.closest('.service-box-w');
+    $service_box.fadeOut(300, function(){ jQuery(this).remove(); });
+  }
+  
+  function latepoint_init_monthly_view(){
+    if(!jQuery('.calendar-month-agents-w').length) return;
+    if(jQuery('.ma-days-with-bookings-w').length){
+      // var ps = new PerfectScrollbar(jQuery('.ma-days-with-bookings-w')[0]);
+    }
+  
+    jQuery('#monthly_calendar_month_select, #monthly_calendar_year_select, #monthly_calendar_location_select').on('change', function(){
+      var $calendar = jQuery('.calendar-month-agents-w');
+      var route_name = $calendar.data('route');
+      $calendar.addClass('os-loading');
+      var params = { month: jQuery('#monthly_calendar_month_select').val(), year: jQuery('#monthly_calendar_year_select').val() };
+      if(jQuery('#monthly_calendar_location_select').length && jQuery('#monthly_calendar_location_select').val()) params.location_id = jQuery('#monthly_calendar_location_select').val();
+      var data = { action: 'latepoint_route_call', route_name: route_name, params: params, layout: 'none', return_format: 'json' }
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(data){
+          $calendar.removeClass('os-loading');
+          if(data.status === "success"){
+            $calendar.html(data.message);
+          }else{
+            // console.log(data.message);
+          }
+        }
+      });
+    });
+    jQuery('.custom-day-calendar').on('click', '.os-day', function(){
+      var $this = jQuery(this);
+      jQuery('.custom-day-calendar .os-day.selected').removeClass('selected');
+      $this.addClass('selected');
+      jQuery('.latepoint-lightbox-footer').slideDown(200);
+      if(jQuery('.custom-day-calendar').data('show-schedule') == 'yes') jQuery('.latepoint-lightbox-w').removeClass('hide-schedule');
+      jQuery('.custom_day_schedule_date').val($this.data('date'));
+      return false;
+    });
+  }
+  
+  
+  function latepoint_init_copy_on_click_elements(){
+    
+    jQuery('.os-click-to-copy').mouseenter(function() {
+      var position_info = jQuery(this).position();
+      var width = jQuery(this).outerWidth();
+      var position_left = position_info.left + width + 5;
+      var position_top = position_info.top + 3;
+      jQuery(this).after('<div class="os-click-to-copy-prompt" style="top: '+position_top+'px; left: '+position_left+'px;">' + latepoint_helper.click_to_copy_prompt + '</div>');
+    }).mouseleave(function() {
+      jQuery(this).nextAll('.os-click-to-copy-prompt').remove();
+    });
+    jQuery('.os-click-to-copy').on('click', function(){
+      var $this = jQuery(this);
+      $this.nextAll('.os-click-to-copy-prompt').hide();
+      var $tempElement = jQuery("<input>");
+      jQuery("body").append($tempElement);
+      $tempElement.val($this.text()).select();
+      document.execCommand("Copy");
+      $tempElement.remove();
+  
+      var position_info = $this.position();
+      var width = $this.outerWidth();
+      var position_left = position_info.left + width + 5;
+      var position_top = position_info.top + 3;
+      var $done_prompt = jQuery('<div class="os-click-to-copy-done" style="top: '+position_top+'px; left: '+position_left+'px;">' + latepoint_helper.click_to_copy_done + '</div>');
+      $done_prompt.insertAfter($this).animate({
+        opacity: 0,
+        left: (position_left + 20),
+      }, 600);
+      setTimeout(function(){
+        $this.nextAll('.os-click-to-copy-done').remove();
+        $this.nextAll('.os-click-to-copy-prompt').show();
+      }, 800);
+    });
+  }
+  
+  function latepoint_sync_update_progress(is_removed){
+    var synced_total = jQuery('.os-sync-stat-tiles .os-tile-value span').text();
+    if(is_removed){
+      synced_total = parseInt(synced_total) - 1;
+    }else{
+      synced_total = parseInt(synced_total) + 1;
+    }
+    jQuery('.os-sync-stat-tiles .os-tile-value span').text(synced_total);
+    jQuery('.os-tile-hor-progress-chart').data('value', synced_total);
+    var chart_total = jQuery('.os-tile-hor-progress-chart').data('total');
+    var chart_value = jQuery('.os-tile-hor-progress-chart').data('value');
+    if(chart_total > 0){
+      var percent = Math.round(chart_value / chart_total * 100);
+      jQuery('.os-tile-hor-progress-chart-value').css('width', percent + '%');
+    }
+  }
+  
+  function latepoint_remove_first_synced_booking_with_google(){
+    var $trigger = jQuery('.os-booking-tiny-box.is-synced:first .os-booking-sync-google-trigger');
+    if(!$trigger.length || jQuery('.remove-all-bookings-from-google-trigger').hasClass('stop-removing')){
+      jQuery('.remove-all-bookings-from-google-trigger').removeClass('os-removing').removeClass('stop-removing').find('span').text(jQuery('.remove-all-bookings-from-google-trigger').data('label-remove'));
+      return false;
+    }
+  
+    var route = $trigger.data('os-remove-action');
+    var params = $trigger.data('os-params');
+    var data = { action: 'latepoint_route_call', route_name: route, params: params, layout: 'none', return_format: 'json' };
+    $trigger.addClass('os-loading');
+    jQuery.ajax({
+      type : "post",
+      dataType : "json",
+      url : latepoint_helper.ajaxurl,
+      data : data,
+      success: function(response){
+        if(response.status === "success"){
+          $trigger.closest('.os-booking-tiny-box').removeClass('is-synced').addClass('not-synced');
+          $trigger.removeClass('os-loading');
+          latepoint_sync_update_progress(true);
+          latepoint_remove_first_synced_booking_with_google();
+        }
+      }
+    });
+  }
+  
+  
+  function latepoint_sync_next_booking_with_google(){
+    var $trigger = jQuery('.os-booking-tiny-box.not-synced:first .os-booking-sync-google-trigger');
+    if(!$trigger.length || jQuery('.sync-all-bookings-to-google-trigger').hasClass('stop-syncing')){
+      jQuery('.sync-all-bookings-to-google-trigger').removeClass('os-syncing').removeClass('stop-syncing').find('span').text(jQuery('.sync-all-bookings-to-google-trigger').data('label-sync'));
+      return false;
+    }
+  
+    var route = $trigger.data('os-action');
+    var params = $trigger.data('os-params');
+    var data = { action: 'latepoint_route_call', route_name: route, params: params, layout: 'none', return_format: 'json' };
+    $trigger.addClass('os-loading');
+    jQuery.ajax({
+      type : "post",
+      dataType : "json",
+      url : latepoint_helper.ajaxurl,
+      data : data,
+      success: function(response){
+        if(response.status === "success"){
+          $trigger.closest('.os-booking-tiny-box').removeClass('not-synced').addClass('is-synced');
+          $trigger.removeClass('os-loading');
+          latepoint_sync_update_progress(false);
+          latepoint_sync_next_booking_with_google();
+        }
+      }
+    });
+  }
+  
+  function latepoint_init_reminder_form(){
+    if(typeof tinymce !== 'undefined' && jQuery('.os-reminder-form:last-child textarea').length) tinymce.execCommand( 'mceAddEditor', true, jQuery('.os-reminder-form:last-child textarea').attr('id') );
+  }
+  
+  function latepoint_filter_table($table, $filter_elem, reset_page = true){
+    $filter_elem.addClass('os-loading');
+    var filter_params = $table.find('.os-table-filter').serialize();
+    var $table_w = $table.closest('.table-with-pagination-w');
+    if(reset_page){
+      $table_w.find('select.pagination-page-select').val(1);
+    }else{
+      filter_params+= '&page_number='+$table_w.find('select.pagination-page-select').val();
+    }
+    var route = $table.data('route');
+    var data = { action: 'latepoint_route_call', route_name: route, params: filter_params, layout: 'none', return_format: 'json' };
+    jQuery.ajax({
+      type : "post",
+      dataType : "json",
+      url : latepoint_helper.ajaxurl,
+      data : data,
+      success: function(data){
+        $filter_elem.removeClass('os-loading');
+        if(data.status === "success"){
+          $table.find('tbody').html(data.message);
+          if(data.total_pages && reset_page){
+            var options = '';
+            for(var i = 1; i <= data.total_pages; i++){
+              options+= '<option>'+ i +'</option>';
+            }
+            $table_w.find('select.pagination-page-select').html(options);
+          }
+          $table_w.find('.os-pagination-from').text(data.showing_from);
+          $table_w.find('.os-pagination-to').text(data.showing_to);
+          $table_w.find('.os-pagination-total').text(data.total_records);
+        }else{
+          // console.log(data.message);
+        }
+      }
+    });
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  // DOCUMENT READY
+  jQuery(document).ready(function( $ ) {
+  
+    // Google calendar
+    if(latepoint_helper.google_calendar_is_enabled && jQuery('.os-google-cal-authorize-btn').length){
+      latepoint_helper.google_calendar = new OsGoogleCalendar();
+      latepoint_helper.google_calendar.init();
+    }
+  
+    // DASHBOARD
+    latepoint_init_daily_agent_calendar();
+    latepoint_init_circles_charts();
+    latepoint_init_donut_charts();
+    latepoint_init_daily_bookings_chart();
+    latepoint_init_element_togglers();
+    latepoint_init_daterangepicker(jQuery('.os-date-range-picker'));
+    latepoint_init_monthly_calendar_navigation();
+    latepoint_init_monthly_view();
+    latepoint_init_custom_fields_form();
+    latepoint_init_reminders_form();
+    latepoint_init_coupons_form();
+    latepoint_init_copy_on_click_elements();
+    latepoint_init_side_menu();
+    latepoint_init_color_picker();
+  
+    jQuery('.os-select-all-toggler').on('change', function(){
+      var $connection_wrappers = jQuery(this).closest('.white-box').find('.os-complex-connections-selector .connection');
+      if($(this).is(':checked')){
+        latepoint_complex_selector_select($connection_wrappers);
+      }else{
+        latepoint_complex_selector_deselect($connection_wrappers);
+      }
+      return false;
+    });
+  
+  
+    jQuery('.os-main-location-selector').on('change', function(){
+      var route = jQuery(this).data('route');
+      var params = 'id=' + jQuery(this).val();
+      var data = { action: 'latepoint_route_call', route_name: route, params: params, layout: 'none', return_format: 'json' };
+      jQuery('.latepoint-content-w').addClass('os-loading');
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(data){
+          location.reload();
+        }
+      });
+    });
+  
+    $('.os-service-durations-w').on('click', '.os-remove-duration', function(){
+      $(this).closest('.duration-box').slideUp(300, function(){
+        $(this).remove();
+      });
+      return false;
+    });
+  
+  
+    $('.menu-color-toggler').on('click', function(){
+      $('.latepoint-side-menu-w').toggleClass('dark');
+      return false;
+    });
+  
+  
+    $('.latepoint-mobile-top-menu-trigger').on('click', function(){
+      $(this).closest('.latepoint-all-wrapper').toggleClass('os-show-mobile-menu');
+      if($(this).closest('.latepoint-all-wrapper').hasClass('os-show-mobile-menu')){
+        $('.latepoint-side-menu-w ul.side-menu > li.has-children > a').on('click', function(){
+          $(this).closest('li').toggleClass('menu-item-sub-open-mobile');
+          return false;
+        });
+      }else{
+        $('.latepoint-side-menu-w ul.side-menu > li.has-children > a').off('click');
+      }
+      return false;
+    });
+  
+    $('.latepoint-mobile-top-search-trigger-cancel').on('click', function(){
+      $(this).closest('.latepoint-all-wrapper').removeClass('os-show-mobile-search');
+      return false;
+    });
+  
+    $('.latepoint-mobile-top-search-trigger').on('click', function(){
+      $(this).closest('.latepoint-all-wrapper').toggleClass('os-show-mobile-search');
+      if($(this).closest('.latepoint-all-wrapper').hasClass('os-show-mobile-search')){
+        $('.latepoint-top-search').focus();
+      }
+      return false;
+    });
+  
+    $('.latepoint-content').on('click', '.os-widget-header-actions-trigger', function(){
+      $(this).closest('.os-widget-header').toggleClass('os-show-actions');
+      return false;
+    });
+  
+  
+    $('.sync-all-bookings-to-google-trigger').on('click', function(){
+      if($(this).hasClass('os-syncing')){
+        $(this).addClass('stop-syncing');
+        $(this).find('span').text($(this).data('label-sync'));
+      }else{
+        $(this).find('span').text($(this).data('label-cancel-sync'));
+        $(this).addClass('os-syncing');
+        latepoint_sync_next_booking_with_google();
+      }
+      return false;
+    });
+  
+  
+    $('.remove-all-bookings-from-google-trigger').on('click', function(){
+  
+      if($(this).hasClass('os-removing')){
+        $(this).addClass('stop-removing');
+        $(this).find('span').text($(this).data('label-remove'));
+      }else{
+        if(!confirm($(this).data('os-prompt'))) return false;
+        $(this).find('span').text($(this).data('label-cancel-remove'));
+        $(this).addClass('os-removing');
+        latepoint_remove_first_synced_booking_with_google();
+      }
+      return false;
+    });
+  
+    
+  
+  
+    jQuery('.download-csv-with-filters').on('click', function(){
+      var filter_params = jQuery(this).closest('table').find('.os-table-filter').serialize();
+      filter_params+= '&download=csv';
+      jQuery(this).attr('href', this.href + '&' + filter_params);
+    });
+  
+    $('select.pagination-page-select').on('change', function(){
+      latepoint_filter_table(jQuery(this).closest('.table-with-pagination-w').find('table'), jQuery(this).closest('.pagination-page-select-w'), false);
+    });
+  
+    $('select.os-table-filter').on('change', function(){
+      latepoint_filter_table(jQuery(this).closest('table'), jQuery(this).closest('.os-form-group'));
+    });
+  
+    $('input.os-table-filter').on('keyup', function(){
+      latepoint_filter_table(jQuery(this).closest('table'), jQuery(this).closest('.os-form-group'));
+    });
+  
+  
+    jQuery('.customize-connection-btn').on('click', function(){
+      jQuery(this).closest('.connection').toggleClass('show-customize-box');
+      return false;
+    });
+  
+    jQuery('.connection-children-list').on('click', 'li', function(){
+      if(jQuery(this).hasClass('active')){
+        jQuery(this).removeClass('active');
+        jQuery(this).find('input.connection-child-is-connected').val('no');
+      }else{
+        jQuery(this).addClass('active');
+        jQuery(this).find('input.connection-child-is-connected').val('yes');
+      }
+      latepoint_count_active_connections(jQuery(this).closest('.connection'));
+      return false;
+    });
+  
+    jQuery('.add-service-category-trigger').on('click', function(){
+      $('.add-service-category-box').toggle();
+      $('.os-new-service-category-form-w').toggle();
+      return false;
+    });
+  
+    jQuery('.latepoint-top-search').on('keyup', function(event){
+      var $wrapper = jQuery(this).closest('.latepoint-top-search-w');
+      $wrapper.addClass('os-loading');
+      var query = jQuery(this).val();
+      if(event.keyCode == 27){
+        $wrapper.removeClass('typing');
+        jQuery('.latepoint-top-search-results-w').html('');
+        jQuery(this).val('');
+        $wrapper.removeClass('os-loading');
+        return;
+      }
+      if(query == ''){
+        $wrapper.removeClass('typing');
+        jQuery('.latepoint-top-search-results-w').html('');
+        $wrapper.removeClass('os-loading');
+        return;
+      }
+      var route = jQuery(this).data('route');
+      var params = 'query=' + query;
+      var data = { action: 'latepoint_route_call', route_name: route, params: params, layout: 'none', return_format: 'json' };
+      $wrapper.addClass('typing');
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(data){
+          if(!$wrapper.hasClass('typing')) return;
+          $wrapper.removeClass('os-loading');
+          if(data.status === "success"){
+            jQuery('.latepoint-top-search-results-w').html(data.message);
+          }else{
+            // console.log(data.message);
+          }
+        }
+      });
+    });
+  
+  
+  
+    jQuery('.add-custom-step-btn').on('click', function(e){
+      var $step = jQuery('.empty-step-w .step-w').clone();
+      var step_name = 'step_' + latepoint_random_text(6);
+      var step_order_number = $('.steps-ordering-w .step-w').length;
+      $step.find('input[name="step[name]"]').val(step_name);
+      $step.find('input[name="step[order_number]"]').val(step_order_number);
+  
+      $step.addClass('editing').attr('data-step-name', step_name);
+      jQuery('.steps-ordering-w').append($step);
+      return false;
+    });
+  
+  
+  
+    jQuery('.appointment-status-selector').on('click', function(e){
+      e.stopPropagation();
+    });
+  
+    jQuery('.latepoint-show-license-details').on('click', function(e){
+      jQuery(this).closest('.active-license-info').find('.license-form-w').slideToggle(200);
+      return false;
+    });
+  
+    jQuery('.aba-button-w').on('click', function(e){
+      e.stopPropagation();
+      var confirm_message = (jQuery(this).hasClass('aba-approve')) ? latepoint_helper.approve_confirm : latepoint_helper.reject_confirm;
+      if(confirm(confirm_message)){
+        var $box = jQuery(this).closest('.appointment-box-large');
+        $box.find('.appointment-status-selector select').val(jQuery(this).data('status')).change();
+      }
+      return false;
+    });
+  
+  
+    jQuery('select.agent_google_calendar_selector').on('change', function(e){
+      var route = $(this).data('route');
+      var calendar_id = $(this).val();
+      var agent_id = $(this).data('agent-id');
+      var data = { action: 'latepoint_route_call', 
+                    route_name: route, 
+                    params: {calendar_id: calendar_id, agent_id: agent_id}, 
+                    layout: 'none', 
+                    return_format: 'json' }
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(data){
+          if(data.status === "success"){
+            latepoint_add_notification(data.message);
+          }else{
+            // console.log(data.message);
+          }
+        }
+      });
+    });
+  
+  
+    jQuery('.appointment-status-selector select').on('change', function(e){
+      var $wrapper = jQuery(this).closest('.appointment-status-selector');
+      var route = $wrapper.data('route');
+      var booking_id = $wrapper.data('booking-id');
+      var status = jQuery(this).val();
+      jQuery(this).closest('.appointment-box-large').attr('class', 'appointment-box-large status-' + status);
+      var params = 'id=' + booking_id + '&status=' + status;
+      var data = { action: 'latepoint_route_call', route_name: route, params: params, layout: 'none', return_format: 'json' };
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(data){
+          if(data.status === "success"){
+            latepoint_add_notification(data.message);
+          }else{
+            // console.log(data.message);
+          }
+        }
+      });
+    });
+  
+    jQuery('body').on('click', '.open-template-variables-panel', function(){
+      jQuery('.latepoint-template-variables').toggleClass('is-visible');
+      return false;
+    });
+  
+    jQuery('body').on('click', '.close-template-variables-panel', function(){
+      jQuery('.latepoint-template-variables').removeClass('is-visible');
+      return false;
+    });
+  
+    jQuery('body').on('click', '.os-notifications .os-notification-close', function(){
+      jQuery(this).closest('.item').remove();
+      return false;
+    });
+  
+  
+    jQuery('body').on('keyup', '.os-form-group .os-form-control', function(){
+      if(jQuery(this).val()){
+        jQuery(this).closest('.os-form-group').addClass('has-value');
+      }else{
+        jQuery(this).closest('.os-form-group').removeClass('has-value');
+      }
+    });
+  
+  
+  
+    jQuery('.os-wizard-setup-w, .latepoint-settings-w, .custom-schedule-wrapper').on('click', '.ws-head', function(){
+      var $schedule_wrapper = jQuery(this).closest('.weekday-schedule-w');
+      $schedule_wrapper.toggleClass('is-editing').removeClass('day-off');
+      $schedule_wrapper.find('.os-toggler').removeClass('off');
+      $schedule_wrapper.find('input.is-active').val(1);
+    });
+  
+  
+    latepoint_mask_timefield(jQuery('.os-mask-time'));
+    latepoint_mask_phone(jQuery('.os-mask-phone'));
+  
+    jQuery('.latepoint').on('click', '.wizard-add-edit-item-trigger', function(e){
+      jQuery(this).addClass('os-loading');
+      var add_item_route_name = jQuery(this).data('route');
+      var item_info = {  };
+      if(jQuery(this).data('id')){
+        item_info.id = jQuery(this).data('id');
+      }
+      var data = { action: 'latepoint_route_call', route_name: add_item_route_name, params: item_info, layout: 'none', return_format: 'json' };
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(data){
+          jQuery('.wizard-add-edit-item-trigger.os-loading').removeClass('os-loading');
+          if(data.status === "success"){
+            jQuery('.os-wizard-step-content-i').html(data.message);
+            jQuery('.os-wizard-setup-w').addClass('is-sub-editing');
+            jQuery('.os-wizard-footer').hide();
+          }else{
+            // console.log(data.message);
+          }
+        }
+      });
+    });
+  
+  
+  
+  
+    // WIZARD NEXT BUTTON CLICK LOGIC
+    jQuery('.latepoint').on('click', '.os-wizard-next-btn', function(){
+      var $next_btn = jQuery(this);
+      $next_btn.addClass('os-loading');
+      var current_step = jQuery('#wizard_current_step').val();
+      var params = 'current_step='+current_step;
+      if(jQuery('.os-wizard-setup-w form.weekday-schedules-w').length){
+        params+= '&'+ jQuery('.os-wizard-setup-w form.weekday-schedules-w .weekday-schedule-w:not(.day-off) input').serialize();
+      }
+      var data = { action: 'latepoint_route_call', route_name: jQuery(this).data('route-name'), params: params, layout: 'none', return_format: 'json'};
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(data){
+          $next_btn.removeClass('os-loading');
+          if(data.status === "success"){
+            jQuery('#wizard_current_step').val(data.step_name);
+            jQuery('.os-wizard-setup-w').attr('class', 'os-wizard-setup-w step-' + data.step_name);
+            jQuery('.os-wizard-step-content').html(data.message);
+            if(data.show_prev_btn){
+              jQuery('.os-wizard-prev-btn').show();
+            }else{
+              jQuery('.os-wizard-prev-btn').hide();
+            }
+            if(data.show_next_btn){
+              jQuery('.os-wizard-next-btn').show();
+            }else{
+              jQuery('.os-wizard-next-btn').hide();
+            }
+            if(!data.show_next_btn && !data.show_prev_btn){
+              jQuery('.os-wizard-footer').hide();
+            }else{
+              jQuery('.os-wizard-footer').show();
+            }
+          }
+        }
+      });
+      return false;
+    });
+  
+    // WIZARD PREV BUTTON CLICK LOGIC
+    jQuery('.latepoint').on('click', '.os-wizard-prev-btn', function(){
+      var $prev_btn = jQuery(this);
+      $prev_btn.addClass('os-loading');
+      var current_step = jQuery('#wizard_current_step').val();
+      var params = 'current_step='+current_step;
+      var data = { action: 'latepoint_route_call', route_name: jQuery(this).data('route-name'), params: params, layout: 'none', return_format: 'json'};
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(data){
+          $prev_btn.removeClass('os-loading');
+          if(data.status === "success"){
+            jQuery('#wizard_current_step').val(data.step_name);
+            jQuery('.os-wizard-setup-w').attr('class', 'os-wizard-setup-w step-' + data.step_name);
+            jQuery('.os-wizard-step-content').html(data.message);
+            if(data.show_prev_btn){
+              jQuery('.os-wizard-prev-btn').show();
+            }else{
+              jQuery('.os-wizard-prev-btn').hide();
+            }
+            if(data.show_next_btn){
+              jQuery('.os-wizard-next-btn').show();
+            }else{
+              jQuery('.os-wizard-next-btn').hide();
+            }
+            if(!data.show_next_btn && !data.show_prev_btn){
+              jQuery('.os-wizard-footer').hide();
+            }else{
+              jQuery('.os-wizard-footer').show();
+            }
+          }
+        }
+      });
+      return false;
+    });
+  
+    jQuery('.latepoint-content-w').on('change', '.os-widget .os-trigger-reload-widget', function(){
+      latepoint_reload_widget(jQuery(this).closest('.os-widget'));
+    });
+  
+  
+    dragula([].slice.apply(document.querySelectorAll('.os-categories-ordering-w .os-category-children')), {
+      moves: function (el, container, handle) {
+        return (handle.classList.contains('os-category-drag') || handle.classList.contains('os-category-service-drag'));
+      },
+    }).on('drop', function(el){
+      var $categories_wrapper = jQuery('.os-categories-ordering-w');
+      var category_datas = [];
+      var service_datas = [];
+  
+      $categories_wrapper.find('.os-category-parent-w').each(function(index){
+        var order_number = jQuery(this).index() + 1;
+        var parent_id = jQuery(this).parent().closest('.os-category-parent-w').data('id') || 0;
+        category_datas.push({id: jQuery(this).data('id'), order_number: order_number, parent_id: parent_id});
+      });
+      $categories_wrapper.find('.service-in-category-w').each(function(index){
+        var service_order_number = jQuery(this).index() + 1;
+        var category_id = jQuery(this).closest('.os-category-parent-w').data('id') || 0;
+        service_datas.push({id: jQuery(this).data('id'), order_number: service_order_number, category_id: category_id});
+      });
+      latepoint_recalculate_services_count_in_category();
+      var data = { action: 'latepoint_route_call', route_name: $categories_wrapper.data('category-order-update-route'), params: {category_datas: category_datas, service_datas: service_datas}, return_format: 'json' } 
+      $categories_wrapper.addClass('os-loading');
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(response){
+          $categories_wrapper.removeClass('os-loading');
+          if(response.status === "success"){
+            // latepoint_add_notification(response.message);
+          }else{
+            alert(response.message);
+          }
+        }
+      });
+    });
+  
+  
+    // Custom Fields Order Dragging
+    dragula([jQuery('.os-custom-fields-ordering-w')[0]], {
+      moves: function (el, container, handle) {
+        return handle.classList.contains('os-custom-field-drag');
+      },
+    }).on('drop', function(el){
+      var custom_fields_order_data = {};
+      var $custom_fields_wrapper = jQuery('.os-custom-fields-ordering-w');
+      $custom_fields_wrapper.find('.os-custom-field-form').each(function(index){
+        var new_order_number = jQuery(this).index() + 1;
+        var $field_id = jQuery(this).find('.os-custom-field-id');
+        if($field_id.length && $field_id.val()) custom_fields_order_data[$field_id.val()] = new_order_number;
+      });
+      var data = { action: 'latepoint_route_call', 
+                    route_name: $custom_fields_wrapper.data('order-update-route'), 
+                    params: {ordered_fields: custom_fields_order_data, 
+                    fields_for: $custom_fields_wrapper.data('fields-for')}, 
+                    return_format: 'json' } 
+      $custom_fields_wrapper.addClass('os-loading');
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(response){
+          $custom_fields_wrapper.removeClass('os-loading');
+        }
+      });
+    });
+  
+    // Steps Order Dragging
+    dragula([jQuery('.steps-ordering-w')[0]], {
+      moves: function (el, container, handle) {
+        return handle.classList.contains('step-drag');
+      },
+    }).on('drop', function(el){
+      var step_order_data = {};
+      var $steps_wrapper = jQuery('.steps-ordering-w');
+      $steps_wrapper.find('.step-w').each(function(index){
+        var new_order_number = jQuery(this).index() + 1;
+        jQuery(this).data('step-order-number', new_order_number);
+        jQuery(this).find('input[name="step[order_number]"]').val(new_order_number);
+        step_order_data[jQuery(this).data('step-name')] = new_order_number;
+      });
+      var data = { action: 'latepoint_route_call', route_name: $steps_wrapper.data('step-order-update-route'), params: {steps: step_order_data}, return_format: 'json' } 
+      $steps_wrapper.addClass('os-loading');
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(response){
+          $steps_wrapper.removeClass('os-loading');
+        }
+      });
+    });
+  
+    jQuery('body.latepoint-admin').on('click', '.os-category-edit-btn, .os-category-edit-cancel-btn, .os-category-w .os-category-name', function(){
+      jQuery(this).closest('.os-category-w').toggleClass('editing');
+      return false;
+    });
+  
+    jQuery('body.latepoint-admin').on('click', '.step-edit-btn, .step-edit-cancel-btn, .step-w .step-name', function(){
+      jQuery(this).closest('.step-w').toggleClass('editing');
+      return false;
+    });
+      
+    jQuery('body.latepoint-admin').on('click', '.agent-info-change-agent-btn', function(){
+      jQuery(this).closest('.agent-info-w').removeClass('selected').addClass('selecting');
+      return false;
+    });
+    
+    jQuery('body.latepoint-admin').on('click', '.agent-info-change-agent-btn', function(){
+      jQuery(this).closest('.agent-info-w').removeClass('selected').addClass('selecting');
+      return false;
+    });
+    
+  
+    jQuery('body.latepoint-admin').on('click', '.customer-info-create-btn', function(){
+      jQuery(this).closest('.customer-info-w').removeClass('selecting').addClass('selected');
+      return false;
+    });
+  
+    jQuery('body.latepoint-admin').on('click', '.customer-info-load-btn', function(){
+      jQuery(this).closest('.customer-info-w').removeClass('selected').addClass('selecting').find('.customers-selector-search-input').focus();
+      return false;
+    });
+  
+    jQuery('body.latepoint-admin').on('click', '.customers-selector-cancel', function(){
+      jQuery(this).closest('.customer-info-w').removeClass('selecting').addClass('selected ');
+      jQuery('.customers-options-list .customer-option').show();
+      jQuery('.customers-selector-search-input').val('');
+      return false;
+    });
+  
+    // CUSTOMER SELECTOR
+  
+    // SERVICES SELECTOR
+    jQuery('body.latepoint-admin').on('click', '.os-services-select-field-w .service-option-selected', function(){
+      var $select = jQuery(this).closest('.os-services-select-field-w');
+      if($select.hasClass('active')){
+        $select.removeClass('active');
+      }else{
+        $select.addClass('active').find('input').focus();
+      }
+      return false;
+    });
+  
+    jQuery('body.latepoint-admin').on('click', '.os-services-select-field-w service-option-selected', function(){
+  
+      return false;
+    });
+  
+  
+    jQuery('body.latepoint-admin').on('keyup', '.service-options-filter-input', function(){
+      var $list = jQuery(this).closest('.services-options-list');
+      var text = jQuery(this).val().toLowerCase();
+      $list.find('.service-option').hide();
+  
+      // Search 
+      $list.find('.service-option').each(function(){
+  
+        if(jQuery(this).text().toLowerCase().indexOf(""+text+"") != -1 ){
+         jQuery(this).show();
+        }
+      });
+      return false;
+    });
+  
+  
+    jQuery('.calendar-week-agent-w').on('click', '.calendar-load-target-date', function(event){
+      jQuery(this).addClass('os-loading');
+      latepoint_load_calendar(jQuery(this).data('target-date'), jQuery('.calendar-agent-selector').val(), jQuery('.calendar-location-selector').val());
+      return false;
+    });
+  
+    jQuery('.calendar-week-agent-w').on('change', '.calendar-agent-selector', function(event){
+      latepoint_load_calendar(jQuery('.calendar-start-date').val(), jQuery('.calendar-agent-selector').val(), jQuery('.calendar-location-selector').val());
+      return false;
+    });
+  
+    jQuery('.calendar-week-agent-w').on('change', '.calendar-location-selector', function(event){
+      latepoint_load_calendar(jQuery('.calendar-start-date').val(), jQuery('.calendar-agent-selector').val(), jQuery('.calendar-location-selector').val());
+      return false;
+    });
+  
+    jQuery('.latepoint-admin').on('click', '.os-complex-connections-selector .selector-trigger', function(){
+      var $connection_wrapper = jQuery(this).closest('.connection');
+      if($connection_wrapper.hasClass('active')){
+        latepoint_complex_selector_deselect($connection_wrapper);
+        jQuery(this).closest('.white-box').find('.os-select-all-toggler').prop('checked', false);
+      }else{
+        latepoint_complex_selector_select($connection_wrapper);
+      }
+      return false;
+    });
+  
+    jQuery('.latepoint-admin').on('click', '.os-agents-selector .agent', function(){
+      if(jQuery(this).hasClass('active')){
+        jQuery(this).removeClass('active');
+        jQuery(this).find('.connection-child-is-connected').val('no');
+      }else{
+        jQuery(this).addClass('active');
+        jQuery(this).find('.connection-child-is-connected').val('yes');
+      }
+      return false;
+    });
+  
+    jQuery('.latepoint-admin').on('click', '.os-services-selector .service', function(){
+      if(jQuery(this).hasClass('active')){
+        jQuery(this).removeClass('active');
+        jQuery(this).find('.connection-child-is-connected').val('no');
+      }else{
+        jQuery(this).addClass('active');
+        jQuery(this).find('.connection-child-is-connected').val('yes');
+      }
+      return false;
+    });
+  
+    jQuery('#wpcontent').on( 'click', '.os-toggler', function( event ){
+      jQuery(this).toggleClass('off');
+      if(jQuery(this).data('for')){
+        if(jQuery(this).data('is-string-value')){
+          $('input[name="' + jQuery(this).data('for') + '"]').val(jQuery(this).hasClass('off') ? 'off' : 'on');
+        }else{
+          $('input[name="' + jQuery(this).data('for') + '"]').val(jQuery(this).hasClass('off') ? 0 : 1);
+        }
+      }
+      if(jQuery(this).data('controlled-toggle-id')){
+        if(jQuery(this).hasClass('off')){
+          $('#' + jQuery(this).data('controlled-toggle-id')).hide();
+        }else{
+          $('#' + jQuery(this).data('controlled-toggle-id')).show();
+        }
+      }
+      jQuery(this).trigger('ostoggler:toggle');
+      return false;
+    });
+  
+  
+  
+    // UPLOAD/REMOVE IMAGE LINK LOGIC
+    jQuery('#wpcontent').on( 'click', '.os-image-selector-trigger', function( event ){
+      var frame;
+  
+      event.preventDefault();
+  
+      var $image_uploader_trigger = jQuery(this);
+      var $image_selector_w = jQuery(this).closest('.os-image-selector-w');
+      var $image_container = $image_selector_w.find('.os-image-container');
+      var $image_id_holder = $image_selector_w.find('.os-image-id-holder');
+  
+      var image_exists = $image_container.find('img').length;
+  
+      if(image_exists){
+        $image_id_holder.val('');
+        $image_container.removeClass('has-image');
+        $image_container.html('');
+        $image_uploader_trigger.find('.os-text-holder').text($image_uploader_trigger.data('label-set-str'));
+      }else{
+        // If the media frame already exists, reopen it.
+        if ( frame ) {
+          frame.open();
+          return false;
+        }
+        
+        // Create a new media frame
+        frame = wp.media({
+          title: 'Select or Upload Media',
+          button: { text: 'Use this media' },
+          multiple: false
+        });
+  
+        frame.on( 'select', function() {
+          var attachment = frame.state().get('selection').first().toJSON();
+          $image_container.append( '<img src="'+attachment.url+'" alt=""/>' );
+          $image_id_holder.val( attachment.id );
+          $image_container.addClass('has-image');
+          $image_uploader_trigger.find('.os-text-holder').text($image_uploader_trigger.data('label-remove-str'));
+        });
+  
+        frame.open();
+      }
+      
+      return false;
+    });
+  
+  
+  
+    jQuery('body').on('click', '.latepoint-lightbox-close', function(){
+      latepoint_lightbox_close();
+      return false;
+    });
+  
+  
+    jQuery('body').on('click', '.latepoint-side-panel-close-trigger', function(){
+      jQuery('.latepoint-side-panel-w').remove();
+      return false;
+    });
+  
+  
+    jQuery('body').on('click', '.latepoint-quick-availability-close', function(){
+      jQuery('.quick-availability-per-day-w').remove();
+      return false;
+    });
+    
+  
+  
+    jQuery('body.latepoint-admin').on('click', '.time-ampm-select', function(){
+      jQuery(this).closest('.time-ampm-w').find('.active').removeClass('active');
+      jQuery(this).addClass('active');
+      var ampm_value = jQuery(this).data('ampm-value');
+      jQuery(this).closest('.os-time-group').find('.ampm-value-hidden-holder').val(ampm_value);
+      return false;
+    });
+  
+  
+    jQuery('body.latepoint-admin').on('click', '.latepoint-lightbox-shadow', function(){
+      latepoint_lightbox_close();
+      return false;
+    });
+  
+    jQuery('body.latepoint-admin').on('click', '.latepoint-side-panel-shadow', function(){
+      jQuery('.latepoint-side-panel-w').remove();
+      return false;
+    });
+  
+    // SCHEDULE
+  
+    jQuery('body.latepoint-admin').on('click', '.ws-period-remove', function(e){
+      jQuery(this).closest('.ws-period').remove();
+      return false;
+    });
+  
+  
+    jQuery('#wpcontent').on( 'click', '.weekday-schedule-w .os-toggler', function( event ){
+      if(jQuery(this).hasClass('off')){
+        jQuery(this).closest('.weekday-schedule-w').addClass('day-off').removeClass('is-editing').find('input.is-active').val(0);
+      }else{
+        jQuery(this).closest('.weekday-schedule-w').removeClass('day-off').addClass('is-editing').find('input.is-active').val(1);
+      }
+      return false;
+    });
+  
+    
+  
+  });
+
+  //os-time
+
+  function latepoint_is_timeframe_in_periods(timeframe_start, timeframe_end, periods_arr) {
+    var is_inside = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+  
+    for (var i = 0; i < periods_arr.length; i++) {
+  
+      var period_start = 0;
+      var period_end = 0;
+      var buffer_before = 0;
+      var buffer_after = 0;
+  
+      var period_info = periods_arr[i].split(':');
+      if (period_info.length == 2) {
+        period_start = period_info[0];
+        period_end = period_info[1];
+      } else {
+        buffer_before = period_info[2];
+        buffer_after = period_info[3];
+        period_start = parseFloat(period_info[0]) - parseFloat(buffer_before);
+        period_end = parseFloat(period_info[1]) + parseFloat(buffer_after);
+      }
+      if (is_inside) {
+        if (latepoint_is_period_inside_another(timeframe_start, timeframe_end, period_start, period_end)) {
+          return true;
+        }
+      } else {
+        if (latepoint_is_period_overlapping(timeframe_start, timeframe_end, period_start, period_end)) {
+          return true;
+        }
+      }
+    };
+    return false;
+  }
+  
+  function latepoint_is_period_overlapping(period_one_start, period_one_end, period_two_start, period_two_end) {
+    // https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap/
+    return period_one_start < period_two_end && period_two_start < period_one_end;
+  }
+  function latepoint_is_period_inside_another(period_one_start, period_one_end, period_two_start, period_two_end) {
+    return period_one_start >= period_two_start && period_one_end <= period_two_end;
+  }
+  
+  
+  // Converts time in minutes to hours if possible, if minutes also exists - shows minutes too
+  function latepoint_minutes_to_hours_preferably(time) {
+    var army_clock = latepoint_is_army_clock();
+  
+    var hours = Math.floor(time / 60);
+    if (!army_clock && hours > 12) hours = hours - 12;
+  
+    var minutes = time % 60;
+    if(minutes > 0) hours = hours + ':' + minutes;
+    return hours;
+  }
+  
+  
+  function latepoint_minutes_to_hours(time) {
+    var army_clock = latepoint_is_army_clock();
+  
+    var hours = Math.floor(time / 60);
+    if (!army_clock && hours > 12) hours = hours - 12;
+    return hours;
+  }
+  
+  
+  function latepoint_am_or_pm(minutes) {
+    if(latepoint_is_army_clock()) return '';
+    return (minutes < 720) ? 'am' : 'pm';
+  }
+  
+  function latepoint_hours_and_minutes_to_minutes(hours_and_minutes, ampm) {
+    var hours_and_minutes_arr = hours_and_minutes.split(':');
+    var hours = hours_and_minutes_arr[0];
+    var minutes = hours_and_minutes_arr[1];
+    if(ampm == "pm" && hours<12) hours = parseInt(hours)+12;
+    if(ampm == "am" && hours==12) hours = 0;
+    minutes = parseInt(minutes) + (hours * 60);
+    return minutes;
+  }
+  
+  function latepoint_get_time_system(){
+    return latepoint_helper.time_system;
+  }
+  
+  function latepoint_is_army_clock(){
+    return (latepoint_get_time_system() == '24');
+  }
+  
+  function latepoint_minutes_to_hours_and_minutes(time) {
+    var army_clock = latepoint_is_army_clock();
+    var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '%02d:%02d';
+  
+    var hours = Math.floor(time / 60);
+    if(!army_clock && (hours > 12)) hours = hours - 12;
+    var minutes = time % 60;
+    return sprintf(format, hours, minutes);
+  }
+
+  //os-selected
+
+  (function($) {
+
+    $.fn.lateSelect = function() {
+
+      function os_build_selected_item($option){
+        var quantity_html = '';
+        if($option.data('quantity')) quantity_html = '<span class="os-late-quantity-selector-w"><span class="os-late-quantity-selector minus" data-sign="minus"></span><input class="os-late-quantity-selector-input" type="text" data-max-quantity="'+ $option.data('max-quantity') +'" value="' + $option.data('quantity') + '"/><span class="os-late-quantity-selector plus" data-sign="plus"></span></span>';
+        return '<div class="ls-item" data-value="' + $option.val() + '"><span class="latepoint-icon latepoint-icon-x ls-item-remover"></span><span>' + $option.text() + '</span>' + quantity_html + '</div>'
+      }
+
+      this.each( function() {
+          var lateselect_html = '';
+          var all_items = '';
+          var selected_items = '';
+          var is_selected = '';
+          $(this).hide();
+          $(this).find('option').each(function(){
+              if($(this).is(':selected')) selected_items+= os_build_selected_item($(this));
+              is_selected = $(this).is(':selected') ? 'selected' : '';
+              all_items+= '<div class="ls-item '+ is_selected +'" data-value="' + $(this).val() + '">' + $(this).text() + '</div>';
+          });
+          lateselect_html = $('<div class="lateselect-w"></div>');
+          $(this).wrap(lateselect_html);
+          var $lateselect_wrapper = $(this).closest('.lateselect-w');
+          $lateselect_wrapper.append('<div class="ls-selected-items-w">' + selected_items + '</div>');
+          $lateselect_wrapper.append('<div class="ls-all-items-w">' + all_items + '</div>');
+
+
+          // ADD ITEM
+          $lateselect_wrapper.on('click', '.ls-all-items-w .ls-item:not(.selected)', function(){
+              var selected_value = $(this).data('value');
+              $lateselect_wrapper.find('.ls-selected-items-w').append(os_build_selected_item($lateselect_wrapper.find('select option[value="'+ selected_value +'"]')));
+              $(this).addClass('selected');
+              $lateselect_wrapper.removeClass('ls-selecting');
+              $lateselect_wrapper.find('select option[value="'+ selected_value +'"]').attr('selected', true);
+              $lateselect_wrapper.find('select').trigger('change');
+              return false;
+          });
+
+          // REMOVE ITEM
+          $lateselect_wrapper.on('click', '.ls-selected-items-w .ls-item-remover', function(){
+              var selected_value = $(this).closest('.ls-item').data('value');
+              $(this).closest('.ls-item').remove();
+              $lateselect_wrapper.find('.ls-all-items-w .ls-item.selected[data-value="' + selected_value + '"]').removeClass('selected');
+              $lateselect_wrapper.find('select option[value="'+ selected_value +'"]').removeAttr('selected');
+              $lateselect_wrapper.find('select').trigger('change');
+              return false;
+          });
+
+          $lateselect_wrapper.on('click', '.ls-selected-items-w', function(){
+              $lateselect_wrapper.toggleClass('ls-selecting');
+              return false;
+          });
+
+          $lateselect_wrapper.on('click', '.os-late-quantity-selector', function(){
+              var $input = $(this).closest('.ls-item').find('input.os-late-quantity-selector-input');
+              var current_value = parseInt($input.val());
+              var new_quantity = ($(this).data('sign') == 'minus') ? current_value - 1 : current_value + 1;
+              var max_quantity = $input.data('max-quantity');
+              if(new_quantity <= 0) new_quantity = 1;
+              if(max_quantity && (new_quantity > max_quantity)) new_quantity = max_quantity;
+              var selected_value = $(this).closest('.ls-item').data('value');
+              $lateselect_wrapper.find('select option[value="'+ selected_value +'"]').data('quantity', new_quantity);
+              $input.val(new_quantity);
+              $lateselect_wrapper.find('select').trigger('change');
+              return false;
+          });
+
+          $(this).on('change', function(){
+              if($(this).data('hidden-connection')){
+                  var formatted_ids = '';
+                  if($(this).find('option:selected').length){
+                      $(this).find('option:selected').each(function(){
+                        var quantity = $(this).data('quantity') ? $(this).data('quantity') : 1;
+                        formatted_ids+= $(this).val() + ':' + quantity + ',';
+                      });
+                  }else{
+                    formatted_ids = '';
+                  }
+                  if(formatted_ids != '') formatted_ids = formatted_ids.slice(0, -1);
+                  $($(this).data('hidden-connection')).val(formatted_ids);
+              }
+          });
+      });
+    }
+}(jQuery));
+
+//os-actions
+
+function latepoint_generate_form_message_html(messages, status){
+    var message_html = '<div class="os-form-message-w status-' + status + '"><ul>';
+    if(Array.isArray(messages)){
+      messages.forEach(function(message){
+        message_html+= '<li>' + message + '</li>';
+      });
+    }else{
+      message_html+= '<li>' + messages + '</li>';
+    }
+    message_html+= '</ul></div>';
+    return message_html;
+  }
+  
+  function latepoint_clear_form_messages($form){
+    $form.find('.os-form-message-w').remove();
+  }
+  
+  function latepoint_show_data_in_lightbox(message, extra_classes = ''){
+    jQuery('.latepoint-lightbox-w').remove();
+    var lightbox_css_classes = 'latepoint-lightbox-w latepoint-w ';
+    if(extra_classes) lightbox_css_classes+= extra_classes;
+    jQuery('body').append('<div class="'+ lightbox_css_classes +'"><div class="latepoint-lightbox-i">' + message + '<a href="#" class="latepoint-lightbox-close"><i class="latepoint-icon latepoint-icon-x"></i></a></div><div class="latepoint-lightbox-shadow"></div></div>');
+    jQuery('body').addClass('latepoint-lightbox-active');
+  }
+  
+  
+  
+  // DOCUMENT READY
+  jQuery(document).ready(function( $ ) {
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    /* 
+      Ajax buttons action
+    */
+    $('.latepoint').on('click', 'button[data-os-action], a[data-os-action], div[data-os-action], span[data-os-action]', function(e){
+      var $this = $(this);
+      if($this.data('os-prompt') && !confirm($this.data('os-prompt'))) return false;
+      var params = $(this).data('os-params');
+      if($(this).data('os-source-of-params')){
+        params = $($(this).data('os-source-of-params')).find('select, input, textarea').serialize();
+      }
+      var return_format = $this.data('os-return-format') ? $this.data('os-return-format') : 'json'
+      var data = { action: 'latepoint_route_call', route_name: $(this).data('os-action'), params: params, return_format: return_format } 
+      $this.addClass('os-loading');
+      $.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(response){
+          if(response.status === "success"){
+            if($this.data('os-output-target') == 'lightbox'){
+              latepoint_show_data_in_lightbox(response.message, $this.data('os-lightbox-classes'));
+            }else if($this.data('os-output-target') == 'side-panel'){
+              $('.latepoint-side-panel-w').remove();
+              $('body').append('<div class="latepoint-side-panel-w"><div class="latepoint-side-panel-i">' + response.message + '</div><div class="latepoint-side-panel-shadow"></div></div>');
+            }else if($this.data('os-success-action') == 'reload'){
+              latepoint_add_notification(response.message);
+              location.reload();
+              return;
+            }else if($this.data('os-success-action') == 'redirect'){
+              if($this.data('os-redirect-to')){
+                latepoint_add_notification(response.message);
+                window.location.replace($this.data('os-redirect-to'));
+              }else{
+                window.location.replace(response.message); 
+              }
+              return;
+            }else if($this.data('os-output-target') && $($this.data('os-output-target')).length){
+              if($this.data('os-output-target-do') == 'append'){
+                $($this.data('os-output-target')).append(response.message);
+              }else{
+                $($this.data('os-output-target')).html(response.message);
+              }
+            }else{
+              if($this.data('os-before-after') == 'before'){
+                $this.before(response.message);
+              }else if($this.data('os-before-after') == 'before'){
+                $this.after(response.message);
+              }else{
+                latepoint_add_notification(response.message);
+              }
+            }
+            if($this.data('os-after-call')){
+              var func_name = $this.data('os-after-call');
+              if($this.data('os-pass-this')){
+                window[func_name]($this);
+              }else if($this.data('os-pass-response')){
+                window[func_name](response);
+              }else{
+                window[func_name]();
+              }
+            }
+            $this.removeClass('os-loading');
+          }else{
+            $this.removeClass('os-loading');
+            if($this.data('os-output-target') && $($this.data('os-output-target')).length){
+              $($this.data('os-output-target')).prepend(latepoint_generate_form_message_html(response.message, 'error'));
+            }else{
+              alert(response.message);
+            }
+          }
+        }
+      });
+      return false;
+    });
+  
+  
+    $('.latepoint').on('click', 'form[data-os-action] button[type="submit"]', function(e){
+      $(this).addClass('os-loading');
+    });
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    /* 
+      Form ajax submit action
+    */
+    $('.latepoint').on('submit', 'form[data-os-action]', function(e){
+      e.preventDefault(); // prevent native submit
+      var $form = $(this);
+      var form_data = $form.serialize();
+      var data = { action: 'latepoint_route_call', route_name: $(this).data('os-action'), params: form_data, return_format: 'json' }
+      $form.find('button[type="submit"]').addClass('os-loading');
+      $.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(response){
+          $form.find('button[type="submit"].os-loading').removeClass('os-loading');
+          latepoint_clear_form_messages($form);
+          if(response.status === "success"){
+            if($form.data('os-success-action') == 'reload'){
+              latepoint_add_notification(response.message);
+              location.reload();
+              return;
+            }else if($form.data('os-success-action') == 'redirect'){
+              if($form.data('os-redirect-to')){
+                latepoint_add_notification(response.message);
+                window.location.replace($form.data('os-redirect-to'));
+              }else{
+                window.location.replace(response.message);
+              }
+              return;
+            }else if($form.data('os-output-target') && $($form.data('os-output-target')).length){
+              $($form.data('os-output-target')).html(response.message);
+            }else{
+              if(response.message == 'redirect'){
+                window.location.replace(response.url);
+              }else{
+                latepoint_add_notification(response.message);
+                $form.prepend(latepoint_generate_form_message_html(response.message, 'success'));
+              }
+            }
+            if($form.data('os-record-id-holder') && response.record_id){
+              $form.find('[name="' + $form.data('os-record-id-holder') + '"]').val(response.record_id)
+            }
+            if($form.data('os-after-call')){
+              var func_name = $form.data('os-after-call');
+              if($form.data('os-pass-response')){
+                window[func_name](response);
+              }else{
+                window[func_name]();
+              }
+            }
+            $('button.os-loading').removeClass('os-loading');
+          }else{
+            $('button.os-loading').removeClass('os-loading');
+            if($form.data('os-show-errors-as-notification')){
+              latepoint_add_notification(response.message, 'error');
+            }else{
+              $form.prepend(latepoint_generate_form_message_html(response.message, 'error'));
+              $([document.documentElement, document.body]).animate({
+                  scrollTop: ($form.find(".os-form-message-w").offset().top - 30)
+              }, 200);
+            }
+          }
+          if(response.form_values_to_update){
+            $.each(response.form_values_to_update, function(name, value){
+              $form.find('[name="'+ name +'"]').val(value);
+            });
+          }
+        }
+      });
+      return false;
+    });
+  });
+
+  //os-notifications
+
+  function latepoint_add_notification(message, message_type = 'success'){
+	var wrapper = jQuery('body').find('.os-notifications');
+	if(!wrapper.length){
+		jQuery('body').append('<div class="os-notifications"></div>');
+		wrapper = jQuery('body').find('.os-notifications');
+	}
+	if(wrapper.find('.item').length > 0) wrapper.find('.item:first-child').remove();
+	wrapper.append('<div class="item item-type-'+ message_type +'">' + message + '<span class="os-notification-close"><i class="latepoint-icon latepoint-icon-x"></i></span></div>');
+}
+
+//os-shared
+
+function latepoint_mask_timefield($elem){
+	if(jQuery().inputmask){
+	  $elem.inputmask({
+	      'mask': '99:99',
+	      'placeholder': 'HH:MM'
+	  });
+	}
+}
+
+function latepoint_mask_phone($elem){
+	if(latepoint_is_phone_masking_enabled() && jQuery().inputmask) $elem.inputmask(latepoint_get_phone_format());
+}
+
+
+function latepoint_get_phone_format(){
+  return latepoint_helper.phone_format;
+}
+
+function latepoint_is_phone_masking_enabled(){
+	return (latepoint_helper.enable_phone_masking == 'yes');
+}
+
+function latepoint_show_booking_end_time(){
+	return (latepoint_helper.show_booking_end_time == 'yes');
+}
+
+function latepoint_init_form_masks(){
+	if(latepoint_is_phone_masking_enabled()) latepoint_mask_phone(jQuery('.os-mask-phone'));
+}
+
+function latepoint_get_paypal_payment_amount($booking_form_element){
+	var payment_portion = $booking_form_element.find('input[name="booking[payment_portion]"]').val();
+	var payment_amount = (payment_portion == 'deposit') ? $booking_form_element.find('.lp-paypal-btn-trigger').data('deposit-amount') : $booking_form_element.find('.lp-paypal-btn-trigger').data('full-amount');
+	return payment_amount;
+}
+
+//os-update
+
+function latepoint_load_addons_info(){
+    var $addons_info_wrapper = jQuery('.addons-info-holder');
+    $addons_info_wrapper.addClass('os-loading');
+    var route = $addons_info_wrapper.data('route');
+  
+    var data = { action: 'latepoint_route_call', route_name: route, params: '', return_format: 'json' }
+    jQuery.ajax({ type : "post", dataType : "json", url : latepoint_helper.ajaxurl, data : data,
+      success: function(response){
+        $addons_info_wrapper.removeClass('os-loading');
+        if(response.status === "success"){
+          if(response.message){
+            $addons_info_wrapper.html(response.message);
+          }else{
+            $addons_info_wrapper.html('Something is wrong. Try refreshing the page.')
+          }
+        }else{
+          alert(response.message, 'error');
+        }
+      }
+    });
+  }
+  
+  
+  function latepoint_check_for_updates(){
+    if(jQuery('.version-log-w').length){
+      var $log_wrapper = jQuery('.version-log-w');
+      $log_wrapper.addClass('os-loading');
+      var route = $log_wrapper.data('route');
+  
+      var data = { action: 'latepoint_route_call', route_name: route, params: '', return_format: 'json' }
+      jQuery.ajax({ type : "post", dataType : "json", url : latepoint_helper.ajaxurl, data : data,
+        success: function(response){
+          $log_wrapper.removeClass('os-loading');
+          if(response.status === "success"){
+            $log_wrapper.html(response.message);
+          }else{
+            alert(response.message, 'error');
+          }
+        }
+      });
+    }
+    if(jQuery('.version-status-info').length){
+  
+      var $version_info_wrapper = jQuery('.version-status-info');
+      $version_info_wrapper.addClass('os-loading');
+      var route = $version_info_wrapper.data('route');
+  
+      var data = { action: 'latepoint_route_call', route_name: route, params: '', return_format: 'json' }
+      jQuery.ajax({ type : "post", dataType : "json", url : latepoint_helper.ajaxurl, data : data,
+        success: function(response){
+          $version_info_wrapper.removeClass('os-loading');
+          if(response.status === "success"){
+            $version_info_wrapper.html(response.message);
+          }else{
+            alert(response.message, 'error');
+          }
+        }
+      });
+    }
+    if(jQuery('.addons-info-holder').length){
+      latepoint_load_addons_info();
+    }
+  }
+  
+  
+  // DOCUMENT READY
+  jQuery(document).ready(function( $ ) {
+    latepoint_check_for_updates();
+  
+  
+    // Install addon button click
+    jQuery('.addons-info-holder').on('click', '.os-addon-action-btn', function(){
+      var $install_btn = jQuery(this);
+      $install_btn.addClass('os-loading');
+  
+      var data = { action: 'latepoint_route_call', route_name: $install_btn.data('route-name'), params: { addon_name: $install_btn.data('addon-name'), addon_path: $install_btn.data('addon-path') }, layout: 'none', return_format: 'json'};
+      jQuery.ajax({
+        type : "post",
+        dataType : "json",
+        url : latepoint_helper.ajaxurl,
+        data : data,
+        success: function(response){
+          $install_btn.removeClass('os-loading');
+          if(response.status === "success"){
+            latepoint_add_notification(response.message);
+            latepoint_load_addons_info();
+          }else{
+            if(response.code == '404'){
+              latepoint_show_data_in_lightbox(response.message);
+            }else{
+              alert(response.message);
+            }
+          }
+        }
+      });
+      return false;
+    });
+  });
+
+  //os-google-calendar
+
+  class OsGoogleCalendar {
+    constructor(){
+    }
+    /**
+     *  On load, called to load the auth2 library and API client library.
+     */
+    init() {
+      gapi.load('client:auth2', () => {
+        gapi.client.init({
+                      clientId: latepoint_helper.google_calendar_client_id,
+                      discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+                      scope: "https://www.googleapis.com/auth/calendar"
+                    }).then(() => {
+                      jQuery('.os-google-cal-authorize-btn').on('click', () => {
+                        try{
+                          gapi.auth2.getAuthInstance().grantOfflineAccess().then(this.saveAuthCode);
+                        }catch(err){
+                          jQuery('.channel-watch-status').before(latepoint_generate_form_message_html(err.message, 'error'));
+                        }
+                        return false;
+                      });
+                    }, (err) => { jQuery('.channel-watch-status').before(latepoint_generate_form_message_html(err.details, 'error')); });
+      });
+    }
+    saveAuthCode(authResult) {
+  
+      var params = {  code: authResult['code'], 
+                      agent_id: jQuery('.os-google-cal-authorize-btn').data('agent-id') 
+                    };
+  
+      var data = {  action: 'latepoint_route_call', 
+                    route_name: jQuery('.os-google-cal-authorize-btn').data('route'), 
+                    params: params, 
+                    layout: 'none', 
+                    return_format: 'json' 
+                  };
+  
+      jQuery.ajax({
+        type: 'POST',
+        url: latepoint_helper.ajaxurl,
+        dataType : "json",
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        data: data,
+        success: function(response) {
+          latepoint_add_notification(response.message);
+          location.reload();
+        }
+      });
+    }
+  }
