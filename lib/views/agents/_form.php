@@ -38,7 +38,19 @@
 					  <?php } ?>
 					</div>
 				</div>
-		    <div class="white-box">
+			<div class="white-box">
+				<div class="white-box-header">
+		        	<div class="os-form-sub-header">
+						<h3><?php _e('Additional Settings', 'latepoint'); ?></h3>
+		      		</div>
+		      	</div>
+			  	<div class="white-box-content">
+			  		<div class="os-row">
+						<div class="os-col-lg-4"><?php echo OsFormHelper::text_field('agent[number_of_seats]', __('Number of seats', 'latepoint'), $agent->number_of_seats); ?></div>
+				    </div>
+				</div>
+			</div>
+			<div class="white-box">
 		      <div class="white-box-header">
 		        <div class="os-form-sub-header">
 						  <h3><?php _e('Additional Contact Information', 'latepoint'); ?></h3>

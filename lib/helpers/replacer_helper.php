@@ -13,7 +13,7 @@ class OsReplacerHelper {
 
   public static function replace_agent_vars($text, $agent){
   	$needles = array('{agent_full_name}', '{agent_display_name}', '{agent_email}','{agent_phone}');
-  	$replacements = array($agent->full_name, $agent->display_name, $agent->email, $agent->formatted_phone);
+  	$replacements = array($agent->full_name, $agent->display_name,$agent->number_of_seats,$agent->email, $agent->formatted_phone);
   	$text = str_replace($needles, $replacements, $text);
   	return $text;
   }
