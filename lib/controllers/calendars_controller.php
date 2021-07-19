@@ -416,7 +416,7 @@ if ( ! class_exists( 'OsCalendarsController' ) ) :
       ];
 
       foreach( $selected_date as $dates){
-        $query = "SELECT start_date,mid_date,end_date FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE service_id = '3' AND (start_date = '".$dates."' OR mid_date = '".$dates."' OR end_date = '".$dates."')";
+        $query = "SELECT start_date,mid_date,end_date FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE agent_id = ".$this->params['agent_id']." AND service_id = '3' AND (start_date = '".$dates."' OR mid_date = '".$dates."' OR end_date = '".$dates."')";
         $fetched_date = $booking->get_query_results($query);
         $returndata[$dates] = $fetched_date[0]; 
         $data[] = $fetched_date[0];
