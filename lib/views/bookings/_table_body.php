@@ -7,6 +7,7 @@ if($bookings){
         <span class="os-column-service-color" style="background-color: <?php echo $booking->service->bg_color; ?>"></span> 
         <a href="#" <?php echo OsBookingHelper::quick_booking_btn_html($booking->id); ?>><?php echo $booking->service->name; ?></a></td>
       <td><?php echo $booking->nice_start_date; ?></td>
+      <td><?php echo date("d M, Y", strtotime($booking->end_date)); ?></td>
       <td><?php echo $booking->nice_start_time; ?></td>
       <?php if(!$show_single_agent){ ?>
         <td>

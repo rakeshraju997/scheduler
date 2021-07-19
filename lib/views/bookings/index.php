@@ -7,7 +7,8 @@
             <tr>
               <th><?php _e('ID', 'latepoint'); ?></th>
               <th><?php _e('Service', 'latepoint'); ?></th>
-              <th><?php _e('Date', 'latepoint'); ?></th>
+              <th><?php _e('Start Date', 'latepoint'); ?></th>
+              <th><?php _e('End Date', 'latepoint'); ?></th>
               <th><?php _e('Time', 'latepoint'); ?></th>
               <?php if(!$show_single_agent){ ?><th><?php _e('Agent', 'latepoint'); ?></th><?php } ?>
               <?php if(count($locations_list) > 1) echo '<th>'.__('Location', 'latepoint').'</th>'; ?>
@@ -29,6 +30,7 @@
                   </div>
                 </div>
               </th>
+              <th></th>
               <?php if(!$show_single_agent){ ?>
                 <th><?php echo OsFormHelper::select_field('filter[agent_id]', false, OsAgentHelper::get_agents_list(), '', ['placeholder' => __('All Agents', 'latepoint'), 'class' => 'os-table-filter']); ?></th>
               <?php } ?>
@@ -55,7 +57,8 @@
             <tr>
               <th><?php _e('ID', 'latepoint'); ?></th>
               <th><?php _e('Service', 'latepoint'); ?></th>
-              <th><?php _e('Date', 'latepoint'); ?></th>
+              <th><?php _e('Start Date', 'latepoint'); ?></th>
+              <th><?php _e('End Date', 'latepoint'); ?></th>
               <th><?php _e('Time', 'latepoint'); ?></th>
               <?php if(!$show_single_agent){ ?><th><?php _e('Agent', 'latepoint'); ?></th><?php } ?>
               <?php if(count($locations_list) > 1) echo '<th>'.__('Location', 'latepoint').'</th>'; ?>
