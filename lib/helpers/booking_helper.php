@@ -960,9 +960,24 @@ class OsBookingHelper
                 $is_available = true;
               }
 
+
+              if($service_id_db == 1 && $p_date != null){
+                $select = true;
+              }else{
+                $select = false;
+              }
+
+              if(($service->id == 3 && $service_id_db != 0) || $countt > 0 ){
+                $p_date = 'c';
+              }else{
+                $p_date = null;
+              }
+
               //rr condition for  selected blue
-              if (($select == false  && $service_id_db != null) || $countt > 0) {
+              if (($select == false  && $service_id_db != 0) || $countt > 0) {
+
                 $three_day_class = 'background-color:#869ae2';
+
                 if ($countt == 0 && $service_id_db == 3) {
                   $countt = $service_id_db;
                   $countt--;
@@ -972,6 +987,7 @@ class OsBookingHelper
               } else {
                 $three_day_class = '';
               }
+              
 
 
               if (!$is_day_in_past && !$not_in_allowed_period) {
