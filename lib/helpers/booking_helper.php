@@ -961,13 +961,11 @@ class OsBookingHelper
               }
 
 
-              if($service_id_db == 1 && $p_date != null){
+              if($service->id == '3' && $service_id_db == 1 && $p_date != null){
                 $select = true;
-              }else{
-                $select = false;
-              }
+               }
 
-              if(($service->id == 3 && $service_id_db != 0) || $countt > 0 ){
+              if(($service->id == '3' && $service_id_db != 0) || $countt > 0 ){
                 $p_date = 'c';
               }else{
                 $p_date = null;
@@ -1668,4 +1666,18 @@ class OsBookingHelper
           $work_periods_arr = array_unique($work_periods_arr);
           return self::get_work_start_end_time($work_periods_arr);
         }
+
+        public static function get_customer_by_date($date,$agent_id)
+        {
+          $bookings = new OsBookingModel();
+          $query = "SELECT customer_id FROM wp_latepoint_bookings WHERE start_date ='" . $date . "' AND agent_id = " . $agent_id;
+          $booked_periods = $bookings->get_query_results($query);
+          foreach($booked_periods as $customer_ID){
+            $customer_details[] =  get_user_by( 'id', $customer_ID->customer_id);
+          }
+          return $customer_details;
+        }
+
       }
+
+      
