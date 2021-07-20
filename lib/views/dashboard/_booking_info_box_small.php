@@ -8,19 +8,19 @@
 		</div>
 	</div>
 	<?php if(!isset($hide_customer_info)){ 
-		$test = OsBookingHelper::get_customer_by_date($booking->start_date,$booking->agent->id);
-		foreach($test as $test1){?>
+		$customers = OsBookingHelper::get_customer_by_date($booking->start_date,$booking->agent->id);
+		foreach($customers as $customer){?>
 	<div class="customer-info-w">
-		<div class="avatar-w" style="background-image: url(<?php echo $booking->customer->get_avatar_url(); ?>);"></div>
+		<div class="avatar-w" style="background-image: url(<?php echo $customer->get_avatar_url(); ?>);"></div>
 		<div class="customer-info">
-			<div class="customer-name"><?php echo $booking->customer->full_name; ?></div>
+			<div class="customer-name"><?php echo $customer->full_name; ?></div>
 			<div class="customer-property">
 				<span class="label"><?php _e('Phone: ', 'latepoint'); ?></span>
-				<span class="value"><?php echo $booking->customer->formatted_phone; ?></span>
+				<span class="value"><?php echo $customer->formatted_phone; ?></span>
 			</div>
 			<div class="customer-property">
 				<span class="label"><?php _e('Email: ', 'latepoint'); ?></span>
-				<span class="value"><?php echo $booking->customer->email; ?></span>
+				<span class="value"><?php echo $customer->email; ?></span>
 			</div>
 		</div>
 	</div>
