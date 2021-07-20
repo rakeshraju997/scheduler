@@ -1,3 +1,13 @@
+<style>
+	.calendar-month-agents-w .ma-days-with-bookings-w .ma-day .ma-day-agent-bookings .ma-day-booking{
+		top : 0px !important;
+		bottom : 0px !important;
+	}
+	.ma-day-booking{
+		border : 0.5px solid #fff;
+		border-radius : 3px;
+	}
+</style>
 <?php 
 if($agents){ ?>
 	<?php if(!$calendar_only){ ?>
@@ -48,6 +58,7 @@ if($agents){ ?>
 					echo $agents_head_html;
 				echo '</div>';
 				$calendar_start_date = new OsWpDateTime($start_date_string);
+				$count = 0;
 				for($i = 0; $i < $calendar_start_date->format('d'); $i++){
 					echo '<div class="ma-day ma-day-number-'.$calendar_start_date->format('N').'">';
 						foreach($agents as $agent){
@@ -55,7 +66,12 @@ if($agents){ ?>
 							$total_work_time = $work_end_minutes - $work_start_minutes;
 							echo '<div class="ma-day-agent-bookings">';
 								if($total_work_time > 0){
-									$day_bookings = OsBookingHelper::get_bookings_for_date($calendar_start_date->format('Y-m-d'), ['agent_id' => $agent->id, 'location_id' => $selected_location_id]);
+									$day_bookings = OsBookingHelper::get_bookings_for_date($calendar_start_date->format('Y-m-d'), ['agent_id' => $agent->id, 'location_id' => $selected_location_id]);							
+									if($store[$agent->id]['count']>0){
+										echo '<div class="ma-day-booking" style="left: 0%; width: 100%; background-color: '.$store[$agent->id]['color'].'" '.$action_html.'>';
+										echo '</div>';$store[$agent->id]['count']--;
+									}
+								
 									if($day_bookings){
 										$overlaps_count = 1;
 										$total_attendies_in_group = 0;
@@ -69,24 +85,16 @@ if($agents){ ?>
 												$total_bookings_in_group++;
 												continue;
 											}else{
-
-												$width = ($booking->end_time - $booking->start_time) / $total_work_time * 100;
-												$left = ($booking->start_time - $work_start_minutes) / $total_work_time * 100;
-												
-												$max_capacity = OsServiceHelper::get_max_capacity($booking->service);
-												if($max_capacity > 1){
-												  $action_html = OsBookingHelper::group_booking_btn_html($booking->id);
+												if($booking->service->id == 3 || $count > 0 ){
+													$store[$agent->id]['count'] = intval($booking->service->id)-1;
+													$store[$agent->id]['color'] = $booking->service->bg_color;
+ 												}
+												if($booking->service->id == 1){
+													$width = 50;
 												}else{
-													$action_html = OsBookingHelper::quick_booking_btn_html($booking->id);
+													$width = 100;
 												}
-												if($width <= 0 || $left >= 100 || (($left + $width) <= 0)) continue;
-												if($left < 0){
-													$width = $width + $left;
-													$left = 0;
-												}
-												if(($left + $width) > 100) $width = 100 - $left;
-
-												echo '<div class="ma-day-booking" style="left: '.$left.'%; width: '.$width.'%; background-color: '.$booking->service->bg_color.'" '.$action_html.'>';
+												echo '<div class="ma-day-booking" style="left: 0%; width: '.$width.'%; background-color: '.$booking->service->bg_color.'" '.$action_html.'>';
 																$hide_agent_info = true;
 																include(LATEPOINT_VIEWS_ABSPATH.'dashboard/_booking_info_box_small.php');
 												echo '</div>';

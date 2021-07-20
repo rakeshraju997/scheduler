@@ -7,7 +7,9 @@
 			<div class="at-time"><?php echo implode('-', array($booking->nice_start_time, $booking->nice_end_time)); ?></div>
 		</div>
 	</div>
-	<?php if(!isset($hide_customer_info)){ ?>
+	<?php if(!isset($hide_customer_info)){ 
+		$test = OsBookingHelper::get_customer_by_date($booking->start_date,$booking->agent->id);
+		foreach($test as $test1){?>
 	<div class="customer-info-w">
 		<div class="avatar-w" style="background-image: url(<?php echo $booking->customer->get_avatar_url(); ?>);"></div>
 		<div class="customer-info">
@@ -22,8 +24,8 @@
 			</div>
 		</div>
 	</div>
-	<?php } ?>
-	<?php if(!isset($hide_agent_info)){ ?>
+	<?php } } ?>
+	<?php if(!isset($hide_agent_info)){?>
     <div class="agent-info-w">
       <div class="avatar-w" style="background-image: url(<?php echo $booking->agent->get_avatar_url(); ?>);"></div>
       <div class="agent-info">
