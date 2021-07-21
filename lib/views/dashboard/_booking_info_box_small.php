@@ -1,4 +1,4 @@
-<div class="appointment-box-small" <?php echo OsBookingHelper::quick_booking_btn_html($booking->id); ?>>
+<div class="appointment-box-small" <?php //echo OsBookingHelper::quick_booking_btn_html($booking->id); ?>>
 	<div class="appointment-info">
 		<div class="appointment-color-elem" style="background-color: <?php echo $booking->service->bg_color; ?>"></div>
 		<div class="appointment-service-name"><?php echo $booking->service->name; ?></div>
@@ -10,7 +10,7 @@
 	<?php if(!isset($hide_customer_info)){ 
 		$customers = OsBookingHelper::get_customer_by_date($booking->start_date,$booking->agent->id);
 		foreach($customers as $customer){?>
-	<div class="customer-info-w">
+	<div class="customer-info-w" <?php echo OsBookingHelper::quick_booking_btn_html($customer->booking_id); ?>>
 		<div class="avatar-w" style="background-image: url(<?php echo $customer->get_avatar_url(); ?>);"></div>
 		<div class="customer-info">
 			<div class="customer-name"><?php echo $customer->full_name; ?></div>

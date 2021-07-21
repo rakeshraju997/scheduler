@@ -1670,10 +1670,12 @@ class OsBookingHelper
         public static function get_customer_by_date($date,$agent_id)
         {
           $bookings = new OsBookingModel();
-          $query = "SELECT customer_id FROM wp_latepoint_bookings WHERE start_date ='" . $date . "' AND agent_id = " . $agent_id;
+          $query = "SELECT customer_id,id FROM wp_latepoint_bookings WHERE start_date ='" . $date . "' AND agent_id = " . $agent_id;
           $booked_periods = $bookings->get_query_results($query);
+          $i=0;
           foreach($booked_periods as $customer_ID){
-            $customer_details[] =  new OsCustomerModel($customer_ID->customer_id);
+            $customer_details[$i] =  new OsCustomerModel($customer_ID->customer_id);
+            $customer_details[$i]->booking_id = $customer_ID->id;$i++;
           }
           return $customer_details;
         }
