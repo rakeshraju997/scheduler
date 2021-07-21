@@ -20,8 +20,8 @@ if ( ! class_exists( 'OsCalendarsController' ) ) :
       
 
       $this->views_folder = LATEPOINT_VIEWS_ABSPATH . 'calendars/';
-      $this->vars['page_header'] = [['label' => __( 'Daily View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'daily_agents'])],
-                                    ['label' => __( 'Weekly View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'weekly_agent'])],
+      $this->vars['page_header'] = [/*['label' => __( 'Daily View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'daily_agents'])],
+                                    ['label' => __( 'Weekly View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'weekly_agent'])],*/
                                     ['label' => __( 'Monthly View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'monthly_agents'])]];
       if(OsAuthHelper::is_agent_logged_in()) $this->vars['page_header'][0]['link'] = OsRouterHelper::build_link(['calendars', 'daily_agent']);
       $this->vars['breadcrumbs'][] = array('label' => __('Appointments', 'latepoint'), 'link' => OsRouterHelper::build_link(OsRouterHelper::build_route_name('calendars', 'pending_approval') ) );

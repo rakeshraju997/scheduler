@@ -18,11 +18,11 @@ class OsMenuHelper {
       // ---------------
       $menus = array(
         array( 'id' => 'dashboard',  'label' => __( 'My Dashboard', 'latepoint' ), 'icon' => 'latepoint-icon latepoint-icon-box', 'link' => OsRouterHelper::build_link(['dashboard', 'for_agent'])),
-        array( 'id' => 'calendar',  'label' => __( 'My Calendar', 'latepoint' ), 'icon' => 'latepoint-icon latepoint-icon-calendar', 'link' => OsRouterHelper::build_link(['calendars', 'daily_agent']),
+        array( 'id' => 'calendar',  'label' => __( 'My Calendar', 'latepoint' ), 'icon' => 'latepoint-icon latepoint-icon-calendar', 'link' => OsRouterHelper::build_link(['calendars', 'monthly_agent']),
           'children' => array(
-                          array('label' => __( 'Daily View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'daily_agent'])),
+                          array('label' => __( 'Monthly View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'monthly_agents']))/*,
                           array('label' => __( 'Weekly View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'weekly_agent'])),
-                          array('label' => __( 'Monthly View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'monthly_agents'])),
+                          array('label' => __( 'Daily View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'daily_agent'])),*/
           )
         ),
         array( 'id' => 'appointments',  'label' => __( 'Appointments', 'latepoint' ), 'icon' => 'latepoint-icon latepoint-icon-book', 'link' => OsRouterHelper::build_link(['bookings', 'pending_approval']),
@@ -45,11 +45,11 @@ class OsMenuHelper {
       // ---------------
       $menus = array(
         array( 'id' => 'dashboard', 'label' => __( 'Dashboard', 'latepoint' ), 'icon' => 'latepoint-icon latepoint-icon-box', 'link' => OsRouterHelper::build_link(['dashboard', 'index'])),
-        array( 'id' => 'calendar', 'label' => __( 'Calendar', 'latepoint' ), 'icon' => 'latepoint-icon latepoint-icon-calendar', 'link' => OsRouterHelper::build_link(['calendars', 'daily_agents']),
+        array( 'id' => 'calendar', 'label' => __( 'Calendar', 'latepoint' ), 'icon' => 'latepoint-icon latepoint-icon-calendar', 'link' => OsRouterHelper::build_link(['calendars', 'monthly_agents']),
           'children' => array(
-                          array('label' => __( 'Daily View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'daily_agents'])),
+                          array('label' => __( 'Monthly View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'monthly_agents']))/*,
                           array('label' => __( 'Weekly Calendar', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'weekly_agent'])),
-                          array('label' => __( 'Monthly View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'monthly_agents'])),
+                          array('label' => __( 'Daily View', 'latepoint' ), 'icon' => '', 'link' => OsRouterHelper::build_link(['calendars', 'daily_agents'])),*/
           )
         ),
         array( 'id' => 'appointments', 'label' => __( 'Appointments', 'latepoint' ), 'icon' => 'latepoint-icon latepoint-icon-inbox', 'link' => OsRouterHelper::build_link(['bookings', 'index']),
