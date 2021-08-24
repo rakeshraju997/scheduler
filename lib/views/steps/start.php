@@ -55,6 +55,7 @@
                             'agent' => ['label' => __('Agent', 'latepoint'), 'value' => $booking->agent->full_name ],
                             'date' => ['label' => __('Date', 'latepoint'), 'value' => '' ],
                             'time' => ['label' => __('Time', 'latepoint'), 'value' => '' ],
+                            'mocktime' => ['label' => __('Mock test Date & Time', 'latepoint'), 'value' => '' ],
                             'customer' => ['label' => __('Customer', 'latepoint'), 'value' => $booking->customer->full_name],
                             'price' => ['label' => __('Total Price', 'latepoint'), 'value' => ($booking->full_amount_to_charge() > 0) ? $booking->formatted_full_price() : '']];
       $selectable_values = apply_filters('latepoint_summary_values', $selectable_values);

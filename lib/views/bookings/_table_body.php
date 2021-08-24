@@ -9,6 +9,7 @@ if($bookings){
       <td><?php echo $booking->nice_start_date; ?></td>
       <td><?php echo date("d M, Y", strtotime($booking->end_date)); ?></td>
       <td><?php echo $booking->nice_start_time; ?></td>
+      <td><?php echo OsTimeHelper::minutes_to_hours_and_minutes($booking->halfday_time); ?></td>
       <?php if(!$show_single_agent){ ?>
         <td>
           <a class="os-with-avatar" href="<?php echo OsRouterHelper::build_link(OsRouterHelper::build_route_name('agents', 'edit_form'), array('id' => $booking->agent_id) ); ?>" target="_blank">
