@@ -134,6 +134,10 @@ class OsBookingModel extends OsModel{
     $end_time = OsTimeHelper::shift_time_by_minutes($this->end_time, $this->customer->get_timeshift_in_minutes());
     return $end_time;
   }
+  public function get_mockstart_time_shifted_for_customer(){
+    $halfday_time = OsTimeHelper::shift_time_by_minutes($this->halfday_time, $this->customer->get_timeshift_in_minutes());
+    return $halfday_time;
+  }
 
   public function get_nice_created_at(){
     return date_format(date_create_from_format('Y-m-d H:i:s', $this->created_at), OsSettingsHelper::get_readable_date_format());
@@ -590,6 +594,7 @@ class OsBookingModel extends OsModel{
                             'start_time',
                             'end_time',
                             'mid_date',
+                            'halfday_time',
                             'payment_method',
                             'payment_portion',
                             'payment_token',
@@ -615,6 +620,7 @@ class OsBookingModel extends OsModel{
                             'end_date',
                             'start_time',
                             'end_time',
+                            'halfday_time',
                             'mid_date',
                             'payment_method',
                             'duration',
