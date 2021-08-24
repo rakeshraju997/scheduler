@@ -17,6 +17,7 @@ if ( ! class_exists( 'OsCalendarsController' ) ) :
       $this->action_access['public'] = array_merge($this->action_access['public'], ['load_monthly_calendar_days']);
       //rr clicked date function call
       $this->action_access['public'] = array_merge($this->action_access['public'], ['date_handle']);
+      $this->action_access['public'] = array_merge($this->action_access['public'], ['slot_handle']);
       
 
       $this->views_folder = LATEPOINT_VIEWS_ABSPATH . 'calendars/';
@@ -451,6 +452,20 @@ if ( ! class_exists( 'OsCalendarsController' ) ) :
       echo json_encode($arrr);
       die();
 
+    }
+
+    function slot_handle(){
+      $booking = new OsBookingModel();
+      $query = "SELECT halfday_time FROM `wp_latepoint_bookings` WHERE end_date = '".$this->params['end_date']."' GROUP BY end_date,halfday_time HAVING COUNT(halfday_time) >= 2";
+      $fetched_date = $booking->get_query_results($query);
+      $available_slots = [510,720,930,1140];
+      foreach($fetched_date as $booked){
+        $pos = array_search($booked->halfday_time,$available_slots);
+        unset($available_slots[$pos]);
+      }
+      $available_slots = array_values($available_slots);
+      echo json_encode($available_slots);
+      die();
     }
 
   }
