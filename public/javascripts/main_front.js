@@ -550,7 +550,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
         var selectedDate_p = $(this).data('date');
 
         // $(this).addClass('selected');   //show blue color on click for a day
-        slot_checking(selectedDate_p)
+        // slot_checking(selectedDate_p)
         // build timeslots
         day_timeslots($(this));
         // initialize timeslots events
