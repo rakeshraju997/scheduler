@@ -215,9 +215,6 @@ class OsBookingModel extends OsModel
 
       $was_new = $this->is_new_record();
 
-      /////////////////////////////
-
-      unset($fdata);
       if ($this->service_id == 1 || $this->service_id == 3) {
         $qu = " AND halfday_time = '" . $this->halfday_time . "'";
       }
@@ -235,10 +232,6 @@ class OsBookingModel extends OsModel
           return false;
         }
       }
-
-
-      //////////////////////
-
 
       if (($this->amount_to_charge() > 0) && !OsSettingsHelper::is_env_demo()) {
         $transaction = OsPaymentsHelper::process_payment_for_booking($this);
