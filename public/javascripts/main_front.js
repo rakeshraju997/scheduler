@@ -555,7 +555,14 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
         var selectedService = $booking_form_element.find('.latepoint_service_id').val();
         var selectedDate_p = $(this).data('date');
 
-        
+         // build timeslots
+         day_timeslots($(this));
+         // initialize timeslots events
+         os_init_timeslots();
+         // clear time and hide next btn
+         latepoint_update_summary_field($booking_form_element, 'time', '');
+         $booking_form_element.find('.latepoint_start_time').val('');
+         latepoint_hide_next_btn($booking_form_element);
 
         //rr ajax for date passing
         if(selectedService == 3){
@@ -580,6 +587,8 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
               {
                 let $timeslots = $booking_form_element.find('.timeslots')
                 $timeslots.html('')
+                $('.times-header').hide()
+                $('.mocktime').hide()
                 $timeslots.addClass('slots-not-available').append('<div class="not-working-message">' + 'Three day session not available' + "</div>");
                 $booking_form_element.find('.os-day.selected').removeClass('selected');
                 $("[data-date="+ selectedDate_p +"]").addClass('os-not-available selected')
@@ -622,14 +631,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
             });
         }
 
-        // build timeslots
-        day_timeslots($(this));
-        // initialize timeslots events
-        os_init_timeslots();
-        // clear time and hide next btn
-        latepoint_update_summary_field($booking_form_element, 'time', '');
-        $booking_form_element.find('.latepoint_start_time').val('');
-        latepoint_hide_next_btn($booking_form_element);
+       
 
       }
       return false;
