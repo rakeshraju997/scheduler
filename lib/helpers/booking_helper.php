@@ -129,8 +129,9 @@ class OsBookingHelper
   public static function get_payment_total_info_html($booking)
   {
     $payment_portion = (OsBookingHelper::get_default_payment_portion_type($booking) == LATEPOINT_PAYMENT_PORTION_DEPOSIT) ? ' paying-deposit ' : '';
+    if($booking->service_id!=1){ $payment_text = __('Booking token price: ', 'latepoint');}else{ $payment_text = __('Total booking price: ', 'latepoint');}
     $html = '<div class="payment-total-info ' . $payment_portion . '">
-              <div class="payment-total-price-w"><span>' . __('Total booking price: ', 'latepoint') . '</span><span class="lp-price-value">' . $booking->formatted_full_price() . '</span></div>
+              <div class="payment-total-price-w"><span>' . $payment_text . '</span><span class="lp-price-value">' . $booking->formatted_full_price() . '</span></div>
               <div class="payment-deposit-price-w"><span>' . __('Deposit Amount: ', 'latepoint') . '</span><span class="lp-price-value">' . $booking->formatted_deposit_price() . '</span></div>
             </div>';
     $html = apply_filters('latepoint_filter_payment_total_info', $html, $booking);
@@ -933,9 +934,17 @@ class OsBookingHelper
               $service_id_db = intval($dd->service_id);
               $service_count = intval($dd->count);
 
-              if ($dd->service_id == $service->id && $service_count < $agent_service_count) {
+              if ($dd->service_id == $service->id && $service_count < $agent_service_count ) {
                 $select = false;
-              } else if ($service_id_db == 3 || $count > 0) {
+                if(self::mocktest_slot_checking($day_date->format('Y-m-d'),$agent_id)){
+                 $select = true;
+                 $is_available = false;
+                 
+                }
+                if($count >0){
+                  $count--;
+                }
+              }else if ($service_id_db == 3 || $count > 0 ) {
                 if ($count == 0) {
                   $count = $service_id_db; //assign count to three for colouring 
                 }
@@ -948,22 +957,21 @@ class OsBookingHelper
                   }
                 }
                 $count--;
-              } 
-              else if ($service_id_db) {
+              }else if ($service_id_db) {
                 $select = true;
                 if ($service_id_db == 1 && $service->id == 3) {
                   $select = false; //three day session end half day red remove 
+                  $is_available = true;
                 }
-              }
-               else {
+              }else {
                 $select = false;
                 $is_available = true;
               }
 
 
-              if($service->id == '3' && $service_id_db == 1 && $p_date != null){
-                $select = true;
-               }
+              // if($service->id == '3' && $service_id_db == 1 && $p_date != null){
+              //   $select = true;
+              //  }
 
               if(($service->id == '3' && $service_id_db != 0) || $countt > 0 ){
                 $p_date = 'c';
@@ -1065,7 +1073,7 @@ class OsBookingHelper
       <div class="<?php echo $day_class; ?>" data-date="<?php echo $day_date->format('Y-m-d'); ?>" data-nice-date="<?php echo OsTimeHelper::get_nice_date_with_optional_year($day_date->format('Y-m-d'), false); ?>" data-service-duration="<?php echo $duration_minutes; ?>" data-total-work-minutes="<?php echo $total_work_minutes; ?>" data-work-start-time="<?php echo $work_start_minutes; ?>" data-work-end-time="<?php echo $work_end_minutes ?>" data-available-minutes="<?php echo implode(',', $available_minutes); ?>" data-day-minutes="<?php echo implode(',', $day_minutes); ?>" data-interval="<?php echo $interval; ?>">
         <?php if ($settings['layout'] == 'horizontal') { ?><div class="os-day-weekday"><?php echo OsBookingHelper::get_weekday_name_by_number($day_date->format('N')); ?></div><?php } ?>
         <div class="os-day-box" <?php echo $three_day_back; ?>>
-          <div class="os-day-number"><?php echo $day_date->format('j'); ?></div>
+          <div class="os-day-number"><?php echo $tt.$day_date->format('j'); ?></div>
           <?php if (!$is_day_in_past && !$not_in_allowed_period) { ?>
             <div class="os-day-status">
               <?php
@@ -1678,6 +1686,24 @@ class OsBookingHelper
             $customer_details[$i]->booking_id = $customer_ID->id;$i++;
           }
           return $customer_details;
+        }
+
+        public static function mocktest_slot_checking($date,$agent_id)
+        {
+          $bookings = new OsBookingModel();
+          $query = "SELECT halfday_time FROM `wp_latepoint_bookings` WHERE end_date = '".$date."' AND agent_id = ".$agent_id." GROUP BY end_date,halfday_time HAVING COUNT(halfday_time) >= 2";
+          $booked_periods = $bookings->get_query_results($query);
+          $available_slots = [510,720,930,1140];
+          foreach($booked_periods as $booked){
+            $pos = array_search($booked->halfday_time,$available_slots);
+            unset($available_slots[$pos]);
+          }
+          $available_slots = array_values($available_slots);
+          if($available_slots[0] == 1140){
+            return true;
+          }else{
+            return false;
+          }
         }
 
       }

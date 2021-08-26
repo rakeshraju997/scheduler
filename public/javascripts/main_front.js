@@ -269,16 +269,21 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
     $day.addClass('selected');
     let $service_id = $booking_form_element.find('.latepoint_service_id').val();
     //rr display half day slots in 3 day
+    let chk_day=$('#mocktime').val().toString()
+    if(chk_day == ''){
+      chk_day = $day.data('date')
+    }
     if($service_id == 3 || $service_id == 1){
         var available_minutes = function () {
         var tmp;
-        let endDate = new Date($day.data('date'))
+        let endDate = new Date(chk_day)
         let slot_info = {}
-        if($service_id !=1){
-          endDate.setDate(endDate.getDate()+2)
-        }
+        // if($service_id !=1){
+        //   endDate.setDate(endDate.getDate()+2)
+        // }
         endDate = endDate.toISOString().replace(/T.*/,'').split('-').join('-')
         slot_info['end_date'] = endDate;
+        slot_info['agent_id'] = $booking_form_element.find('.latepoint_agent_id').val();
         let  slot_handle = 'calendars__slot_handle';
         let data = { action: 'latepoint_route_call', route_name: slot_handle, params: slot_info, layout: 'none', return_format: 'json' };
         $.ajax({
@@ -313,7 +318,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
     }
     var $timeslots = $booking_form_element.find('.timeslots');
     $timeslots.html('');
-    if(total_work_minutes > 0 && available_minutes.length && day_minutes.length){
+    if(total_work_minutes > 0 && available_minutes.length && day_minutes.length && $day.hasClass('os-not-available')==false){
       var prev_minutes = false;
       day_minutes.forEach(function(current_minutes){
         if((current_minutes + service_duration) > work_end_minutes) return;
@@ -352,6 +357,8 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
         prev_minutes = current_minutes;
       });
     }else{
+      $('.times-header').hide()
+      $('.mocktime').hide()
       // No working hours this day
       $timeslots.addClass('slots-not-available').append('<div class="not-working-message">' + latepoint_helper.msg_not_available + "</div>");
     }
@@ -388,7 +395,6 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
             $booking_form_element.find('.latepoint_halfday_time').val($(this).data('minutes'));
             $booking_form_element.find('.latepoint_start_time').val(600);
             $booking_form_element.find('.latepoint_halfday_time').val($(this).data('minutes'));
-            console.log($booking_form_element.find('.os-summary-value-mocktime').text() + ','+ selected_timeslot_time )
             latepoint_update_summary_field($booking_form_element, 'mocktime', $booking_form_element.find('.os-summary-value-mocktime').text().split(',')[0] + ',<br>'+ selected_timeslot_time);
           }else{
             if($booking_form_element.find('.latepoint_service_id').val() == 1){
@@ -549,16 +555,14 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
         var selectedService = $booking_form_element.find('.latepoint_service_id').val();
         var selectedDate_p = $(this).data('date');
 
-        // $(this).addClass('selected');   //show blue color on click for a day
-        // slot_checking(selectedDate_p)
-        // build timeslots
-        day_timeslots($(this));
-        // initialize timeslots events
-        os_init_timeslots();
-        // clear time and hide next btn
-        latepoint_update_summary_field($booking_form_element, 'time', '');
-        $booking_form_element.find('.latepoint_start_time').val('');
-        latepoint_hide_next_btn($booking_form_element);
+         // build timeslots
+         day_timeslots($(this));
+         // initialize timeslots events
+         os_init_timeslots();
+         // clear time and hide next btn
+         latepoint_update_summary_field($booking_form_element, 'time', '');
+         $booking_form_element.find('.latepoint_start_time').val('');
+         latepoint_hide_next_btn($booking_form_element);
 
         //rr ajax for date passing
         if(selectedService == 3){
@@ -573,6 +577,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
         let  next_month_route_name = 'calendars__date_handle';
         let data = { action: 'latepoint_route_call', route_name: next_month_route_name, params: booking_info, layout: 'none', return_format: 'json' };
           $.ajax({
+            async: false,
             type : "post",
             dataType : "json",
             url : latepoint_helper.ajaxurl,
@@ -582,11 +587,14 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
               {
                 let $timeslots = $booking_form_element.find('.timeslots')
                 $timeslots.html('')
+                $('.times-header').hide()
+                $('.mocktime').hide()
                 $timeslots.addClass('slots-not-available').append('<div class="not-working-message">' + 'Three day session not available' + "</div>");
                 $booking_form_element.find('.os-day.selected').removeClass('selected');
                 $("[data-date="+ selectedDate_p +"]").addClass('os-not-available selected')
                 console.log('block by other session')
               }else{
+                $('#mocktime').val(data.end_date)
                 //create normal time for mocktest first twodays
                 var end_date_nice = $("[data-date="+ data.end_date +"]").data('nice-date')
                 let current_minutes = $("[data-date="+ data.start_date +"]").data('work-start-time');
@@ -607,7 +615,11 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
                 }
                 $booking_form_element.find('.os-day.selected').removeClass('selected');
                 latepoint_update_summary_field($booking_form_element, 'date', $("[data-date="+ data.start_date +"]").data('nice-date')+' - '+$("[data-date="+ data.end_date +"]").data('nice-date'))
-                $('.times-header-label span').text($("[data-date="+ data.start_date +"]").data('nice-date')+' - '+$("[data-date="+ data.end_date +"]").data('nice-date'));
+          
+                $('.times-header-label  span:nth-child(2)').text($("[data-date="+ data.start_date +"]").data('nice-date')+' - '+ $("[data-date="+ data.mid_date +"]").data('nice-date')); //add start& mid date to calander bottom section
+
+                $('.times-header-label span:nth-child(3)').html(timeslot_label);//add time to calander bottom section
+                $('.mocktime span').html($("[data-date="+ data.end_date +"]").data('nice-date'))
                 Object.values(data).forEach(val => {
                   $("[data-date="+ val +"]").addClass('selected')
                 });
@@ -618,6 +630,9 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
             }
             });
         }
+
+       
+
       }
       return false;
     });
@@ -1440,7 +1455,6 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
       var $next_btn = $(this); 
       $next_btn.addClass('os-loading');
       var $booking_form = $(this).closest('.latepoint-form');
-      console.log($booking_form)
       var $booking_form_element = $booking_form.closest('.latepoint-booking-form-element');
 
       var current_step = $booking_form_element.find('.latepoint_current_step').val();
