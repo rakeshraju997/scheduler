@@ -979,7 +979,7 @@ class OsBookingHelper
                  if (array_search($day_date->format('Y-m-d'), $datess)) {
                     $select = true;
                     $is_available = false;
-                    if ($datess[2] == $day_date->format('Y-m-d') && $service->id != 3) {
+                    if ($datess[2] == $day_date->format('Y-m-d') && $service->id == 1) {
                       $agnt_servc_count = self::get_agent_seat_number_by_service(3, $agent_id);
                       $cnt = self::getenddatebookingcount($datess[2], $agent_id);
                       if ($cnt < $agnt_servc_count) {
