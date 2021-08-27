@@ -456,7 +456,12 @@ if ( ! class_exists( 'OsCalendarsController' ) ) :
 
     function slot_handle(){
       $booking = new OsBookingModel();
-      $query = "SELECT halfday_time FROM `wp_latepoint_bookings` WHERE end_date = '".$this->params['end_date']."' AND agent_id = ".$this->params['agent_id']." GROUP BY end_date,halfday_time HAVING COUNT(halfday_time) >= 2";
+
+      $query0 = "SELECT start_date,mid_date,end_date FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE agent_id = ".$this->params['agent_id']." AND service_id = '3' AND (start_date = '".$this->params['date']."' OR mid_date = '".$this->params['date']."' OR end_date = '".$this->params['date']."')";
+      $fetched_date = $booking->get_query_results($query0);
+      $end_date = $fetched_date[0]->end_date;
+
+      $query = "SELECT halfday_time FROM `wp_latepoint_bookings` WHERE end_date = '".$end_date."' AND agent_id = ".$this->params['agent_id']." GROUP BY end_date,halfday_time HAVING COUNT(halfday_time) >= 2";
       $fetched_date = $booking->get_query_results($query);
       $available_slots = [510,720,930,1140];
       foreach($fetched_date as $booked){

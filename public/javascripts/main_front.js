@@ -274,11 +274,11 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
         var tmp;
         let endDate = new Date($day.data('date'))
         let slot_info = {}
-        if($service_id ==3){
-          endDate.setDate(endDate.getDate()+2)
-        }
+        // if($service_id ==3){
+        //   endDate.setDate(endDate.getDate()+2)
+        // }
         endDate = endDate.toISOString().replace(/T.*/,'').split('-').join('-')
-        slot_info['end_date'] = endDate;
+        slot_info['date'] = endDate;
         slot_info['agent_id'] = $booking_form_element.find('.latepoint_agent_id').val();
         let  slot_handle = 'calendars__slot_handle';
         let data = { action: 'latepoint_route_call', route_name: slot_handle, params: slot_info, layout: 'none', return_format: 'json' };
@@ -289,6 +289,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
           url : latepoint_helper.ajaxurl,
           data : data,
           success: function(data){
+            console.log(data)
            tmp = data 
           },
           error: function(error){
