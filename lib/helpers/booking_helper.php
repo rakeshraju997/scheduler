@@ -956,10 +956,10 @@ class OsBookingHelper
                   if ($db->service_id == $service->id && $booking_count < $agent_service_count) {
                     $select = false;
                     $is_available = true;
-                   if ($cntt >= $agnt_servc_countt && $service->id != 1) {
+                   if ($cntt >= $agnt_servc_countt && $service->id == 3) {  /* != 1 */
                       $datess = array_values((array) self::getThreeDayBookingDates($day_date->format('Y-m-d'), $agent_id));
-                      $select = true;
-                      $is_available = false;
+                     $select = true;
+                     $is_available = false;
                     }
                   } else if ($service_id_db) {
                     if ($service_id_db == 3) {
