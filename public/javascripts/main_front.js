@@ -586,12 +586,12 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
                 $timeslots.html('')
                 $('.times-header').hide()
                 $('.mocktime').hide()
+                latepoint_update_summary_field($booking_form_element, 'mocktime','')
                 $timeslots.addClass('slots-not-available').append('<div class="not-working-message">' + 'Three day session not available' + "</div>");
                 $booking_form_element.find('.os-day.selected').removeClass('selected');
                 $("[data-date="+ selectedDate_p +"]").addClass('os-not-available selected')
                 console.log('block by other session')
               }else{
-                $('#mocktime').val(data.end_date)
                 //create normal time for mocktest first twodays
                 var end_date_nice = $("[data-date="+ data.end_date +"]").data('nice-date')
                 let current_minutes = $("[data-date="+ data.start_date +"]").data('work-start-time');
