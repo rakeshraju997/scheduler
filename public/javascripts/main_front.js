@@ -269,18 +269,14 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
     $day.addClass('selected');
     let $service_id = $booking_form_element.find('.latepoint_service_id').val();
     //rr display half day slots in 3 day
-    let chk_day=$('#mocktime').val().toString()
-    if(chk_day == ''){
-      chk_day = $day.data('date')
-    }
     if($service_id == 3 || $service_id == 1){
         var available_minutes = function () {
         var tmp;
-        let endDate = new Date(chk_day)
+        let endDate = new Date($day.data('date'))
         let slot_info = {}
-        // if($service_id !=1){
-        //   endDate.setDate(endDate.getDate()+2)
-        // }
+        if($service_id ==3){
+          endDate.setDate(endDate.getDate()+2)
+        }
         endDate = endDate.toISOString().replace(/T.*/,'').split('-').join('-')
         slot_info['end_date'] = endDate;
         slot_info['agent_id'] = $booking_form_element.find('.latepoint_agent_id').val();
