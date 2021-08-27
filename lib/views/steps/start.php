@@ -52,7 +52,7 @@
       $selectable_values = ['service' => ['label' => __('Service', 'latepoint'), 'value' => $booking->service->name ],
                             'duration' => ['label' => __('Duration', 'latepoint'), 'value' => '' ],
                             'location' => ['label' => __('Location', 'latepoint'), 'value' => $booking->location->name ],
-                            'agent' => ['label' => __('Agent', 'latepoint'), 'value' => $booking->agent->full_name ],
+                            'agent' => ['label' => __('Location', 'latepoint'), 'value' => $booking->agent->full_name ],
                             'date' => ['label' => __('Date', 'latepoint'), 'value' => '' ],
                             'time' => ['label' => __('Time', 'latepoint'), 'value' => '' ],
                             'mocktime' => ['label' => __('Mock test Date & Time', 'latepoint'), 'value' => '' ],
