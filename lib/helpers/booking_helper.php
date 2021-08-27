@@ -129,7 +129,11 @@ class OsBookingHelper
   public static function get_payment_total_info_html($booking)
   {
     $payment_portion = (OsBookingHelper::get_default_payment_portion_type($booking) == LATEPOINT_PAYMENT_PORTION_DEPOSIT) ? ' paying-deposit ' : '';
-    if($booking->service_id!=1){ $payment_text = __('Booking token price: ', 'latepoint');}else{ $payment_text = __('Total booking price: ', 'latepoint');}
+    if ($booking->service_id != 1) {
+      $payment_text = __('Booking token price: ', 'latepoint');
+    } else {
+      $payment_text = __('Total booking price: ', 'latepoint');
+    }
     $html = '<div class="payment-total-info ' . $payment_portion . '">
               <div class="payment-total-price-w"><span>' . $payment_text . '</span><span class="lp-price-value">' . $booking->formatted_full_price() . '</span></div>
               <div class="payment-deposit-price-w"><span>' . __('Deposit Amount: ', 'latepoint') . '</span><span class="lp-price-value">' . $booking->formatted_deposit_price() . '</span></div>
@@ -919,81 +923,135 @@ class OsBookingHelper
             $available_minutes = [];
             $day_minutes = [];
 
-            foreach ($agent_ids as $agent_id) {
-              if ($is_today) {
-                // if today - block already passed time slots
-                $today_earliest_possible_minutes_start = OsTimeHelper::get_current_minutes($settings['timeshift_minutes']);
-                if ($settings['earliest_possible_booking'] && $earliest_possible_booking->format('Y-m-d') == $now_datetime->format('Y-m-d')) {
-                  $today_earliest_possible_minutes_start = max($today_earliest_possible_minutes_start, OsTimeHelper::convert_datetime_to_minutes($earliest_possible_booking));
-                }
-                $booked_periods_arr['agent_' . $agent_id][$day_date->format('Y-m-d')][] = '0:' . $today_earliest_possible_minutes_start . ':0:0';
-              }
-              //rr
-              $agent_service_count = self::get_agent_seat_number($agent_id)->number_of_seats;
-              $dd = self::get_serviceid_by_date($day_date->format('Y-m-d'), $agent_id, $approved_only = true);
-              $service_id_db = intval($dd->service_id);
-              $service_count = intval($dd->count);
-
-              if ($dd->service_id == $service->id && $service_count < $agent_service_count ) {
-                $select = false;
-                if(self::mocktest_slot_checking($day_date->format('Y-m-d'),$agent_id)){
-                 $select = true;
-                 $is_available = false;
-                 
-                }
-                if($count >0){
-                  $count--;
-                }
-              }else if ($service_id_db == 3 || $count > 0 ) {
-                if ($count == 0) {
-                  $count = $service_id_db; //assign count to three for colouring 
-                }
-                $select = true;
-                if ($service->id == 1 && $count == 1 && $service_count < $agent_service_count) {             
-                  $select = false; //three day session end half gree for half day booking
-                  $is_available = true;
-                  if ($service_id_db == 2) {
-                    $select = true;
+                foreach ($agent_ids as $agent_id) {
+                  if ($is_today) {
+                    // if today - block already passed time slots
+                    $today_earliest_possible_minutes_start = OsTimeHelper::get_current_minutes($settings['timeshift_minutes']);
+                    if ($settings['earliest_possible_booking'] && $earliest_possible_booking->format('Y-m-d') == $now_datetime->format('Y-m-d')) {
+                      $today_earliest_possible_minutes_start = max($today_earliest_possible_minutes_start, OsTimeHelper::convert_datetime_to_minutes($earliest_possible_booking));
+                    }
+                    $booked_periods_arr['agent_' . $agent_id][$day_date->format('Y-m-d')][] = '0:' . $today_earliest_possible_minutes_start . ':0:0';
                   }
-                }
-                $count--;
-              }else if ($service_id_db) {
-                $select = true;
-                if ($service_id_db == 1 && $service->id == 3) {
-                  $select = false; //three day session end half day red remove 
+                  //rr
+                  if($service->id == 1) {
+                    $ser_id = 3;
+                  }
+                  else { 
+                    $ser_id = $service->id; 
+                  }
+                  $agent_service_count = self::get_agent_seat_number_by_service($ser_id, $agent_id);
+                  $db = self::get_serviceid_by_date($day_date->format('Y-m-d'), $agent_id, $approved_only = true);
+                  $service_id_db = intval($db->service_id);
+                  $service_count = intval($db->count);
+                  $select = false;
                   $is_available = true;
-                }
-              }else {
-                $select = false;
-                $is_available = true;
-              }
+        // $datess= array();
+        // unset($datess);
 
+                  if ($service->id == 3 && $service_id_db == 3) {
+                    $agnt_servc_countt = self::get_agent_seat_number_by_service(3, $agent_id);
+                    $cntt = self::getenddatebookingcount(date('Y-m-d', strtotime("+2 day", strtotime($day_date->format('Y-m-d')))), gent_id);
+                  }
+                 $booking_count = self::getBookingcountbySeriviceId($service->id, $day_date->format('Y-m-d'), $agent_id);
+                  if ($db->service_id == $service->id && $booking_count < $agent_service_count) {
+                    $select = false;
+                    $is_available = true;
+                   if ($cntt >= $agnt_servc_countt && $service->id != 1) {
+                      $datess = array_values((array) self::getThreeDayBookingDates($day_date->format('Y-m-d'), $agent_id));
+                      $select = true;
+                      $is_available = false;
+                    }
+                  } else if ($service_id_db) {
+                    if ($service_id_db == 3) {
+                      $datess = array_values((array) self::getThreeDayBookingDates($day_date->format('Y-m-d'), $agent_id));
+                    }
+                    $select = true;
+                    $is_available = false;
+                    if ($service->id == 3 && $service_id_db == 1) {
+                      $cnt = self::getenddatebookingcount($day_date->format('Y-m-d'), $agent_id);
+                      $agnt_servc_count = self::get_agent_seat_number_by_service(3, $agent_id);
+                      if ($cnt < $agnt_servc_count) {
+                        $select = false;
+                        $is_available = true;
+                      }
+                    }
+                  }
+                 if (array_search($day_date->format('Y-m-d'), $datess)) {
+                    $select = true;
+                    $is_available = false;
+                    if ($datess[2] == $day_date->format('Y-m-d')) {
+                      $agnt_servc_count = self::get_agent_seat_number_by_service(3, $agent_id);
+                      $cnt = self::getenddatebookingcount($datess[2], $agent_id);
+                      if ($cnt < $agnt_servc_count) {
+                        $pp =  $cnt;
+                        $select = false;
+                        $is_available = true;
+                      }
+                    }
+                  }
+                                    
+            
 
-              // if($service->id == '3' && $service_id_db == 1 && $p_date != null){
+              // if ($dd->service_id == $service->id && $service_count < $agent_service_count ) {
+              //   $select = false;
+              //   if(self::mocktest_slot_checking($day_date->format('Y-m-d'),$agent_id)){
+              //    $select = true;
+              //    $is_available = false;
+
+              //   }
+              //   if($count >0){
+              //     $count--;
+              //   }
+              // }else if ($service_id_db == 3 || $count > 0 ) {
+              //   if ($count == 0) {
+              //     $count = $service_id_db; //assign count to three for colouring 
+              //   }
               //   $select = true;
-              //  }
+              //   if ($service->id == 1 && $count == 1 && $service_count < $agent_service_count) {             
+              //     $select = false; //three day session end half gree for half day booking
+              //     $is_available = true;
+              //     if ($service_id_db == 2) {
+              //       $select = true;
+              //     }
+              //   }
+              //   $count--;
+              // }else if ($service_id_db) {
+              //   $select = true;
+              //   if ($service_id_db == 1 && $service->id == 3) {
+              //     $select = false; //three day session end half day red remove 
+              //     $is_available = true;
+              //   }
+              // }else {
+              //   $select = false;
+              //   $is_available = true;
+              // }
 
-              if(($service->id == '3' && $service_id_db != 0) || $countt > 0 ){
-                $p_date = 'c';
-              }else{
-                $p_date = null;
-              }
 
-              //rr condition for  selected blue
-              if (($select == false  && $service_id_db != 0) || $countt > 0) {
+              // // if($service->id == '3' && $service_id_db == 1 && $p_date != null){
+              // //   $select = true;
+              // //  }
 
-                $three_day_class = 'background-color:#869ae2';
+              // if(($service->id == '3' && $service_id_db != 0) || $countt > 0 ){
+              //   $p_date = 'c';
+              // }else{
+              //   $p_date = null;
+              // }
 
-                if ($countt == 0 && $service_id_db == 3) {
-                  $countt = $service_id_db;
-                  $countt--;
-                } else {
-                  $countt--;
-                }
-              } else {
-                $three_day_class = '';
-              }
-              
+              // //rr condition for  selected blue
+              // if (($select == false  && $service_id_db != 0) || $countt > 0) {
+
+              //   $three_day_class = 'background-color:#869ae2';
+
+              //   if ($countt == 0 && $service_id_db == 3) {
+              //     $countt = $service_id_db;
+              //     $countt--;
+              //   } else {
+              //     $countt--;
+              //   }
+              // } else {
+              //   $three_day_class = '';
+              // }
+
 
 
               if (!$is_day_in_past && !$not_in_allowed_period) {
@@ -1073,7 +1131,7 @@ class OsBookingHelper
       <div class="<?php echo $day_class; ?>" data-date="<?php echo $day_date->format('Y-m-d'); ?>" data-nice-date="<?php echo OsTimeHelper::get_nice_date_with_optional_year($day_date->format('Y-m-d'), false); ?>" data-service-duration="<?php echo $duration_minutes; ?>" data-total-work-minutes="<?php echo $total_work_minutes; ?>" data-work-start-time="<?php echo $work_start_minutes; ?>" data-work-end-time="<?php echo $work_end_minutes ?>" data-available-minutes="<?php echo implode(',', $available_minutes); ?>" data-day-minutes="<?php echo implode(',', $day_minutes); ?>" data-interval="<?php echo $interval; ?>">
         <?php if ($settings['layout'] == 'horizontal') { ?><div class="os-day-weekday"><?php echo OsBookingHelper::get_weekday_name_by_number($day_date->format('N')); ?></div><?php } ?>
         <div class="os-day-box" <?php echo $three_day_back; ?>>
-          <div class="os-day-number"><?php echo $tt.$day_date->format('j'); ?></div>
+          <div class="os-day-number"><?php  echo $day_date->format('j'); ?></div>
           <?php if (!$is_day_in_past && !$not_in_allowed_period) { ?>
             <div class="os-day-status">
               <?php
@@ -1309,11 +1367,11 @@ class OsBookingHelper
         public static function get_agent_seat_number($agent_id)
         {
           $bookings = new OsBookingModel();
-          $query = 'SELECT number_of_seats FROM wp_latepoint_agents WHERE id ='.$agent_id;        
+          $query = 'SELECT number_of_seats FROM wp_latepoint_agents WHERE id =' . $agent_id;
           // return $query;
           return $bookings->get_query_results($query)[0];
         }
-        
+
         public static function get_bookings_times_for_date_range($date_from = false, $date_to = false, $args = [])
         {
           if (!$date_from || !$date_to) return false;
@@ -1675,37 +1733,73 @@ class OsBookingHelper
           return self::get_work_start_end_time($work_periods_arr);
         }
 
-        public static function get_customer_by_date($date,$agent_id)
+        public static function get_customer_by_date($date, $agent_id)
         {
           $bookings = new OsBookingModel();
           $query = "SELECT customer_id,id FROM wp_latepoint_bookings WHERE start_date ='" . $date . "' AND agent_id = " . $agent_id;
           $booked_periods = $bookings->get_query_results($query);
-          $i=0;
-          foreach($booked_periods as $customer_ID){
+          $i = 0;
+          foreach ($booked_periods as $customer_ID) {
             $customer_details[$i] =  new OsCustomerModel($customer_ID->customer_id);
-            $customer_details[$i]->booking_id = $customer_ID->id;$i++;
+            $customer_details[$i]->booking_id = $customer_ID->id;
+            $i++;
           }
           return $customer_details;
         }
 
-        public static function mocktest_slot_checking($date,$agent_id)
+        public static function mocktest_slot_checking($date, $agent_id)
         {
           $bookings = new OsBookingModel();
-          $query = "SELECT halfday_time FROM `wp_latepoint_bookings` WHERE end_date = '".$date."' AND agent_id = ".$agent_id." GROUP BY end_date,halfday_time HAVING COUNT(halfday_time) >= 2";
+          $query = "SELECT halfday_time FROM `wp_latepoint_bookings` WHERE end_date = '" . $date . "' AND agent_id = " . $agent_id . " GROUP BY end_date,halfday_time HAVING COUNT(halfday_time) >= 2";
           $booked_periods = $bookings->get_query_results($query);
-          $available_slots = [510,720,930,1140];
-          foreach($booked_periods as $booked){
-            $pos = array_search($booked->halfday_time,$available_slots);
+          $available_slots = [510, 720, 930, 1140];
+          foreach ($booked_periods as $booked) {
+            $pos = array_search($booked->halfday_time, $available_slots);
             unset($available_slots[$pos]);
           }
           $available_slots = array_values($available_slots);
-          if($available_slots[0] == 1140){
+          if ($available_slots[0] == 1140) {
             return true;
-          }else{
+          } else {
             return false;
           }
         }
 
-      }
+        public static function getThreeDayBookingDates($start_date,$agent_id){
+          $bookings = new OsBookingModel();
+          $query = "SELECT `start_date`,`mid_date`,`end_date` FROM `wp_latepoint_bookings` WHERE start_date = '". $start_date."' AND service_id = '3' AND agent_id = '".$agent_id."'";
+          $booked_dates = $bookings->get_query_results($query);
+          return $booked_dates[0];
+        }
 
-      
+  public static function getBookingcountbySeriviceId($service_id, $date, $agent_id)
+  {
+    $bookings = new OsBookingModel();
+    $query = "SELECT count(*) as count FROM `wp_latepoint_bookings` WHERE start_date ='" . $date . "' AND agent_id = '" . $agent_id . "' AND service_id = '" . $service_id . "'";
+    $booked_periods = $bookings->get_query_results($query);
+    return $booked_periods[0]->count;
+  }
+
+  public static function get_agent_seat_number_by_service($service_id,$agent_id)
+  {
+    $bookings = new OsBookingModel();
+    if($service_id == 1 || $service_id ==2){
+      $query = "SELECT maximum_capacity as capacity_max FROM `wp_latepoint_services` WHERE id =" . $service_id;
+      $limit = $bookings->get_query_results($query)[0]->capacity_max;
+    }else{
+      $query = "SELECT number_of_seats FROM wp_latepoint_agents WHERE id =" . $agent_id;
+      $limit = $bookings->get_query_results($query)[0]->number_of_seats;
+    }
+   
+    // return $query;
+    return $limit;
+  }
+
+  public static function getenddatebookingcount($date,$agent_id) {
+    $bookings = new OsBookingModel();
+    $query = "SELECT COUNT(*) AS count FROM `wp_latepoint_bookings` WHERE end_date = '".$date."' AND agent_id = '".$agent_id."' AND (service_id = '1' OR service_id = '3')";
+    $count = $bookings->get_query_results($query);
+    return $count[0]->count;
+  }
+
+      }

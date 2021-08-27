@@ -277,6 +277,7 @@ class OsDatabaseHelper {
       timeblock_interval int(11),
       capacity_min int(4),
       capacity_max int(4),
+      maximum_capacity int(11),
       status varchar(20) NOT NULL,
       visibility varchar(20) NOT NULL,
       created_at datetime,
