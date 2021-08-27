@@ -218,13 +218,19 @@ class OsBookingModel extends OsModel
       if ($this->service_id == 1 || $this->service_id == 3) {
         $qu = " AND halfday_time = '" . $this->halfday_time . "'";
       }
-      $queryc = "SELECT COUNT(*) as count FROM `wp_latepoint_bookings` WHERE service_id = '" . $this->service_id . "' AND agent_id = '" . $this->agent_id . "' AND start_date = '" . $this->end_date . "'$qu";
+      else {
+        $qu = " AND service_id = '" . $this->service_id . "'";
+      }
+      if($this->service_id == 3) {
+        $this->end_date = date('Y-m-d', strtotime($this->end_date . ' +2 day'));
+      }
+      $queryc = "SELECT COUNT(*) as count FROM `wp_latepoint_bookings` WHERE agent_id = '" . $this->agent_id . "' AND end_date = '" . $this->end_date . "'$qu";
       $fdata = $service->get_query_results($queryc);
-      $agent_service_count = OsBookingHelper::get_agent_seat_number($this->agent_id)->number_of_seats;
-      $fdata[1] = $agent_service_count;
+     // $agent_service_count = OsBookingHelper::get_agent_seat_number($this->agent_id)->number_of_seats;
+     // $fdata[1] = $agent_service_count;
 
       if ($this->service_id == 2) {
-        if ($fdata[0]->count >= $fdata[1]) {
+        if ($fdata[0]->count >= 3) {
           return false;
         }
       } else {
