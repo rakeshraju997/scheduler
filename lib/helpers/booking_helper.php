@@ -950,7 +950,7 @@ class OsBookingHelper
 
                   if ($service->id == 3 && $service_id_db == 3) {
                     $agnt_servc_countt = self::get_agent_seat_number_by_service(3, $agent_id);
-                    $cntt = self::getenddatebookingcount(date('Y-m-d', strtotime("+2 day", strtotime($day_date->format('Y-m-d')))), gent_id);
+                    $cntt = self::getenddatebookingcount(date('Y-m-d', strtotime("+2 day", strtotime($day_date->format('Y-m-d')))), $agent_id);
                   }
                  $booking_count = self::getBookingcountbySeriviceId($service->id, $day_date->format('Y-m-d'), $agent_id);
                   if ($db->service_id == $service->id && $booking_count < $agent_service_count) {
@@ -979,11 +979,10 @@ class OsBookingHelper
                  if (array_search($day_date->format('Y-m-d'), $datess)) {
                     $select = true;
                     $is_available = false;
-                    if ($datess[2] == $day_date->format('Y-m-d')) {
+                    if ($datess[2] == $day_date->format('Y-m-d') && $service->id != 3) {
                       $agnt_servc_count = self::get_agent_seat_number_by_service(3, $agent_id);
                       $cnt = self::getenddatebookingcount($datess[2], $agent_id);
                       if ($cnt < $agnt_servc_count) {
-                        $pp =  $cnt;
                         $select = false;
                         $is_available = true;
                       }
