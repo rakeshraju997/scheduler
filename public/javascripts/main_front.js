@@ -619,6 +619,8 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
                 Object.values(data).forEach(val => {
                   $("[data-date="+ val +"]").addClass('selected')
                 });
+                $('.times-header').show()
+                $('.mocktime').show()
               }
             },
             error: function(error){
