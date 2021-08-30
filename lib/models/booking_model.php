@@ -14,6 +14,7 @@ class OsBookingModel extends OsModel
     $end_date,
     $start_time,
     $end_time,
+    $halfday_time,
     $payment_method,
     $payment_portion,
     $payment_token,

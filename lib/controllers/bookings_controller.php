@@ -333,7 +333,7 @@ if ( ! class_exists( 'OsBookingsController' ) ) :
                       <li>
                         <?php _e('Mock test Date & Time', 'latepoint'); ?> 
                         <strong>
-                          <?php echo $booking->format_end_date_and_time(get_option('date_format'), false, OsTimeHelper::get_timezone_from_session()).', r'.OsTimeHelper::minutes_to_hours_and_minutes($booking->get_mockstart_time_shifted_for_customer()); ?>
+                          <?php echo $booking->format_end_date_and_time(get_option('date_format'), false, OsTimeHelper::get_timezone_from_session()).', '.OsTimeHelper::minutes_to_hours_and_minutes($booking->get_mockstart_time_shifted_for_customer()); ?>
                         </strong>
                       </li>
                     <?php }?>
