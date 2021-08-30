@@ -9,14 +9,16 @@
   </div>
   <?php if($booking->service_id == '1'){
           $seats = 2;
-        }else if($booking->service_id == '2'){
-          $seats = 3;
+        }else if($booking->service_id == '2'){  
+          $seats = 3;echo '<style>.time-selector-w.with-end-time.time-system-12 .timeslots{grid-template-columns:repeat(1, 1fr)}';
         }else if($booking->service_id == '3'){
           $seats = OsBookingHelper::get_agent_seat_number($booking->agent_id)->number_of_seats;
+          //echo '<style>.times-header{padding-bottom:0px}</style>';
+          echo '<style>.time-selector-w.style-timebox .times-header{display:inherit;}</style>';
         }
   ?>
-  <style>.times-header span{border-bottom:none !important;}.mocktime{margin-bottom:15px;}.times-header {color:unset;font-weight:400;margin-bottom:0px !important;padding-bottom:0px}</style>
-  *Note: Maximum Candidates Attending 1 to <?php echo $seats;?>
+  <style>.times-header-label span{border-bottom:unset !important;}.mocktime{margin-bottom:15px;text-align: center;}.times-header {color:unset;font-weight:unset;/*margin-bottom:0px !important;*/}</style>
+  <!-- *Note: Maximum Candidates Attending 1 to <?php //echo $seats;?> -->
   <div class="time-selector-w <?php echo 'time-system-'.OsTimeHelper::get_time_system(); ?> <?php echo (OsSettingsHelper::is_on('show_booking_end_time')) ? 'with-end-time' : 'without-end-time'; ?> style-<?php echo OsSettingsHelper::get_time_pick_style(); ?>">
     <div class="times-header">
       <?php if($booking->service_id == '3'){?>
