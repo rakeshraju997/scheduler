@@ -988,6 +988,47 @@ class OsBookingHelper
                       }
                     }
                   }
+
+                  //rr condition for  selected blue
+                 
+
+                  if (($select == false  && $service_id_db != 0) || $countt > 0) {
+                    if ($service->id == 3 && $service_id_db != 3 && $select == false
+                    ) {
+                      $three_day_class = '';
+                      if($service_id_db == 1) {
+                        $three_day_class = 'background-color:#869ae2';
+                      }
+                    }
+                    else {
+                    $three_day_class = 'background-color:#869ae2';
+                    }
+
+                    if ($countt == 0 && $service_id_db == 3) {
+                      $countt = $service_id_db;
+                      $countt--;
+                    } else {
+                      $countt--;
+                    }
+                  } else {
+                    $three_day_class = '';
+                  }
+
+
+                  if ($service_id_db == 3) {
+                    $datt =  array_values((array) self::getThreeDayBookingDates($day_date->format('Y-m-d'), $agent_id));
+                  }
+
+                  if ($service->id == 3) {
+                    if (array_search($day_date->format('Y-m-d'), $datt)) {
+                      $three_day_class = 'background-color:#869ae2';
+                    }
+                  }
+                  if ($service->id == 1) {
+                    if ($day_date->format('Y-m-d') == $datt[2]) {
+                      $three_day_class = 'background-color:#869ae2';
+                    }
+                  }
                                     
             
 
@@ -1130,7 +1171,7 @@ class OsBookingHelper
       <div class="<?php echo $day_class; ?>" data-date="<?php echo $day_date->format('Y-m-d'); ?>" data-nice-date="<?php echo OsTimeHelper::get_nice_date_with_optional_year($day_date->format('Y-m-d'), false); ?>" data-service-duration="<?php echo $duration_minutes; ?>" data-total-work-minutes="<?php echo $total_work_minutes; ?>" data-work-start-time="<?php echo $work_start_minutes; ?>" data-work-end-time="<?php echo $work_end_minutes ?>" data-available-minutes="<?php echo implode(',', $available_minutes); ?>" data-day-minutes="<?php echo implode(',', $day_minutes); ?>" data-interval="<?php echo $interval; ?>">
         <?php if ($settings['layout'] == 'horizontal') { ?><div class="os-day-weekday"><?php echo OsBookingHelper::get_weekday_name_by_number($day_date->format('N')); ?></div><?php } ?>
         <div class="os-day-box" <?php echo $three_day_back; ?>>
-          <div class="os-day-number"><?php  echo $day_date->format('j'); ?></div>
+          <div class="os-day-number"><?php echo $day_date->format('j'); ?></div>
           <?php if (!$is_day_in_past && !$not_in_allowed_period) { ?>
             <div class="os-day-status">
               <?php
