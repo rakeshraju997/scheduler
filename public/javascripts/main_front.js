@@ -289,7 +289,6 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
           url : latepoint_helper.ajaxurl,
           data : data,
           success: function(data){
-            console.log(data)
            tmp = data 
           },
           error: function(error){
