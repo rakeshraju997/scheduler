@@ -988,6 +988,37 @@ class OsBookingHelper
                       }
                     }
                   }
+
+                  //rr condition for  selected blue
+                 
+
+                  if (($select == false  && $service_id_db != 0) || $countt > 0) {
+                    if ($service->id == 3 && $service_id_db != 3 && $select == false
+                    ) {
+                      $three_day_class = '';
+                    }
+                    else {
+                    $three_day_class = 'background-color:#869ae2';
+                    if ($service->id == 3 && $service_id_db == 3 && $select == false) {
+                      $datt =  array_values((array) self::getThreeDayBookingDates($day_date->format('Y-m-d'), $agent_id));
+                    }
+                    }
+
+                    if ($countt == 0 && $service_id_db == 3) {
+                      $countt = $service_id_db;
+                      $countt--;
+                    } else {
+                      $countt--;
+                    }
+                  } else {
+                    $three_day_class = '';
+                  }
+
+                  if ($service->id == 3) {
+                    if (array_search($day_date->format('Y-m-d'), $datt)) {
+                      $three_day_class = 'background-color:#869ae2';
+                    }
+                  }
                                     
             
 
