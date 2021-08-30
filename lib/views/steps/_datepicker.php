@@ -26,7 +26,7 @@
         <div class="mocktime">Choose Your Mock Test Time Slot for <span style="font-weight:bold"></span></div>
       <?php }else{?>
         <div class="th-line"></div>
-        <div class="times-header-label"><?php _e('Pick Appointment Time For'.$booking->service_id, 'latepoint'); ?> <span></span></div>
+        <div class="times-header-label"><?php _e('Pick Appointment Time For', 'latepoint'); ?> <span></span></div>
         <div class="th-line"></div></div>
       <?php }?>
     
