@@ -15,15 +15,16 @@
           $seats = OsBookingHelper::get_agent_seat_number($booking->agent_id)->number_of_seats;
         }
   ?>
-  <style>.times-header span{border-bottom:none !important;}.mocktime{margin-bottom:15px;color:black;}</style>
+  <style>.times-header span{border-bottom:none !important;}.mocktime{margin-bottom:15px;}.times-header {color:unset;font-weight:400;margin-bottom:0px !important;padding-bottom:0px}</style>
   *Note: Maximum Candidates Attending 1 to <?php echo $seats;?>
   <div class="time-selector-w <?php echo 'time-system-'.OsTimeHelper::get_time_system(); ?> <?php echo (OsSettingsHelper::is_on('show_booking_end_time')) ? 'with-end-time' : 'without-end-time'; ?> style-<?php echo OsSettingsHelper::get_time_pick_style(); ?>">
     <div class="times-header">
       <?php if($booking->service_id == '3'){?>
-        <div class="th-line"></div>
+        
         <div class="times-header-label" style="margin:0px;flex:unset;"><?php _e('Your Training Will be Scheduled for', 'latepoint'); ?><br> <span></span><?php echo ' From '?><span></span></div>
-        <div class="th-line"></div></div>
-        <div class="mocktime">Choose Your Mock Test Time Slot for <span style="font-weight:bold"></span></div>
+        </div>
+        <div class="mocktime">Choose Your Mock Test Time Slot for <span style="color:#4b64e8"></span></div>
+        <div class="th-line"></div>
       <?php }else{?>
         <div class="th-line"></div>
         <div class="times-header-label"><?php _e('Pick Appointment Time For', 'latepoint'); ?> <span></span></div>
