@@ -269,6 +269,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
     $day.addClass('selected');
     let $service_id = $booking_form_element.find('.latepoint_service_id').val();
     //rr display half day slots in 3 day
+    $('.loader').show()
     if($service_id == 3 || $service_id == 1){
         var available_minutes = function () {
         var tmp;
@@ -358,13 +359,17 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
       // No working hours this day
       $timeslots.addClass('slots-not-available').append('<div class="not-working-message">' + latepoint_helper.msg_not_available + "</div>");
     }
-    $('.times-header-label span').text($day.data('nice-date'));
-    $booking_form_element.find('.time-selector-w').slideDown(200, function(){
-      var $scrollable_wrapper = $booking_form_element.find('.latepoint-body');
-      $scrollable_wrapper.stop().animate({
-        scrollTop: $scrollable_wrapper[0].scrollHeight
-      }, 200);
-    });
+    $booking_form_element.find('.time-selector-w').slideUp(200);
+    $('.times-header-label span:nth-child(1)').text($day.data('nice-date')); 
+    setTimeout(function() {
+      $('.loader').hide();
+      $booking_form_element.find('.time-selector-w').slideDown(200, function(){
+        var $scrollable_wrapper = $booking_form_element.find('.latepoint-body');
+        $scrollable_wrapper.stop().animate({
+          scrollTop: $scrollable_wrapper[0].scrollHeight
+        }, 200);
+      });
+    }, 3000);
   }
 
 
@@ -579,6 +584,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
             url : latepoint_helper.ajaxurl,
             data : data,
             success: function(data){
+              $('.loader').show();
               if(data == null)
               {
                 let $timeslots = $booking_form_element.find('.timeslots')
@@ -590,6 +596,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
                 $booking_form_element.find('.os-day.selected').removeClass('selected');
                 $("[data-date="+ selectedDate_p +"]").addClass('os-not-available selected')
                 console.log('block by other session')
+                $('.loader').hide();
               }else{
                 //create normal time for mocktest first twodays
                 var end_date_nice = $("[data-date="+ data.end_date +"]").data('nice-date')

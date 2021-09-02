@@ -17,8 +17,11 @@
           echo '<style>.time-selector-w.style-timebox .times-header{display:inherit;}</style>';
         }
   ?>
-  <style>.times-header-label span{border-bottom:unset !important;}.mocktime{margin-bottom:15px;text-align: center;}.times-header {color:unset;font-weight:unset;/*margin-bottom:0px !important;*/}</style>
-  <!-- *Note: Maximum Candidates Attending 1 to <?php //echo $seats;?> -->
+  <style>.times-header span{border-bottom:unset !important;}.mocktime{margin-bottom:15px;text-align: center;}.times-header {color:unset;font-weight:unset;/*margin-bottom:0px !important;*/}.loader {width: 25px !important;height: 25px !important;border-bottom: 2px solid #2d54de;border-left: 2px solid #2d54de;
+  border-top: 2px solid #2d54de;border-right: 2px solid rgba(255,255,255,0);border-radius: 20px;position: absolute;left: 50%;transform: translate(-50%, -50%);background-color: transparent !important;animation-delay: 0.25s;
+  animation: os-loading 2s linear infinite;display: none;margin-top:14px;}</style>
+  <!-- *Note: Maximum Candidates <?php //echo $seats;?> -->
+  <div class="loader"></div>
   <div class="time-selector-w <?php echo 'time-system-'.OsTimeHelper::get_time_system(); ?> <?php echo (OsSettingsHelper::is_on('show_booking_end_time')) ? 'with-end-time' : 'without-end-time'; ?> style-<?php echo OsSettingsHelper::get_time_pick_style(); ?>">
     <div class="times-header">
       <?php if($booking->service_id == '3'){?>
