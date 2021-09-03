@@ -447,7 +447,16 @@ if ( ! class_exists( 'OsCalendarsController' ) ) :
         }
       }
       else if($data[0] != NULL) {
-        $arrr = $returndata[$this->params['day1']];
+        $arrr = (array) $returndata[$this->params['day1']];
+      }
+      
+      $queryh = "SELECT custom_date FROM ".LATEPOINT_TABLE_WORK_PERIODS." WHERE agent_id = ".$this->params['agent_id'];
+      $fetched_holiday_date = $booking->get_query_results($queryh);
+
+      foreach($fetched_holiday_date as $h_dates){
+        if($h_dates->custom_date == $arrr['mid_date'] || $h_dates->custom_date == $arrr['end_date']){
+           $arrr = null;
+        }
       }
       echo json_encode($arrr);
       die();

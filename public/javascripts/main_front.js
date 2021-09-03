@@ -504,6 +504,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
     os_init_timeslots();
     os_init_monthly_calendar_navigation();
     $('.os-months').on('click', '.os-day', function(){
+      $('.loader').show();
       if($(this).hasClass('os-day-passed')) return false;
       if($(this).hasClass('os-not-in-allowed-period')) return false;
       var $booking_form_element = $(this).closest('.latepoint-booking-form-element');
@@ -584,7 +585,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
             url : latepoint_helper.ajaxurl,
             data : data,
             success: function(data){
-              $('.loader').show();
+              // $('.loader').show();
               if(data == null)
               {
                 let $timeslots = $booking_form_element.find('.timeslots')
