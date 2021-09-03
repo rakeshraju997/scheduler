@@ -130,9 +130,9 @@ class OsBookingHelper
   {
     $payment_portion = (OsBookingHelper::get_default_payment_portion_type($booking) == LATEPOINT_PAYMENT_PORTION_DEPOSIT) ? ' paying-deposit ' : '';
     if ($booking->service_id != 1) {
-      $payment_text = __('Booking token price: ', 'latepoint');
+      $payment_text = __('Booking Token Price: ', 'latepoint');
     } else {
-      $payment_text = __('Total booking price: ', 'latepoint');
+      $payment_text = __('Total Booking Price: ', 'latepoint');
     }
     $html = '<div class="payment-total-info ' . $payment_portion . '">
               <div class="payment-total-price-w"><span>' . $payment_text . '</span><span class="lp-price-value">' . $booking->formatted_full_price() . '</span></div>
