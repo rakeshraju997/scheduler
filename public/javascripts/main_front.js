@@ -620,9 +620,10 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
                 $booking_form_element.find('.os-day.selected').removeClass('selected');
                 latepoint_update_summary_field($booking_form_element, 'date', $("[data-date="+ data.start_date +"]").data('nice-date')+' - '+$("[data-date="+ data.end_date +"]").data('nice-date'))
           
-                $('.times-header-label  span:nth-child(2)').text($("[data-date="+ data.start_date +"]").data('nice-date')+' - '+ $("[data-date="+ data.mid_date +"]").data('nice-date')); //add start& mid date to calander bottom section
+                $('.times-header-label  span').text($("[data-date="+ data.start_date +"]").data('nice-date')+' - '+ $("[data-date="+ data.end_date +"]").data('nice-date')); //add start& mid date to calander bottom section
 
-                $('.times-header-label span:nth-child(3)').html(timeslot_label);//add time to calander bottom section
+                $('.scheduletime span').html($("[data-date="+ data.start_date +"]").data('nice-date')+' & '+ $("[data-date="+ data.mid_date +"]").data('nice-date')+' : '+timeslot_label);//add time to calander bottom section
+
                 $('.mocktime span').html($("[data-date="+ data.end_date +"]").data('nice-date'))
                 Object.values(data).forEach(val => {
                   $("[data-date="+ val +"]").addClass('selected')

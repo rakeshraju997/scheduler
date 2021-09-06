@@ -10,14 +10,15 @@
   <?php if($booking->service_id == '1'){
           $seats = 2;
         }else if($booking->service_id == '2'){  
-          $seats = 3;echo '<style>.time-selector-w.with-end-time.time-system-12 .timeslots{grid-template-columns:repeat(1, 1fr)}';
+          $seats = 3;echo '<style>.time-selector-w.with-end-time.time-system-12 .timeslots{grid-template-columns:repeat(1, 1fr)}</style>';
         }else if($booking->service_id == '3'){
           $seats = OsBookingHelper::get_agent_seat_number($booking->agent_id)->number_of_seats;
           //echo '<style>.times-header{padding-bottom:0px}</style>';
-          echo '<style>.time-selector-w.style-timebox .times-header{display:inherit;}</style>';
+          echo '<style>.time-selector-w.style-timebox .times-header{display:inherit;}.time-selector-w{text-align:center}</style>';
         }
   ?>
-  <style>.times-header span{border-bottom:unset !important;}.mocktime{margin-bottom:15px;text-align: center;}.times-header {color:unset;font-weight:unset;/*margin-bottom:0px !important;*/}.loader {width: 25px !important;height: 25px !important;border-bottom: 2px solid #2d54de;border-left: 2px solid #2d54de;
+  <style>.times-header span{border-bottom:unset !important;}.scheduletime{line-height: 1.5;
+}.mocktime{margin: 9px 0px 15px 0px;}.times-header {color:unset;font-weight:unset;/*margin-bottom:0px !important;*/}.loader {width: 25px !important;height: 25px !important;border-bottom: 2px solid #2d54de;border-left: 2px solid #2d54de;
   border-top: 2px solid #2d54de;border-right: 2px solid rgba(255,255,255,0);border-radius: 20px;position: absolute;left: 50%;transform: translate(-50%, -50%);background-color: transparent !important;animation-delay: 0.25s;
   animation: os-loading 2s linear infinite;display: none;margin-top:14px;}</style>
   <!-- *Note: Maximum Candidates <?php //echo $seats;?> -->
@@ -26,8 +27,10 @@
     <div class="times-header">
       <?php if($booking->service_id == '3'){?>
         
-        <div class="times-header-label" style="margin:0px;flex:unset;"><?php _e('Your Training Will be Scheduled for', 'latepoint'); ?><br> <span></span><?php echo ' From '?><span></span></div>
+        <div class="times-header-label" style="margin:0px;flex:unset;"><?php _e('Your Training Will be Scheduled for ', 'latepoint'); ?><br><span></span></div>
         </div>
+        <div class="th-line"></div>
+        <div class="scheduletime"><div style="font-weight:700">Timing</div><span style="color:#4b64e8"></span></div>
         <div class="mocktime">Choose Your Mock Test Time Slot for <span style="color:#4b64e8"></span></div>
         <div class="th-line"></div>
       <?php }else{?>
