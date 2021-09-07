@@ -117,6 +117,75 @@ class OsShortcodesHelper {
       return $output;
   }
 
+  // [latepoint_book_image]
+  public static function shortcode_latepoint_book_image( $atts, $content = "" ) {
+    $atts = shortcode_atts( array(
+        'caption' => __('Book Appointment', 'latepoint'),
+        'bg_color' => false,
+        'text_color' => false,
+        'font_size' => false,
+        'border' => false,
+        'border_radius' => false,
+        'margin' => false,
+        'padding' => false,
+        'css' => false,
+        'show_locations' => false,
+        'show_agents' => false,
+        'show_services' => false,
+        'show_service_categories' => false,
+        'selected_location' => false,
+        'selected_agent' => false,
+        'selected_service' => false,
+        'selected_service_category' => false,
+        'calendar_start_date' => false,
+        'selected_start_date' => false,
+        'selected_start_time' => false,
+        'hide_side_panel' => false,
+        'hide_summary' => false,
+        'src' =>false
+    ), $atts );
+
+    $nonce = wp_create_nonce("latepoint_nonce");
+
+    $style = '';
+    $data_atts = '';
+
+    // Style setup
+    if($atts['bg_color']) $style.= 'background-color: '.$atts['bg_color'].';';
+    if($atts['text_color']) $style.= 'color: '.$atts['text_color'].';';
+    if($atts['font_size']) $style.= 'font-size: '.$atts['font_size'].';';
+    if($atts['border']) $style.= 'border: '.$atts['border'].';';
+    if($atts['border_radius']) $style.= 'border-radius: '.$atts['border_radius'].';';
+    if($atts['margin']) $style.= 'margin: '.$atts['margin'].';';
+    if($atts['padding']) $style.= 'padding: '.$atts['padding'].';';
+
+
+    // Data attributes setup
+    if($atts['show_locations']) $data_atts.= 'data-show-locations="'.$atts['show_locations'].'" ';
+    if($atts['show_agents']) $data_atts.= 'data-show-agents="'.$atts['show_agents'].'" ';
+    if($atts['show_services']) $data_atts.= 'data-show-services="'.$atts['show_services'].'" ';
+    if($atts['show_service_categories']) $data_atts.= 'data-show-service-categories="'.$atts['show_service_categories'].'" ';
+    if($atts['selected_location']) $data_atts.= 'data-selected-location="'.$atts['selected_location'].'" ';
+    if($atts['selected_agent']) $data_atts.= 'data-selected-agent="'.$atts['selected_agent'].'" ';
+    if($atts['selected_service']) $data_atts.= 'data-selected-service="'.$atts['selected_service'].'" ';
+    if($atts['selected_service_category']) $data_atts.= 'data-selected-service-category="'.$atts['selected_service_category'].'" ';
+    if($atts['calendar_start_date']) $data_atts.= 'data-calendar-start-date="'.$atts['calendar_start_date'].'" ';
+    if($atts['selected_start_date']) $data_atts.= 'data-start-date="'.$atts['selected_start_date'].'" ';
+    if($atts['selected_start_time']) $data_atts.= 'data-start-time="'.$atts['selected_start_time'].'" ';
+
+
+    if($atts['hide_summary'] == 'yes') $data_atts.= 'data-hide-summary="yes" ';
+    if($atts['hide_side_panel'] == 'yes') $data_atts.= 'data-hide-side-panel="yes" ';
+    
+    if(($style == '') && $atts['css']) $style = $atts['css'];
+
+    if($style != '') $style = 'style="'.$style.'"';
+
+    $output = '<img class=" os_trigger_booking" src="'.$atts["src"].'" '.$data_atts.' data-nonce="'.$nonce.' alt="Book Now" '.esc_attr($atts['caption']).'>';
+    
+    return $output;
+}
+
   // [latepoint_customer_dashboard]
   public static function shortcode_latepoint_customer_dashboard($atts){
     $atts = shortcode_atts( array(

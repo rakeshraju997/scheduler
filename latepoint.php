@@ -645,6 +645,7 @@ final class LatePoint {
     add_shortcode( 'latepoint_book_form', array('OsShortcodesHelper', 'shortcode_latepoint_book_form' ));
     add_shortcode( 'latepoint_customer_dashboard', array('OsShortcodesHelper', 'shortcode_latepoint_customer_dashboard' ));
     add_shortcode( 'latepoint_customer_login', array('OsShortcodesHelper', 'shortcode_latepoint_customer_login' ));
+    add_shortcode( 'latepoint_book_image', array('OsShortcodesHelper', 'shortcode_latepoint_book_image' ));
   }
 
   /*
