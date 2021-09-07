@@ -632,6 +632,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
                 });
                 $('.times-header').show()
                 $('.mocktime').show()
+                $('.scheduletime').show()
               }
             },
             error: function(error){
