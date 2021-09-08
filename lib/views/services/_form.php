@@ -101,6 +101,22 @@
 
     <div class="white-box">
       <div class="white-box-header">
+        <div class="os-form-sub-header"><h3><?php _e('Service Seat Limit', 'latepoint'); ?></h3></div>
+      </div>
+      <div class="white-box-content">
+        <div class="service-duration-box">
+          <div class="os-row">
+            <div class="os-col-lg-4">
+              <?php echo OsFormHelper::text_field('service[maximum_capacity]', __('Service Capacity Limit', 'latepoint'), $service->maximum_capacity); ?>
+            </div>
+          </div>
+        </div>
+        <?php do_action('latepoint_service_edit_durations', $service); ?>
+      </div>
+    </div>
+    
+    <div class="white-box">
+      <div class="white-box-header">
         <div class="os-form-sub-header">
           <h3><?php _e('Agents Who Offer This Service', 'latepoint'); ?></h3>
           <div class="os-form-sub-header-actions">
