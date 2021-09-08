@@ -356,6 +356,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
     }else{
       $('.times-header').hide()
       $('.mocktime').hide()
+      $('.scheduletime').hide()
       // No working hours this day
       $timeslots.addClass('slots-not-available').append('<div class="not-working-message">' + latepoint_helper.msg_not_available + "</div>");
     }
@@ -592,6 +593,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
                 $timeslots.html('')
                 $('.times-header').hide()
                 $('.mocktime').hide()
+                $('.scheduletime').hide()
                 latepoint_update_summary_field($booking_form_element, 'mocktime','')
                 $timeslots.addClass('slots-not-available').append('<div class="not-working-message">' + 'Three day session not available' + "</div>");
                 $booking_form_element.find('.os-day.selected').removeClass('selected');
@@ -630,6 +632,7 @@ function latepoint_add_action(callbacks_list, action, priority = 10){
                 });
                 $('.times-header').show()
                 $('.mocktime').show()
+                $('.scheduletime').show()
               }
             },
             error: function(error){
