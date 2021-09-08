@@ -232,12 +232,12 @@ class OsBookingModel extends OsModel
 
       if ($this->service_id == 2) {
         if ($fdata[0]->count >= 3) {
-          $this->add_error('missing_agent', __('Selected slot not available. Please choose different slot', 'latepoint'));
+          $this->add_error('missing_agent', __('The selected slot is occupied by another user at the moment. Please choose another slot or try after some time.', 'latepoint'));
           return false;
         }
       } else {
         if ($fdata[0]->count >= 2) {
-          $this->add_error('missing_agent', __('Selected slot not available. Please choose different slot', 'latepoint'));
+          $this->add_error('missing_agent', __('The selected slot is occupied by another user at the moment. Please choose another slot or try after some time.', 'latepoint'));
           return false;
         }
       }
