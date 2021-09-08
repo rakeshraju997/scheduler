@@ -1830,7 +1830,7 @@ class OsBookingHelper
   {
     $bookings = new OsBookingModel();
     if($service_id == 1 || $service_id ==2){
-      $query = "SELECT maximum_capacity as capacity_max FROM ".LATEPOINT_TABLE_AGENTS." WHERE id =" . $service_id;
+      $query = "SELECT maximum_capacity as capacity_max FROM ".LATEPOINT_TABLE_SERVICES." WHERE id =" . $service_id;
       $limit = $bookings->get_query_results($query)[0]->capacity_max;
     }else{
       $query = "SELECT number_of_seats FROM ".LATEPOINT_TABLE_AGENTS." WHERE id =" . $agent_id;
