@@ -225,7 +225,7 @@ class OsBookingModel extends OsModel
       if($this->service_id == 3) {
         $this->end_date = date('Y-m-d', strtotime($this->end_date . ' +2 day'));
       }
-      $queryc = "SELECT COUNT(*) as count FROM `wp_latepoint_bookings` WHERE agent_id = '" . $this->agent_id . "' AND end_date = '" . $this->end_date . "'$qu";
+      $queryc = "SELECT COUNT(*) as count FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE agent_id = '" . $this->agent_id . "' AND end_date = '" . $this->end_date . "'$qu";
       $fdata = $service->get_query_results($queryc);
      // $agent_service_count = OsBookingHelper::get_agent_seat_number($this->agent_id)->number_of_seats;
      // $fdata[1] = $agent_service_count;
