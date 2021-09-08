@@ -789,7 +789,7 @@ class OsBookingHelper
         public static function get_serviceid_by_date($date, $agent_id, $approved_only = true)
         {
           $bookings = new OsBookingModel();
-          $query = "SELECT service_id,count(*) as count FROM wp_latepoint_bookings WHERE start_date ='" . $date . "' AND agent_id = " . $agent_id;
+          $query = "SELECT service_id,count(*) as count FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE start_date ='" . $date . "' AND agent_id = " . $agent_id;
           $booked_periods = $bookings->get_query_results($query);
           return $booked_periods[0];
         }
@@ -1413,7 +1413,7 @@ class OsBookingHelper
         public static function get_agent_seat_number($agent_id)
         {
           $bookings = new OsBookingModel();
-          $query = 'SELECT number_of_seats FROM wp_latepoint_agents WHERE id =' . $agent_id;
+          $query = 'SELECT number_of_seats FROM '.LATEPOINT_TABLE_AGENTS.' WHERE id =' . $agent_id;
           // return $query;
           return $bookings->get_query_results($query)[0];
         }
@@ -1782,7 +1782,7 @@ class OsBookingHelper
         public static function get_customer_by_date($date, $agent_id)
         {
           $bookings = new OsBookingModel();
-          $query = "SELECT customer_id,id FROM wp_latepoint_bookings WHERE start_date ='" . $date . "' AND agent_id = " . $agent_id;
+          $query = "SELECT customer_id,id FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE start_date ='" . $date . "' AND agent_id = " . $agent_id;
           $booked_periods = $bookings->get_query_results($query);
           $i = 0;
           foreach ($booked_periods as $customer_ID) {
@@ -1796,7 +1796,7 @@ class OsBookingHelper
         public static function mocktest_slot_checking($date, $agent_id)
         {
           $bookings = new OsBookingModel();
-          $query = "SELECT halfday_time FROM `wp_latepoint_bookings` WHERE end_date = '" . $date . "' AND agent_id = " . $agent_id . " GROUP BY end_date,halfday_time HAVING COUNT(halfday_time) >= 2";
+          $query = "SELECT halfday_time FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE end_date = '" . $date . "' AND agent_id = " . $agent_id . " GROUP BY end_date,halfday_time HAVING COUNT(halfday_time) >= 2";
           $booked_periods = $bookings->get_query_results($query);
           $available_slots = [510, 720, 930, 1140];
           foreach ($booked_periods as $booked) {
@@ -1813,7 +1813,7 @@ class OsBookingHelper
 
         public static function getThreeDayBookingDates($start_date,$agent_id){
           $bookings = new OsBookingModel();
-          $query = "SELECT `start_date`,`mid_date`,`end_date` FROM `wp_latepoint_bookings` WHERE start_date = '". $start_date."' AND service_id = '3' AND agent_id = '".$agent_id."'";
+          $query = "SELECT `start_date`,`mid_date`,`end_date` FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE start_date = '". $start_date."' AND service_id = '3' AND agent_id = '".$agent_id."'";
           $booked_dates = $bookings->get_query_results($query);
           return $booked_dates[0];
         }
@@ -1821,7 +1821,7 @@ class OsBookingHelper
   public static function getBookingcountbySeriviceId($service_id, $date, $agent_id)
   {
     $bookings = new OsBookingModel();
-    $query = "SELECT count(*) as count FROM `wp_latepoint_bookings` WHERE start_date ='" . $date . "' AND agent_id = '" . $agent_id . "' AND service_id = '" . $service_id . "'";
+    $query = "SELECT count(*) as count FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE start_date ='" . $date . "' AND agent_id = '" . $agent_id . "' AND service_id = '" . $service_id . "'";
     $booked_periods = $bookings->get_query_results($query);
     return $booked_periods[0]->count;
   }
@@ -1830,10 +1830,10 @@ class OsBookingHelper
   {
     $bookings = new OsBookingModel();
     if($service_id == 1 || $service_id ==2){
-      $query = "SELECT maximum_capacity as capacity_max FROM `wp_latepoint_services` WHERE id =" . $service_id;
+      $query = "SELECT maximum_capacity as capacity_max FROM ".LATEPOINT_TABLE_SERVICES." WHERE id =" . $service_id;
       $limit = $bookings->get_query_results($query)[0]->capacity_max;
     }else{
-      $query = "SELECT number_of_seats FROM wp_latepoint_agents WHERE id =" . $agent_id;
+      $query = "SELECT number_of_seats FROM ".LATEPOINT_TABLE_AGENTS." WHERE id =" . $agent_id;
       $limit = $bookings->get_query_results($query)[0]->number_of_seats;
     }
    
@@ -1843,7 +1843,7 @@ class OsBookingHelper
 
   public static function getenddatebookingcount($date,$agent_id) {
     $bookings = new OsBookingModel();
-    $query = "SELECT COUNT(*) AS count FROM `wp_latepoint_bookings` WHERE end_date = '".$date."' AND agent_id = '".$agent_id."' AND (service_id = '1' OR service_id = '3')";
+    $query = "SELECT COUNT(*) AS count FROM ".LATEPOINT_TABLE_BOOKINGS." WHERE end_date = '".$date."' AND agent_id = '".$agent_id."' AND (service_id = '1' OR service_id = '3')";
     $count = $bookings->get_query_results($query);
     return $count[0]->count;
   }
