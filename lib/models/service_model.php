@@ -20,6 +20,7 @@ class OsServiceModel extends OsModel{
       $visibility = LATEPOINT_SERVICE_VISIBILITY_VISIBLE,
       $capacity_min = 1,
       $capacity_max = 1,
+      $maximum_capacity,
       $timeblock_interval,
       $is_custom_price = false,
       $is_custom_hours = false,
@@ -73,6 +74,7 @@ class OsServiceModel extends OsModel{
                             'status',
                             'capacity_min',
                             'capacity_max',
+                            'maximum_capacity',
                             'description_image_id');
     return $params_to_save;
   }
@@ -98,6 +100,7 @@ class OsServiceModel extends OsModel{
                             'status',
                             'capacity_min',
                             'capacity_max',
+                            'maximum_capacity',
                             'description_image_id');
     return $allowed_params;
   }
