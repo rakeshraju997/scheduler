@@ -1001,7 +1001,6 @@ class OsBookingHelper
                       }
                     }else {
                     $three_day_class = 'background-color:#869ae2';
-                    
                     }
                     if ($countt == 0 && $service_id_db == 3) {
                       $countt = $service_id_db;
