@@ -992,6 +992,7 @@ class OsBookingHelper
                   //rr condition for  selected blue
                  
 
+                  $three_day_border = '';
                   if (($select == false  && $service_id_db != 0) || $countt > 0) {
                     if ($service->id == 3 && $service_id_db != 3 && $select == false
                     ) {
@@ -1002,12 +1003,19 @@ class OsBookingHelper
                     }
                     else {
                     $three_day_class = 'background-color:#869ae2';
+                    $three_day_border = 'border: 1px solid #4b64e829;';
                     }
-
                     if ($countt == 0 && $service_id_db == 3) {
                       $countt = $service_id_db;
+                      $three_day_border = 'border: 1px solid #4b64e829;border-right:0;border-radius:9px 0 0 9px';
                       $countt--;
-                    } else {
+                    } else if($countt>0) {
+                      $three_day_border = 'border: 1px solid #4b64e829;';
+                      if($countt==2){
+                        $three_day_border.='border-left:0;border-right:0;';
+                      }else{
+                        $three_day_border.='border-left:0;border-radius:0 9px 9px 0';
+                      }
                       $countt--;
                     }
                   } else {
@@ -1157,6 +1165,7 @@ class OsBookingHelper
 
             $day_class = 'os-day os-day-current week-day-' . strtolower($day_date->format('N'));
             if (empty($available_minutes)) $day_class .= ' os-not-available';
+            if (empty($available_minutes)) $three_day_border = '';
             if ($is_today) $day_class .= ' os-today';
             if ($is_day_in_past) $day_class .= ' os-day-passed';
             if ($is_target_month) $day_class .= ' os-month-current';
@@ -1168,9 +1177,9 @@ class OsBookingHelper
             // var_dump($service->id);
           ?>
 
-      <div class="<?php echo $day_class; ?>" data-date="<?php echo $day_date->format('Y-m-d'); ?>" data-nice-date="<?php echo OsTimeHelper::get_nice_date_with_optional_year($day_date->format('Y-m-d'), false); ?>" data-service-duration="<?php echo $duration_minutes; ?>" data-total-work-minutes="<?php echo $total_work_minutes; ?>" data-work-start-time="<?php echo $work_start_minutes; ?>" data-work-end-time="<?php echo $work_end_minutes ?>" data-available-minutes="<?php echo implode(',', $available_minutes); ?>" data-day-minutes="<?php echo implode(',', $day_minutes); ?>" data-interval="<?php echo $interval; ?>">
+      <div style="<?php echo $three_day_border ?>" class="<?php echo $day_class; ?>" data-date="<?php echo $day_date->format('Y-m-d'); ?>" data-nice-date="<?php echo OsTimeHelper::get_nice_date_with_optional_year($day_date->format('Y-m-d'), false); ?>" data-service-duration="<?php echo $duration_minutes; ?>" data-total-work-minutes="<?php echo $total_work_minutes; ?>" data-work-start-time="<?php echo $work_start_minutes; ?>" data-work-end-time="<?php echo $work_end_minutes ?>" data-available-minutes="<?php echo implode(',', $available_minutes); ?>" data-day-minutes="<?php echo implode(',', $day_minutes); ?>" data-interval="<?php echo $interval; ?>">
         <?php if ($settings['layout'] == 'horizontal') { ?><div class="os-day-weekday"><?php echo OsBookingHelper::get_weekday_name_by_number($day_date->format('N')); ?></div><?php } ?>
-        <div class="os-day-box" <?php echo $three_day_back; ?>>
+        <div class="os-day-box" >
           <div class="os-day-number"><?php echo $day_date->format('j'); ?></div>
           <?php if (!$is_day_in_past && !$not_in_allowed_period) { ?>
             <div class="os-day-status">
