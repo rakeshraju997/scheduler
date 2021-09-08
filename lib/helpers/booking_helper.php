@@ -994,16 +994,13 @@ class OsBookingHelper
 
                   $three_day_border = '';
                   if (($select == false  && $service_id_db != 0) || $countt > 0) {
-                    if ($service->id == 3 && $service_id_db != 3 && $select == false
-                    ) {
+                    if ($service->id == 3 && $service_id_db != 3 && $select == false) {
                       $three_day_class = '';
                       if($service_id_db == 1) {
                         $three_day_class = 'background-color:#869ae2';
                       }
-                    }
-                    else {
+                    }else {
                     $three_day_class = 'background-color:#869ae2';
-                    $three_day_border = 'border: 1px solid #4b64e85e;';
                     }
                     if ($countt == 0 && $service_id_db == 3) {
                       $countt = $service_id_db;
