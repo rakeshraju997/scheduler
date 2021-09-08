@@ -231,12 +231,12 @@ class OsBookingModel extends OsModel
      // $fdata[1] = $agent_service_count;
 
       if ($this->service_id == 2) {
-        if ($fdata[0]->count >= intval(OsBookingHelper::get_agent_seat_number_by_service(2,$this->params['agent_id']))) {
+        if (intval($fdata[0]->count) >= intval(OsBookingHelper::get_agent_seat_number_by_service(2,$this->agent_id))) {
           $this->add_error('missing_agent', __('The selected slot is occupied by another user at the moment. Please choose another slot or try after some time.', 'latepoint'));
           return false;
         }
       } else {
-        if ($fdata[0]->count >= intval(OsBookingHelper::get_agent_seat_number_by_service(1,$this->params['agent_id']))) {
+        if (intval($fdata[0]->count) >= intval(OsBookingHelper::get_agent_seat_number_by_service(1,$this->agent_id))) {
           $this->add_error('missing_agent', __('The selected slot is occupied by another user at the moment. Please choose another slot or try after some time.', 'latepoint'));
           return false;
         }
