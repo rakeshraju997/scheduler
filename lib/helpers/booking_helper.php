@@ -137,7 +137,7 @@ class OsBookingHelper
     $html = '<div class="payment-total-info ' . $payment_portion . '">
               <div class="payment-total-price-w"><span>' . $payment_text . '</span><span class="lp-price-value">' . $booking->formatted_full_price() . '</span></div>
               <div class="payment-deposit-price-w"><span>' . __('Deposit Amount: ', 'latepoint') . '</span><span class="lp-price-value">' . $booking->formatted_deposit_price() . '</span></div>
-            </div>';
+            </div><br>Note: Our Consultant will get in touch with you for confirmation of booking.';
     $html = apply_filters('latepoint_filter_payment_total_info', $html, $booking);
     return $html;
   }
