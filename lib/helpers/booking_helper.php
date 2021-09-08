@@ -1003,14 +1003,14 @@ class OsBookingHelper
                     }
                     else {
                     $three_day_class = 'background-color:#869ae2';
-                    $three_day_border = 'border: 1px solid #4b64e829;';
+                    $three_day_border = 'border: 1px solid #4b64e85e;';
                     }
                     if ($countt == 0 && $service_id_db == 3) {
                       $countt = $service_id_db;
-                      $three_day_border = 'border: 1px solid #4b64e829;border-right:0;border-radius:9px 0 0 9px';
+                      $three_day_border = 'border: 1px solid #4b64e85e;border-right:0;border-radius:9px 0 0 9px';
                       $countt--;
                     } else if($countt>0) {
-                      $three_day_border = 'border: 1px solid #4b64e829;';
+                      $three_day_border = 'border: 1px solid #4b64e85e;';
                       if($countt==2){
                         $three_day_border.='border-left:0;border-right:0;';
                       }else{
